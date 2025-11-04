@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Members Management UI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#135bec",
+              "background-light": "#f6f6f8",
+              "background-dark": "#101622",
+              "secondary-light": "#EFEFF4",
+              "secondary-dark": "#1C1F2A",
+              "text-light-primary": "#1C1C1E",
+              "text-dark-primary": "#E1E3E8",
+              "text-light-secondary": "#8E8E93",
+              "text-dark-secondary": "#8A91A0",
+              "status-green": "#34C759",
+              "status-orange": "#FF9500",
+              "status-red": "#FF3B30",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display">
+<div class="relative flex h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-hidden">
+<!-- Header Bar -->
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between border-b border-secondary-light dark:border-secondary-dark/40 sticky top-0 z-10">
+<div class="text-text-light-primary dark:text-text-dark-primary flex size-12 shrink-0 items-center justify-start">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</div>
+<h2 class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Members</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-transparent text-primary gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
+<span class="material-symbols-outlined text-2xl">add</span>
+</button>
+</div>
+</div>
+<!-- Main Content Area with Split View -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Left Pane: Member List -->
+<div class="w-full lg:w-[30%] flex-shrink-0 flex flex-col border-r border-secondary-light dark:border-secondary-dark/40 overflow-y-auto">
+<!-- Search Bar -->
+<div class="px-4 py-3 sticky top-0 bg-background-light dark:bg-background-dark z-10">
+<label class="flex flex-col min-w-40 h-12 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-text-light-secondary dark:text-text-dark-secondary flex border-none bg-secondary-light dark:bg-secondary-dark items-center justify-center pl-4 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined text-2xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-light-primary dark:text-text-dark-primary focus:outline-0 focus:ring-0 border-none bg-secondary-light dark:bg-secondary-dark focus:border-none h-full placeholder:text-text-light-secondary dark:placeholder:text-text-dark-secondary px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="Search members..." value=""/>
+</div>
+</label>
+</div>
+<!-- Filters (Chips) -->
+<div class="flex gap-2 p-3 px-4 overflow-x-auto">
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-primary text-white pl-4 pr-4">
+<p class="text-sm font-medium leading-normal">All</p>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-secondary-light dark:bg-secondary-dark pl-4 pr-4">
+<p class="text-text-light-primary dark:text-text-dark-primary text-sm font-medium leading-normal">Premium</p>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-secondary-light dark:bg-secondary-dark pl-4 pr-4">
+<p class="text-text-light-primary dark:text-text-dark-primary text-sm font-medium leading-normal">Active</p>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-secondary-light dark:bg-secondary-dark pl-4 pr-4">
+<p class="text-text-light-primary dark:text-text-dark-primary text-sm font-medium leading-normal">Pending</p>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-secondary-light dark:bg-secondary-dark pl-4 pr-4">
+<p class="text-text-light-primary dark:text-text-dark-primary text-sm font-medium leading-normal">Inactive</p>
+</button>
+</div>
+<!-- Member List Items -->
+<div class="flex flex-col flex-1">
+<!-- Selected Member Item -->
+<div class="flex items-center gap-4 bg-primary/10 dark:bg-primary/20 px-4 min-h-[72px] py-2 justify-between border-l-4 border-primary">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12" data-alt="Profile picture of Eleanor Vance" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCE1dpbzFinMOz9wIjugFI1bPEKI_pf7WCKwwMX_goVAP3JUuCQ1K6bMKQe6okOIJdaQY-FoFX9mEbPl99MM-E7zJCUSala_bQxu6Ws2QwWk1z_J-6sZy0lf7rvEr4cOdUaJB19x5ostQBBbZ5R-QbRhfG8aLwSAZVVCDgJGtOKQ6x7vsrwzLdGDX-zlDLp5O9G_nLT94S137SUxI4-0biAj4CBchEFHVpITK2leKK0G0f2BRgO-5as8EIEh9Rh4VZN1GBPO5S2dEg");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-text-light-primary dark:text-text-dark-primary text-base font-medium leading-normal line-clamp-1">Eleanor Vance</p>
+<p class="text-primary dark:text-primary/90 text-sm font-normal leading-normal line-clamp-2">Premium Member</p>
+</div>
+</div>
+</div>
+<!-- Other Member Items -->
+<div class="flex items-center gap-4 bg-transparent hover:bg-secondary-light/50 dark:hover:bg-secondary-dark/50 px-4 min-h-[72px] py-2 justify-between">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12" data-alt="Profile picture of Marcus Holloway" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuClzuRTeAm7FPlmKlsp_3W7VmtVPlb2TM1ApNjG7Hqj2-pbG4pKKETckwKCWhStHxXW6_LR1BFdhUhOlH7mlFs-_cSVePWzGyAS_562ZdQjQ2XnJiU2CN7Z9TM_esLP0_NKzWN4_DPySYACOXNutvnGDVpGt2YJHB3obi7R6eRlZ3YCC-peMz0AbAxDVfsAwfmAfVvpP5QHSGYhVNusKnvUD7hCX-KvjDpJyuawxDBr24n0mFaiBmpEUsMJe32wVJ8szeoRJnBtTWk");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-text-light-primary dark:text-text-dark-primary text-base font-medium leading-normal line-clamp-1">Marcus Holloway</p>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-sm font-normal leading-normal line-clamp-2">Joined Feb 2024</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-transparent hover:bg-secondary-light/50 dark:hover:bg-secondary-dark/50 px-4 min-h-[72px] py-2 justify-between">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12" data-alt="Profile picture of Clara Oswald" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCIwxE8NNXUSpSaMOlMuWp1A93fXu9Qu5-9Wm8jIGlsZiibkS8Hz9PV2m7KxHh3IFgSu0l_MtCc4J9dJ_IIRFn_G9cT9b2BqKQreiyk58ew3r3L8in6KXTex2HhcVzkv8gcn-_wfs9GfvEeKEXU8usfp3nDQ3U92xWiBcxXaN5Pd4Pb9ERvbxlJPSp5xnLCtGxo4qtHBzX3xpyaKc8mzY3bFHSQRzk2hCAxZWF-3guWv45pVf8Ad6ThwqVfOQmucTTjJwEotLp_Hms");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-text-light-primary dark:text-text-dark-primary text-base font-medium leading-normal line-clamp-1">Clara Oswald</p>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-sm font-normal leading-normal line-clamp-2">Joined Dec 2023</p>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-transparent hover:bg-secondary-light/50 dark:hover:bg-secondary-dark/50 px-4 min-h-[72px] py-2 justify-between">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12" data-alt="Profile picture of Kenji Tanaka" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC1OzMJWRV-Dor2ubLU-r96bx9voKqdIr5IJmzUD0HGhbCpZcGCziuodqXa4U5u4jH92u50ZsFwvnjtDNIH0bA8t6LgBfqXyegWlE3kY3yPxBJ_Y6OIrF6vkchAcQcxh44R4nuZUhsBJjHdswYBhLBEs0EmlG7NAfyjb_UYcmjIIGuLM77IudPQK0k9xvPZgA1ud9CmxBahozwrggZnK-q0NffflptIn7lk1Z72pT4MKDaAi0kb9hhJug_faFQmjk_ZT-ItaQgnbv0");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-text-light-primary dark:text-text-dark-primary text-base font-medium leading-normal line-clamp-1">Kenji Tanaka</p>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-sm font-normal leading-normal line-clamp-2">Joined May 2024</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Pane: Member Details (Shown on larger screens) -->
+<div class="w-[70%] flex-shrink-0 flex-col overflow-y-auto p-6 bg-secondary-light/50 dark:bg-secondary-dark/20 hidden lg:flex">
+<!-- Profile Header -->
+<div class="flex flex-col items-center text-center gap-4 pb-6 border-b border-secondary-light dark:border-secondary-dark/40">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-24 w-24" data-alt="Enlarged profile picture of Eleanor Vance" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD28Q3UhbljwTm8-9348TR256XgSJ-2ma1hERDvzLBgE42yK2L0Tz_OjL6dHECWpr_dYPJjv01CJYK-c8IclFZJiu5nBEBiRnQxrbxmxSOT3U-lfO-EI0S0_uglWUrTeWVE9O3dgqdHPnZyeGqf70gYI2uq1v_ngqcWE97Fe1iNg-LzDrDnKWRebriGqg6FL9AwmNN__1d12DXoTedxjMHvdiqcUu0KbYdrjxLEJTiDazk1jg5On-YvhLxaLx7mdk68VJGyyFFjbwM");'></div>
+<div class="flex flex-col gap-1">
+<h3 class="text-2xl font-bold text-text-light-primary dark:text-text-dark-primary">Eleanor Vance</h3>
+<p class="text-text-light-secondary dark:text-text-dark-secondary">Premium Member</p>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-primary text-white text-sm font-medium">
+<span class="material-symbols-outlined text-base">call</span>
+<span>Call</span>
+</button>
+<button class="flex items-center justify-center gap-2 h-10 px-4 rounded-lg bg-secondary-light dark:bg-secondary-dark text-text-light-primary dark:text-text-dark-primary text-sm font-medium">
+<span class="material-symbols-outlined text-base">email</span>
+<span>Email</span>
+</button>
+</div>
+</div>
+<!-- Tab Navigation (Simplified) -->
+<div class="py-6 border-b border-secondary-light dark:border-secondary-dark/40">
+<div class="flex gap-2">
+<button class="flex-1 text-center py-2 text-sm font-medium border-b-2 border-primary text-primary">Details</button>
+<button class="flex-1 text-center py-2 text-sm font-medium border-b-2 border-transparent text-text-light-secondary dark:text-text-dark-secondary">Activity</button>
+<button class="flex-1 text-center py-2 text-sm font-medium border-b-2 border-transparent text-text-light-secondary dark:text-text-dark-secondary">Notes</button>
+</div>
+</div>
+<!-- Information Sections -->
+<div class="flex flex-col gap-6 py-6">
+<!-- Contact Information -->
+<div>
+<h4 class="text-sm font-bold uppercase text-text-light-secondary dark:text-text-dark-secondary mb-3 tracking-wider">Contact Information</h4>
+<div class="space-y-3">
+<div class="flex items-start">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary mt-0.5 mr-3 text-lg">call</span>
+<div>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">Phone</p>
+<p class="text-base text-text-light-primary dark:text-text-dark-primary">+1 (555) 123-4567</p>
+</div>
+</div>
+<div class="flex items-start">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary mt-0.5 mr-3 text-lg">email</span>
+<div>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">Email</p>
+<p class="text-base text-text-light-primary dark:text-text-dark-primary">eleanor.vance@example.com</p>
+</div>
+</div>
+<div class="flex items-start">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary mt-0.5 mr-3 text-lg">location_on</span>
+<div>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">Address</p>
+<p class="text-base text-text-light-primary dark:text-text-dark-primary">123 Market St, San Francisco, CA</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Membership Details -->
+<div>
+<h4 class="text-sm font-bold uppercase text-text-light-secondary dark:text-text-dark-secondary mb-3 tracking-wider">Membership Details</h4>
+<div class="space-y-3">
+<div class="flex items-start">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary mt-0.5 mr-3 text-lg">badge</span>
+<div>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">Membership ID</p>
+<p class="text-base text-text-light-primary dark:text-text-dark-primary">MBR-10023</p>
+</div>
+</div>
+<div class="flex items-start">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary mt-0.5 mr-3 text-lg">verified</span>
+<div>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">Status</p>
+<div class="flex items-center gap-2">
+<span class="block w-2 h-2 rounded-full bg-status-green"></span>
+<p class="text-base text-text-light-primary dark:text-text-dark-primary">Active</p>
+</div>
+</div>
+</div>
+<div class="flex items-start">
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary mt-0.5 mr-3 text-lg">calendar_today</span>
+<div>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">Join Date</p>
+<p class="text-base text-text-light-primary dark:text-text-dark-primary">January 15, 2024</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>
