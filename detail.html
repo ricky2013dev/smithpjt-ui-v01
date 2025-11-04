@@ -1,0 +1,2739 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Open Dental Patient Viewer - Demo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+      }
+
+      .header p {
+        font-size: 1.1em;
+        opacity: 0.9;
+      }
+
+      .demo-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 8px 16px;
+        border-radius: 20px;
+        margin-top: 10px;
+        font-size: 0.9em;
+        font-weight: 600;
+      }
+
+      .controls {
+        padding: 30px;
+        background: #f8f9fa;
+        border-bottom: 2px solid #e9ecef;
+      }
+
+      .control-group {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: end;
+      }
+
+      .input-group {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #495057;
+      }
+
+      .input-group input,
+      .input-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s;
+      }
+
+      .input-group input:focus,
+      .input-group select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      button {
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      button.secondary {
+        background: #6c757d;
+      }
+
+      button.secondary:hover {
+        box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+      }
+
+      button.small {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+
+      .content {
+        padding: 30px;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #6c757d;
+      }
+
+      .loading::after {
+        content: "...";
+        animation: dots 1.5s steps(3, end) infinite;
+      }
+
+      @keyframes dots {
+        0%,
+        20% {
+          content: ".";
+        }
+        40% {
+          content: "..";
+        }
+        60%,
+        100% {
+          content: "...";
+        }
+      }
+
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 15px 20px;
+        border-radius: 8px;
+        border-left: 4px solid #dc3545;
+        margin-bottom: 20px;
+      }
+
+      .success {
+        background: #d4edda;
+        color: #155724;
+        padding: 15px 20px;
+        border-radius: 8px;
+        border-left: 4px solid #28a745;
+        margin-bottom: 20px;
+      }
+
+      .info {
+        background: #d1ecf1;
+        color: #0c5460;
+        padding: 15px 20px;
+        border-radius: 8px;
+        border-left: 4px solid #17a2b8;
+        margin-bottom: 20px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 2.5em;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 0.9em;
+        opacity: 0.9;
+      }
+
+      .patient-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+      }
+
+      .patient-card {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 20px;
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+
+      .patient-card:hover {
+        border-color: #667eea;
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        transform: translateY(-5px);
+      }
+
+      .patient-card h3 {
+        color: #667eea;
+        margin-bottom: 15px;
+        font-size: 1.4em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .patient-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+
+      .patient-info {
+        display: grid;
+        gap: 10px;
+      }
+
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #f1f3f5;
+      }
+
+      .info-row:last-child {
+        border-bottom: none;
+      }
+
+      .info-label {
+        font-weight: 600;
+        color: #6c757d;
+      }
+
+      .info-value {
+        color: #212529;
+        text-align: right;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        font-weight: 600;
+      }
+
+      .badge-active {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .badge-inactive {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .json-viewer {
+        background: #f8f9fa;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+        max-height: 500px;
+        overflow-y: auto;
+      }
+
+      .json-viewer pre {
+        margin: 0;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #212529;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #e9ecef;
+      }
+
+      .tab {
+        padding: 10px 20px;
+        background: none;
+        color: #6c757d;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+
+      .tab.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      /* Patient Detail Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+        animation: fadeIn 0.3s;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .modal-content {
+        background-color: white;
+        margin: 2% auto;
+        padding: 0;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 1000px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+        animation: slideIn 0.3s;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px 30px;
+        border-radius: 15px 15px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-header h2 {
+        margin: 0;
+        font-size: 1.8em;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .modal-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.5em;
+      }
+
+      .close {
+        color: white;
+        font-size: 35px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        line-height: 1;
+      }
+
+      .close:hover {
+        transform: scale(1.2);
+      }
+
+      .modal-body {
+        padding: 30px;
+      }
+
+      .detail-section {
+        margin-bottom: 30px;
+      }
+
+      .detail-section h3 {
+        color: #667eea;
+        font-size: 1.4em;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+      }
+
+      .detail-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+
+      .detail-item-label {
+        font-weight: 600;
+        color: #6c757d;
+        font-size: 0.9em;
+        margin-bottom: 5px;
+      }
+
+      .detail-item-value {
+        color: #212529;
+        font-size: 1.1em;
+      }
+
+      .insurance-card {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        transition: all 0.3s;
+      }
+
+      .insurance-card:hover {
+        border-color: #667eea;
+        box-shadow: 0 3px 15px rgba(102, 126, 234, 0.1);
+      }
+
+      .insurance-card h4 {
+        color: #667eea;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .insurance-type {
+        display: inline-block;
+        padding: 4px 10px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        font-size: 0.8em;
+        font-weight: 600;
+      }
+
+      .no-insurance {
+        text-align: center;
+        padding: 40px;
+        color: #6c757d;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .appointment-list {
+        display: grid;
+        gap: 15px;
+      }
+
+      .appointment-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #28a745;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .appointment-item.past {
+        border-left-color: #6c757d;
+        opacity: 0.7;
+      }
+
+      .appointment-info {
+        flex: 1;
+      }
+
+      .appointment-date {
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 5px;
+      }
+
+      .appointment-type {
+        color: #6c757d;
+        font-size: 0.9em;
+      }
+
+      .appointment-status {
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 0.85em;
+        font-weight: 600;
+      }
+
+      .status-completed {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .status-scheduled {
+        background: #d1ecf1;
+        color: #0c5460;
+      }
+
+      .status-cancelled {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .treatment-history {
+        display: grid;
+        gap: 10px;
+      }
+
+      .treatment-item {
+        background: #f8f9fa;
+        padding: 12px 15px;
+        border-radius: 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .treatment-name {
+        font-weight: 600;
+        color: #212529;
+      }
+
+      .treatment-date {
+        color: #6c757d;
+        font-size: 0.9em;
+      }
+
+      .view-more {
+        text-align: center;
+        margin-top: 15px;
+      }
+
+      .coverage-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .coverage-table thead {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .coverage-table th {
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.95em;
+      }
+
+      .coverage-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #e9ecef;
+      }
+
+      .coverage-table tbody tr:hover {
+        background: #f8f9fa;
+      }
+
+      .coverage-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .procedure-code {
+        font-family: "Courier New", monospace;
+        background: #f8f9fa;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+        color: #667eea;
+      }
+
+      .coverage-amount {
+        font-weight: 600;
+        color: #28a745;
+      }
+
+      .coverage-percent {
+        display: inline-block;
+        padding: 4px 10px;
+        background: #d4edda;
+        color: #155724;
+        border-radius: 12px;
+        font-size: 0.9em;
+        font-weight: 600;
+      }
+
+      .coverage-category {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.85em;
+        font-weight: 600;
+      }
+
+      .category-preventive {
+        background: #d1ecf1;
+        color: #0c5460;
+      }
+
+      .category-basic {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .category-major {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .category-orthodontic {
+        background: #e2e3e5;
+        color: #383d41;
+      }
+
+      .no-coverage-data {
+        text-align: center;
+        padding: 40px;
+        color: #6c757d;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+
+      .coverage-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .summary-card {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+      }
+
+      .summary-card-title {
+        font-size: 0.9em;
+        color: #6c757d;
+        margin-bottom: 8px;
+      }
+
+      .summary-card-value {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #667eea;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🦷 Open Dental Patient Viewer</h1>
+        <p>Retrieve and view patient data from Open Dental FHIR API</p>
+        <div class="demo-badge">✨ DEMO MODE - Sample Data Loaded</div>
+      </div>
+
+      <div class="controls">
+        <div class="control-group">
+          <div class="input-group">
+            <label for="dataMode">Data Source</label>
+            <select id="dataMode" onchange="updateDataMode()">
+              <option value="demo">Demo Data (Sample Patients)</option>
+              <option value="api">Live API (Requires Connection)</option>
+            </select>
+          </div>
+          <div class="input-group" id="apiKeyGroup" style="display: none">
+            <label for="apiKey">API Authorization Key</label>
+            <input
+              type="text"
+              id="apiKey"
+              placeholder="ODFHIR DeveloperKey/CustomerKey"
+              value="ODFHIR NFF6i0KrXrxDkZHt/VzkmZEaUWOjnQX2z"
+            />
+          </div>
+          <div class="input-group">
+            <label for="patientFilter">Filter Patients</label>
+            <input
+              type="text"
+              id="patientFilter"
+              placeholder="Search by name..."
+              onkeyup="filterPatients()"
+            />
+          </div>
+          <button onclick="loadData()">Load Data</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div id="statusMessage"></div>
+
+        <div id="stats" class="stats" style="display: none">
+          <div class="stat-card">
+            <div class="stat-number" id="statPatients">0</div>
+            <div class="stat-label">Total Patients</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="statActive">0</div>
+            <div class="stat-label">Active Patients</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="statAppointments">0</div>
+            <div class="stat-label">Appointments</div>
+          </div>
+        </div>
+
+        <div class="action-buttons" id="actionButtons" style="display: none">
+          <button class="secondary" onclick="exportToCSV()">
+            📊 Export to CSV
+          </button>
+          <button class="secondary" onclick="printReport()">
+            🖨️ Print Report
+          </button>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" onclick="switchTab('cards')">
+            Patient Cards
+          </button>
+          <button class="tab" onclick="switchTab('json')">Raw JSON</button>
+        </div>
+
+        <div id="cardsTab" class="tab-content active">
+          <div id="results"></div>
+        </div>
+        <div id="jsonTab" class="tab-content">
+          <div class="json-viewer">
+            <pre id="jsonOutput">No data loaded yet</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Patient Detail Modal -->
+    <div id="patientModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>
+            <div class="modal-avatar" id="modalAvatar">SJ</div>
+            <span id="modalPatientName">Patient Name</span>
+          </h2>
+          <span class="close" onclick="closePatientDetail()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <!-- Demographics Section -->
+          <div class="detail-section">
+            <h3>👤 Demographics</h3>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <div class="detail-item-label">Patient ID</div>
+                <div class="detail-item-value" id="detailPatientId">-</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-item-label">Date of Birth</div>
+                <div class="detail-item-value" id="detailBirthDate">-</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-item-label">Age</div>
+                <div class="detail-item-value" id="detailAge">-</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-item-label">Gender</div>
+                <div class="detail-item-value" id="detailGender">-</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-item-label">Status</div>
+                <div class="detail-item-value" id="detailStatus">-</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-item-label">Last Visit</div>
+                <div class="detail-item-value" id="detailLastVisit">-</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Information Section -->
+          <div class="detail-section">
+            <h3>📞 Contact Information</h3>
+            <div class="detail-grid">
+              <div class="detail-item">
+                <div class="detail-item-label">Phone</div>
+                <div class="detail-item-value" id="detailPhone">-</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-item-label">Email</div>
+                <div class="detail-item-value" id="detailEmail">-</div>
+              </div>
+              <div class="detail-item" style="grid-column: 1 / -1">
+                <div class="detail-item-label">Address</div>
+                <div class="detail-item-value" id="detailAddress">-</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Insurance Information Section -->
+          <div class="detail-section">
+            <h3>🏥 Insurance Information</h3>
+            <div id="insuranceContainer"></div>
+          </div>
+
+          <!-- Appointments Section -->
+          <div class="detail-section">
+            <h3>📅 Appointments</h3>
+            <div id="appointmentsContainer" class="appointment-list"></div>
+          </div>
+
+          <!-- Treatment History Section -->
+          <div class="detail-section">
+            <h3>💉 Recent Treatment History</h3>
+            <div id="treatmentContainer" class="treatment-history"></div>
+          </div>
+
+          <!-- Coverage Details Section -->
+          <div class="detail-section">
+            <h3>📊 Coverage Details by Procedure</h3>
+            <div id="coverageDetailsContainer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Sample patient data with insurance information
+      const DEMO_DATA = {
+        resourceType: "Bundle",
+        type: "searchset",
+        total: 8,
+        entry: [
+          {
+            resource: {
+              resourceType: "Patient",
+              id: "1001",
+              active: true,
+              name: [
+                {
+                  given: ["Sarah", "Jane"],
+                  family: "Johnson",
+                },
+              ],
+              gender: "female",
+              birthDate: "1985-03-15",
+              telecom: [
+                { system: "phone", value: "(555) 123-4567" },
+                { system: "email", value: "sarah.johnson@email.com" },
+              ],
+              address: [
+                {
+                  line: ["123 Maple Street", "Apt 4B"],
+                  city: "Springfield",
+                  state: "IL",
+                  postalCode: "62701",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Patient",
+              id: "1002",
+              active: true,
+              name: [
+                {
+                  given: ["Michael", "Robert"],
+                  family: "Anderson",
+                },
+              ],
+              gender: "male",
+              birthDate: "1978-07-22",
+              telecom: [
+                { system: "phone", value: "(555) 234-5678" },
+                { system: "email", value: "m.anderson@email.com" },
+              ],
+              address: [
+                {
+                  line: ["456 Oak Avenue"],
+                  city: "Springfield",
+                  state: "IL",
+                  postalCode: "62702",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Patient",
+              id: "1003",
+              active: true,
+              name: [
+                {
+                  given: ["Emily", "Rose"],
+                  family: "Martinez",
+                },
+              ],
+              gender: "female",
+              birthDate: "1992-11-08",
+              telecom: [
+                { system: "phone", value: "(555) 345-6789" },
+                { system: "email", value: "emily.martinez@email.com" },
+              ],
+              address: [
+                {
+                  line: ["789 Pine Road"],
+                  city: "Riverside",
+                  state: "CA",
+                  postalCode: "92501",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Patient",
+              id: "1004",
+              active: false,
+              name: [
+                {
+                  given: ["David", "Lee"],
+                  family: "Thompson",
+                },
+              ],
+              gender: "male",
+              birthDate: "1965-05-30",
+              telecom: [{ system: "phone", value: "(555) 456-7890" }],
+              address: [
+                {
+                  line: ["321 Elm Street"],
+                  city: "Portland",
+                  state: "OR",
+                  postalCode: "97201",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Patient",
+              id: "1005",
+              active: true,
+              name: [
+                {
+                  given: ["Jennifer", "Ann"],
+                  family: "Williams",
+                },
+              ],
+              gender: "female",
+              birthDate: "1988-09-12",
+              telecom: [
+                { system: "phone", value: "(555) 567-8901" },
+                { system: "email", value: "j.williams@email.com" },
+              ],
+              address: [
+                {
+                  line: ["654 Birch Lane"],
+                  city: "Austin",
+                  state: "TX",
+                  postalCode: "78701",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Patient",
+              id: "1006",
+              active: true,
+              name: [
+                {
+                  given: ["Christopher", "James"],
+                  family: "Davis",
+                },
+              ],
+              gender: "male",
+              birthDate: "1975-02-18",
+              telecom: [
+                { system: "phone", value: "(555) 678-9012" },
+                { system: "email", value: "chris.davis@email.com" },
+              ],
+              address: [
+                {
+                  line: ["987 Cedar Court"],
+                  city: "Seattle",
+                  state: "WA",
+                  postalCode: "98101",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Patient",
+              id: "1007",
+              active: true,
+              name: [
+                {
+                  given: ["Amanda", "Grace"],
+                  family: "Brown",
+                },
+              ],
+              gender: "female",
+              birthDate: "1995-12-25",
+              telecom: [
+                { system: "phone", value: "(555) 789-0123" },
+                { system: "email", value: "amanda.brown@email.com" },
+              ],
+              address: [
+                {
+                  line: ["147 Willow Drive"],
+                  city: "Denver",
+                  state: "CO",
+                  postalCode: "80201",
+                },
+              ],
+            },
+          },
+          {
+            resource: {
+              resourceType: "Patient",
+              id: "1008",
+              active: true,
+              name: [
+                {
+                  given: ["Robert", "William"],
+                  family: "Garcia",
+                },
+              ],
+              gender: "male",
+              birthDate: "1982-04-07",
+              telecom: [
+                { system: "phone", value: "(555) 890-1234" },
+                { system: "email", value: "robert.garcia@email.com" },
+              ],
+              address: [
+                {
+                  line: ["258 Spruce Avenue"],
+                  city: "Miami",
+                  state: "FL",
+                  postalCode: "33101",
+                },
+              ],
+            },
+          },
+        ],
+      };
+
+      // Insurance data for each patient
+      const INSURANCE_DATA = {
+        1001: [
+          {
+            type: "Primary",
+            provider: "Blue Cross Blue Shield",
+            policyNumber: "BCBS-123456789",
+            groupNumber: "GRP-98765",
+            subscriberName: "Sarah Jane Johnson",
+            subscriberId: "123456789",
+            relationship: "Self",
+            effectiveDate: "2023-01-01",
+            expirationDate: "2024-12-31",
+            coverage: {
+              deductible: "$1,500",
+              deductibleMet: "$450",
+              maxBenefit: "$2,000/year",
+              preventiveCoverage: "100%",
+              basicCoverage: "80%",
+              majorCoverage: "50%",
+            },
+          },
+        ],
+        1002: [
+          {
+            type: "Primary",
+            provider: "Delta Dental",
+            policyNumber: "DD-987654321",
+            groupNumber: "GRP-54321",
+            subscriberName: "Michael Robert Anderson",
+            subscriberId: "987654321",
+            relationship: "Self",
+            effectiveDate: "2023-06-01",
+            expirationDate: "2024-05-31",
+            coverage: {
+              deductible: "$1,000",
+              deductibleMet: "$1,000",
+              maxBenefit: "$1,500/year",
+              preventiveCoverage: "100%",
+              basicCoverage: "80%",
+              majorCoverage: "50%",
+            },
+          },
+          {
+            type: "Secondary",
+            provider: "MetLife Dental",
+            policyNumber: "ML-456789123",
+            groupNumber: "GRP-11111",
+            subscriberName: "Michael Robert Anderson",
+            subscriberId: "456789123",
+            relationship: "Self",
+            effectiveDate: "2023-06-01",
+            expirationDate: "2024-05-31",
+            coverage: {
+              deductible: "$500",
+              deductibleMet: "$0",
+              maxBenefit: "$1,000/year",
+              preventiveCoverage: "100%",
+              basicCoverage: "50%",
+              majorCoverage: "50%",
+            },
+          },
+        ],
+        1003: [
+          {
+            type: "Primary",
+            provider: "Cigna Dental",
+            policyNumber: "CIG-555666777",
+            groupNumber: "GRP-77777",
+            subscriberName: "Emily Rose Martinez",
+            subscriberId: "555666777",
+            relationship: "Self",
+            effectiveDate: "2024-01-01",
+            expirationDate: "2024-12-31",
+            coverage: {
+              deductible: "$2,000",
+              deductibleMet: "$200",
+              maxBenefit: "$2,500/year",
+              preventiveCoverage: "100%",
+              basicCoverage: "80%",
+              majorCoverage: "60%",
+            },
+          },
+        ],
+        1004: [],
+        1005: [
+          {
+            type: "Primary",
+            provider: "Aetna Dental",
+            policyNumber: "AET-111222333",
+            groupNumber: "GRP-33333",
+            subscriberName: "Jennifer Ann Williams",
+            subscriberId: "111222333",
+            relationship: "Self",
+            effectiveDate: "2023-03-01",
+            expirationDate: "2025-02-28",
+            coverage: {
+              deductible: "$1,200",
+              deductibleMet: "$800",
+              maxBenefit: "$1,800/year",
+              preventiveCoverage: "100%",
+              basicCoverage: "80%",
+              majorCoverage: "50%",
+            },
+          },
+        ],
+        1006: [
+          {
+            type: "Primary",
+            provider: "Guardian Dental",
+            policyNumber: "GRD-888999000",
+            groupNumber: "GRP-99999",
+            subscriberName: "Christopher James Davis",
+            subscriberId: "888999000",
+            relationship: "Self",
+            effectiveDate: "2023-01-01",
+            expirationDate: "2024-12-31",
+            coverage: {
+              deductible: "$1,500",
+              deductibleMet: "$1,500",
+              maxBenefit: "$2,000/year",
+              preventiveCoverage: "100%",
+              basicCoverage: "80%",
+              majorCoverage: "50%",
+            },
+          },
+        ],
+        1007: [
+          {
+            type: "Primary",
+            provider: "Humana Dental",
+            policyNumber: "HUM-444555666",
+            groupNumber: "GRP-66666",
+            subscriberName: "Robert Brown",
+            subscriberId: "444555666",
+            relationship: "Dependent",
+            effectiveDate: "2023-09-01",
+            expirationDate: "2024-08-31",
+            coverage: {
+              deductible: "$1,000",
+              deductibleMet: "$300",
+              maxBenefit: "$1,500/year",
+              preventiveCoverage: "100%",
+              basicCoverage: "80%",
+              majorCoverage: "50%",
+            },
+          },
+        ],
+        1008: [
+          {
+            type: "Primary",
+            provider: "United Healthcare Dental",
+            policyNumber: "UHC-222333444",
+            groupNumber: "GRP-44444",
+            subscriberName: "Robert William Garcia",
+            subscriberId: "222333444",
+            relationship: "Self",
+            effectiveDate: "2024-01-01",
+            expirationDate: "2024-12-31",
+            coverage: {
+              deductible: "$1,500",
+              deductibleMet: "$0",
+              maxBenefit: "$2,000/year",
+              preventiveCoverage: "100%",
+              basicCoverage: "80%",
+              majorCoverage: "50%",
+            },
+          },
+        ],
+      };
+
+      // Appointments data for each patient
+      const APPOINTMENTS_DATA = {
+        1001: [
+          {
+            date: "2024-11-15",
+            time: "10:00 AM",
+            type: "Regular Checkup",
+            status: "scheduled",
+            provider: "Dr. Smith",
+          },
+          {
+            date: "2024-08-10",
+            time: "2:00 PM",
+            type: "Teeth Cleaning",
+            status: "completed",
+            provider: "Dr. Johnson",
+          },
+          {
+            date: "2024-02-20",
+            time: "9:30 AM",
+            type: "Crown Placement",
+            status: "completed",
+            provider: "Dr. Smith",
+          },
+        ],
+        1002: [
+          {
+            date: "2024-12-05",
+            time: "3:00 PM",
+            type: "Root Canal",
+            status: "scheduled",
+            provider: "Dr. Williams",
+          },
+          {
+            date: "2024-09-15",
+            time: "11:00 AM",
+            type: "Filling",
+            status: "completed",
+            provider: "Dr. Johnson",
+          },
+        ],
+        1003: [
+          {
+            date: "2024-11-20",
+            time: "1:00 PM",
+            type: "Teeth Whitening",
+            status: "scheduled",
+            provider: "Dr. Martinez",
+          },
+          {
+            date: "2024-07-08",
+            time: "10:00 AM",
+            type: "Regular Checkup",
+            status: "completed",
+            provider: "Dr. Smith",
+          },
+        ],
+        1004: [
+          {
+            date: "2024-05-12",
+            time: "2:30 PM",
+            type: "Extraction",
+            status: "cancelled",
+            provider: "Dr. Williams",
+          },
+          {
+            date: "2023-11-20",
+            time: "9:00 AM",
+            type: "Regular Checkup",
+            status: "completed",
+            provider: "Dr. Smith",
+          },
+        ],
+        1005: [
+          {
+            date: "2024-11-25",
+            time: "11:30 AM",
+            type: "Regular Checkup",
+            status: "scheduled",
+            provider: "Dr. Johnson",
+          },
+          {
+            date: "2024-06-18",
+            time: "3:00 PM",
+            type: "Teeth Cleaning",
+            status: "completed",
+            provider: "Dr. Martinez",
+          },
+        ],
+        1006: [
+          {
+            date: "2024-12-10",
+            time: "9:00 AM",
+            type: "Implant Consultation",
+            status: "scheduled",
+            provider: "Dr. Williams",
+          },
+          {
+            date: "2024-08-22",
+            time: "2:00 PM",
+            type: "Filling",
+            status: "completed",
+            provider: "Dr. Smith",
+          },
+        ],
+        1007: [
+          {
+            date: "2024-11-18",
+            time: "4:00 PM",
+            type: "Braces Adjustment",
+            status: "scheduled",
+            provider: "Dr. Martinez",
+          },
+          {
+            date: "2024-09-10",
+            time: "1:30 PM",
+            type: "Regular Checkup",
+            status: "completed",
+            provider: "Dr. Johnson",
+          },
+        ],
+        1008: [
+          {
+            date: "2024-12-01",
+            time: "10:30 AM",
+            type: "Regular Checkup",
+            status: "scheduled",
+            provider: "Dr. Smith",
+          },
+          {
+            date: "2024-06-05",
+            time: "11:00 AM",
+            type: "Teeth Cleaning",
+            status: "completed",
+            provider: "Dr. Williams",
+          },
+        ],
+      };
+
+      // Treatment history data
+      const TREATMENT_HISTORY = {
+        1001: [
+          {
+            name: "Dental Crown - Tooth #14",
+            date: "2024-02-20",
+            cost: "$1,200",
+          },
+          { name: "Teeth Cleaning", date: "2024-08-10", cost: "$120" },
+          { name: "X-Ray (Full Mouth)", date: "2024-02-15", cost: "$150" },
+        ],
+        1002: [
+          {
+            name: "Composite Filling - Tooth #18",
+            date: "2024-09-15",
+            cost: "$250",
+          },
+          { name: "Regular Checkup", date: "2024-03-10", cost: "$100" },
+        ],
+        1003: [
+          { name: "Regular Checkup", date: "2024-07-08", cost: "$100" },
+          { name: "Panoramic X-Ray", date: "2024-07-08", cost: "$180" },
+        ],
+        1004: [
+          { name: "Regular Checkup", date: "2023-11-20", cost: "$100" },
+          { name: "Teeth Cleaning", date: "2023-11-20", cost: "$120" },
+        ],
+        1005: [
+          { name: "Teeth Cleaning", date: "2024-06-18", cost: "$120" },
+          { name: "Fluoride Treatment", date: "2024-06-18", cost: "$50" },
+        ],
+        1006: [
+          {
+            name: "Composite Filling - Tooth #30",
+            date: "2024-08-22",
+            cost: "$280",
+          },
+          { name: "Regular Checkup", date: "2024-02-14", cost: "$100" },
+        ],
+        1007: [
+          { name: "Orthodontic Adjustment", date: "2024-09-10", cost: "$200" },
+          { name: "Regular Checkup", date: "2024-09-10", cost: "$100" },
+        ],
+        1008: [
+          { name: "Teeth Cleaning", date: "2024-06-05", cost: "$120" },
+          { name: "Bitewing X-Rays", date: "2024-06-05", cost: "$80" },
+        ],
+      };
+
+      // Coverage Details by Procedure - CDT Codes with coverage information
+      const COVERAGE_DETAILS = {
+        1001: {
+          annual_maximum: 2000,
+          annual_used: 1470,
+          deductible: 1500,
+          deductible_met: 450,
+          procedures: [
+            {
+              code: "D0120",
+              name: "Periodic Oral Evaluation",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$50",
+              patient_pays: "$0",
+            },
+            {
+              code: "D0150",
+              name: "Comprehensive Oral Evaluation",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$85",
+              patient_pays: "$0",
+            },
+            {
+              code: "D0210",
+              name: "Complete Series of Radiographic Images",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$150",
+              patient_pays: "$0",
+            },
+            {
+              code: "D0330",
+              name: "Panoramic Radiographic Image",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$130",
+              patient_pays: "$0",
+            },
+            {
+              code: "D1110",
+              name: "Prophylaxis - Adult",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$120",
+              patient_pays: "$0",
+            },
+            {
+              code: "D1120",
+              name: "Prophylaxis - Child",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$85",
+              patient_pays: "$0",
+            },
+            {
+              code: "D1206",
+              name: "Topical Fluoride - Child",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$45",
+              patient_pays: "$0",
+            },
+            {
+              code: "D2140",
+              name: "Amalgam - One Surface",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$180",
+              patient_pays: "$36",
+            },
+            {
+              code: "D2150",
+              name: "Amalgam - Two Surfaces",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$220",
+              patient_pays: "$44",
+            },
+            {
+              code: "D2391",
+              name: "Resin-Based Composite - One Surface",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$195",
+              patient_pays: "$39",
+            },
+            {
+              code: "D2392",
+              name: "Resin-Based Composite - Two Surfaces",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$250",
+              patient_pays: "$50",
+            },
+            {
+              code: "D2740",
+              name: "Crown - Porcelain/Ceramic",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$1,200",
+              patient_pays: "$600",
+            },
+            {
+              code: "D2750",
+              name: "Crown - Porcelain Fused to Metal",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$1,100",
+              patient_pays: "$550",
+            },
+            {
+              code: "D2751",
+              name: "Crown - Porcelain Fused to Noble Metal",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$1,250",
+              patient_pays: "$625",
+            },
+            {
+              code: "D3310",
+              name: "Root Canal - Anterior",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$800",
+              patient_pays: "$400",
+            },
+            {
+              code: "D3320",
+              name: "Root Canal - Bicuspid",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$950",
+              patient_pays: "$475",
+            },
+            {
+              code: "D3330",
+              name: "Root Canal - Molar",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$1,200",
+              patient_pays: "$600",
+            },
+            {
+              code: "D4341",
+              name: "Periodontal Scaling and Root Planing",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$250",
+              patient_pays: "$50",
+            },
+            {
+              code: "D5110",
+              name: "Complete Denture - Upper",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$1,500",
+              patient_pays: "$750",
+            },
+            {
+              code: "D5120",
+              name: "Complete Denture - Lower",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$1,500",
+              patient_pays: "$750",
+            },
+            {
+              code: "D6010",
+              name: "Surgical Placement of Implant",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$2,000",
+              patient_pays: "$1,000",
+            },
+            {
+              code: "D7140",
+              name: "Extraction, Erupted Tooth",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$150",
+              patient_pays: "$30",
+            },
+            {
+              code: "D7210",
+              name: "Extraction, Impacted Tooth",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$350",
+              patient_pays: "$175",
+            },
+          ],
+        },
+        1002: {
+          annual_maximum: 1500,
+          annual_used: 250,
+          deductible: 1000,
+          deductible_met: 1000,
+          procedures: [
+            {
+              code: "D0120",
+              name: "Periodic Oral Evaluation",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$50",
+              patient_pays: "$0",
+            },
+            {
+              code: "D0210",
+              name: "Complete Series of Radiographic Images",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$150",
+              patient_pays: "$0",
+            },
+            {
+              code: "D1110",
+              name: "Prophylaxis - Adult",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$120",
+              patient_pays: "$0",
+            },
+            {
+              code: "D2140",
+              name: "Amalgam - One Surface",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$180",
+              patient_pays: "$36",
+            },
+            {
+              code: "D2391",
+              name: "Resin-Based Composite - One Surface",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$195",
+              patient_pays: "$39",
+            },
+            {
+              code: "D2740",
+              name: "Crown - Porcelain/Ceramic",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$1,200",
+              patient_pays: "$600",
+            },
+            {
+              code: "D3310",
+              name: "Root Canal - Anterior",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$800",
+              patient_pays: "$400",
+            },
+            {
+              code: "D3320",
+              name: "Root Canal - Bicuspid",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$950",
+              patient_pays: "$475",
+            },
+            {
+              code: "D4341",
+              name: "Periodontal Scaling and Root Planing",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$250",
+              patient_pays: "$50",
+            },
+            {
+              code: "D7140",
+              name: "Extraction, Erupted Tooth",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$150",
+              patient_pays: "$30",
+            },
+          ],
+        },
+        1003: {
+          annual_maximum: 2500,
+          annual_used: 280,
+          deductible: 2000,
+          deductible_met: 200,
+          procedures: [
+            {
+              code: "D0120",
+              name: "Periodic Oral Evaluation",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$50",
+              patient_pays: "$0",
+            },
+            {
+              code: "D0274",
+              name: "Bitewing - Four Radiographic Images",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$80",
+              patient_pays: "$0",
+            },
+            {
+              code: "D1110",
+              name: "Prophylaxis - Adult",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$120",
+              patient_pays: "$0",
+            },
+            {
+              code: "D1206",
+              name: "Topical Fluoride - Child",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$45",
+              patient_pays: "$0",
+            },
+            {
+              code: "D2391",
+              name: "Resin-Based Composite - One Surface",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$195",
+              patient_pays: "$39",
+            },
+            {
+              code: "D2740",
+              name: "Crown - Porcelain/Ceramic",
+              category: "Major",
+              coverage: "60%",
+              estimated_cost: "$1,200",
+              patient_pays: "$480",
+            },
+            {
+              code: "D3310",
+              name: "Root Canal - Anterior",
+              category: "Major",
+              coverage: "60%",
+              estimated_cost: "$800",
+              patient_pays: "$320",
+            },
+            {
+              code: "D6010",
+              name: "Surgical Placement of Implant",
+              category: "Major",
+              coverage: "60%",
+              estimated_cost: "$2,000",
+              patient_pays: "$800",
+            },
+            {
+              code: "D9972",
+              name: "External Bleaching - Per Arch",
+              category: "Basic",
+              coverage: "0%",
+              estimated_cost: "$400",
+              patient_pays: "$400",
+            },
+          ],
+        },
+        1004: {
+          annual_maximum: 0,
+          annual_used: 0,
+          deductible: 0,
+          deductible_met: 0,
+          procedures: [],
+        },
+        1005: {
+          annual_maximum: 1800,
+          annual_used: 170,
+          deductible: 1200,
+          deductible_met: 800,
+          procedures: [
+            {
+              code: "D0120",
+              name: "Periodic Oral Evaluation",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$50",
+              patient_pays: "$0",
+            },
+            {
+              code: "D0330",
+              name: "Panoramic Radiographic Image",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$130",
+              patient_pays: "$0",
+            },
+            {
+              code: "D1110",
+              name: "Prophylaxis - Adult",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$120",
+              patient_pays: "$0",
+            },
+            {
+              code: "D2140",
+              name: "Amalgam - One Surface",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$180",
+              patient_pays: "$36",
+            },
+            {
+              code: "D2391",
+              name: "Resin-Based Composite - One Surface",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$195",
+              patient_pays: "$39",
+            },
+            {
+              code: "D2740",
+              name: "Crown - Porcelain/Ceramic",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$1,200",
+              patient_pays: "$600",
+            },
+            {
+              code: "D3310",
+              name: "Root Canal - Anterior",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$800",
+              patient_pays: "$400",
+            },
+            {
+              code: "D7140",
+              name: "Extraction, Erupted Tooth",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$150",
+              patient_pays: "$30",
+            },
+          ],
+        },
+        1006: {
+          annual_maximum: 2000,
+          annual_used: 280,
+          deductible: 1500,
+          deductible_met: 1500,
+          procedures: [
+            {
+              code: "D0120",
+              name: "Periodic Oral Evaluation",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$50",
+              patient_pays: "$0",
+            },
+            {
+              code: "D0210",
+              name: "Complete Series of Radiographic Images",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$150",
+              patient_pays: "$0",
+            },
+            {
+              code: "D1110",
+              name: "Prophylaxis - Adult",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$120",
+              patient_pays: "$0",
+            },
+            {
+              code: "D2391",
+              name: "Resin-Based Composite - One Surface",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$195",
+              patient_pays: "$39",
+            },
+            {
+              code: "D2392",
+              name: "Resin-Based Composite - Two Surfaces",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$250",
+              patient_pays: "$50",
+            },
+            {
+              code: "D2740",
+              name: "Crown - Porcelain/Ceramic",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$1,200",
+              patient_pays: "$600",
+            },
+            {
+              code: "D3320",
+              name: "Root Canal - Bicuspid",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$950",
+              patient_pays: "$475",
+            },
+            {
+              code: "D6010",
+              name: "Surgical Placement of Implant",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$2,000",
+              patient_pays: "$1,000",
+            },
+            {
+              code: "D7140",
+              name: "Extraction, Erupted Tooth",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$150",
+              patient_pays: "$30",
+            },
+          ],
+        },
+        1007: {
+          annual_maximum: 1500,
+          annual_used: 300,
+          deductible: 1000,
+          deductible_met: 300,
+          procedures: [
+            {
+              code: "D0120",
+              name: "Periodic Oral Evaluation",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$50",
+              patient_pays: "$0",
+            },
+            {
+              code: "D0274",
+              name: "Bitewing - Four Radiographic Images",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$80",
+              patient_pays: "$0",
+            },
+            {
+              code: "D1110",
+              name: "Prophylaxis - Adult",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$120",
+              patient_pays: "$0",
+            },
+            {
+              code: "D2391",
+              name: "Resin-Based Composite - One Surface",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$195",
+              patient_pays: "$39",
+            },
+            {
+              code: "D8080",
+              name: "Comprehensive Orthodontic Treatment",
+              category: "Orthodontic",
+              coverage: "50%",
+              estimated_cost: "$5,000",
+              patient_pays: "$2,500",
+            },
+            {
+              code: "D8660",
+              name: "Pre-Orthodontic Treatment Examination",
+              category: "Orthodontic",
+              coverage: "100%",
+              estimated_cost: "$150",
+              patient_pays: "$0",
+            },
+            {
+              code: "D8670",
+              name: "Periodic Orthodontic Treatment Visit",
+              category: "Orthodontic",
+              coverage: "50%",
+              estimated_cost: "$200",
+              patient_pays: "$100",
+            },
+          ],
+        },
+        1008: {
+          annual_maximum: 2000,
+          annual_used: 200,
+          deductible: 1500,
+          deductible_met: 0,
+          procedures: [
+            {
+              code: "D0120",
+              name: "Periodic Oral Evaluation",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$50",
+              patient_pays: "$0",
+            },
+            {
+              code: "D0210",
+              name: "Complete Series of Radiographic Images",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$150",
+              patient_pays: "$0",
+            },
+            {
+              code: "D1110",
+              name: "Prophylaxis - Adult",
+              category: "Preventive",
+              coverage: "100%",
+              estimated_cost: "$120",
+              patient_pays: "$0",
+            },
+            {
+              code: "D2140",
+              name: "Amalgam - One Surface",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$180",
+              patient_pays: "$36",
+            },
+            {
+              code: "D2391",
+              name: "Resin-Based Composite - One Surface",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$195",
+              patient_pays: "$39",
+            },
+            {
+              code: "D2740",
+              name: "Crown - Porcelain/Ceramic",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$1,200",
+              patient_pays: "$600",
+            },
+            {
+              code: "D3310",
+              name: "Root Canal - Anterior",
+              category: "Major",
+              coverage: "50%",
+              estimated_cost: "$800",
+              patient_pays: "$400",
+            },
+            {
+              code: "D4341",
+              name: "Periodontal Scaling and Root Planing",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$250",
+              patient_pays: "$50",
+            },
+            {
+              code: "D7140",
+              name: "Extraction, Erupted Tooth",
+              category: "Basic",
+              coverage: "80%",
+              estimated_cost: "$150",
+              patient_pays: "$30",
+            },
+          ],
+        },
+      };
+
+      let currentData = DEMO_DATA;
+      let currentMode = "demo";
+      let allPatients = DEMO_DATA.entry;
+
+      function updateDataMode() {
+        const mode = document.getElementById("dataMode").value;
+        const apiKeyGroup = document.getElementById("apiKeyGroup");
+        currentMode = mode;
+
+        if (mode === "api") {
+          apiKeyGroup.style.display = "block";
+        } else {
+          apiKeyGroup.style.display = "none";
+        }
+      }
+
+      function switchTab(tab) {
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        event.target.classList.add("active");
+
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((tc) => tc.classList.remove("active"));
+        if (tab === "cards") {
+          document.getElementById("cardsTab").classList.add("active");
+        } else {
+          document.getElementById("jsonTab").classList.add("active");
+        }
+      }
+
+      async function loadData() {
+        if (currentMode === "demo") {
+          loadDemoData();
+        } else {
+          await fetchFromAPI();
+        }
+      }
+
+      function loadDemoData() {
+        currentData = DEMO_DATA;
+        allPatients = DEMO_DATA.entry;
+        document.getElementById("jsonOutput").textContent = JSON.stringify(
+          currentData,
+          null,
+          2
+        );
+        displayPatients(currentData);
+        updateStats();
+        showMessage(
+          "info",
+          "📊 Demo data loaded successfully! Click on any patient card to view detailed information."
+        );
+        document.getElementById("stats").style.display = "grid";
+        document.getElementById("actionButtons").style.display = "flex";
+      }
+
+      async function fetchFromAPI() {
+        const apiKey = document.getElementById("apiKey").value.trim();
+        const resultsDiv = document.getElementById("results");
+        const statusDiv = document.getElementById("statusMessage");
+        const jsonOutput = document.getElementById("jsonOutput");
+
+        if (!apiKey) {
+          showMessage("error", "Please enter an API key");
+          return;
+        }
+
+        resultsDiv.innerHTML =
+          '<div class="loading">Fetching patient data from API</div>';
+        statusDiv.innerHTML = "";
+
+        try {
+          const baseUrl = "https://api.opendental.com/fhir/v2";
+          const url = `${baseUrl}/Patient`;
+
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              Authorization: apiKey,
+              Accept: "application/json",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          const data = await response.json();
+          currentData = data;
+          allPatients = data.entry || [];
+
+          jsonOutput.textContent = JSON.stringify(data, null, 2);
+          displayPatients(data);
+          updateStats();
+          showMessage(
+            "success",
+            `✅ Successfully retrieved ${allPatients.length} patient(s) from API!`
+          );
+          document.getElementById("stats").style.display = "grid";
+          document.getElementById("actionButtons").style.display = "flex";
+        } catch (error) {
+          console.error("Error:", error);
+          resultsDiv.innerHTML = "";
+          showMessage(
+            "error",
+            `❌ Error: ${error.message}. Try using Demo Data mode instead.`
+          );
+        }
+      }
+
+      function displayPatients(data) {
+        const resultsDiv = document.getElementById("results");
+        const patients = data.entry || [];
+
+        if (patients.length === 0) {
+          resultsDiv.innerHTML =
+            '<p style="text-align: center; color: #6c757d; padding: 40px;">No patients found</p>';
+          return;
+        }
+
+        resultsDiv.innerHTML = '<div class="patient-grid"></div>';
+        const gridDiv = resultsDiv.querySelector(".patient-grid");
+
+        patients.forEach((entry) => {
+          const patient = entry.resource;
+          gridDiv.appendChild(createPatientCard(patient));
+        });
+      }
+
+      function createPatientCard(patient) {
+        const card = document.createElement("div");
+        card.className = "patient-card";
+        card.dataset.patientName = getPatientName(patient).toLowerCase();
+        card.onclick = () => showPatientDetail(patient);
+
+        const name = getPatientName(patient);
+        const initials = name
+          .split(" ")
+          .map((n) => n[0])
+          .join("");
+        const birthDate = patient.birthDate || "N/A";
+        const age = calculateAge(patient.birthDate);
+        const gender = patient.gender || "N/A";
+        const id = patient.id || "N/A";
+        const phone = getContactInfo(patient, "phone");
+        const email = getContactInfo(patient, "email");
+        const address = getAddress(patient);
+        const activeStatus = patient.active !== false;
+
+        card.innerHTML = `
+                <h3>
+                    <div class="patient-avatar">${initials}</div>
+                    ${name}
+                    <span class="badge ${activeStatus ? "badge-active" : "badge-inactive"}">${activeStatus ? "Active" : "Inactive"}</span>
+                </h3>
+                <div class="patient-info">
+                    <div class="info-row">
+                        <span class="info-label">Patient ID:</span>
+                        <span class="info-value">${id}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Birth Date:</span>
+                        <span class="info-value">${birthDate} ${age ? `(${age} yrs)` : ""}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Gender:</span>
+                        <span class="info-value">${gender}</span>
+                    </div>
+                    ${
+                      phone
+                        ? `
+                    <div class="info-row">
+                        <span class="info-label">Phone:</span>
+                        <span class="info-value">${phone}</span>
+                    </div>
+                    `
+                        : ""
+                    }
+                </div>
+            `;
+
+        return card;
+      }
+
+      function showPatientDetail(patient) {
+        const modal = document.getElementById("patientModal");
+        const name = getPatientName(patient);
+        const initials = name
+          .split(" ")
+          .map((n) => n[0])
+          .join("");
+        const age = calculateAge(patient.birthDate);
+        const patientId = patient.id;
+
+        // Set header
+        document.getElementById("modalAvatar").textContent = initials;
+        document.getElementById("modalPatientName").textContent = name;
+
+        // Set demographics
+        document.getElementById("detailPatientId").textContent =
+          patient.id || "N/A";
+        document.getElementById("detailBirthDate").textContent =
+          patient.birthDate || "N/A";
+        document.getElementById("detailAge").textContent = age
+          ? `${age} years`
+          : "N/A";
+        document.getElementById("detailGender").textContent =
+          patient.gender || "N/A";
+        document.getElementById("detailStatus").innerHTML =
+          patient.active !== false
+            ? '<span class="badge badge-active">Active</span>'
+            : '<span class="badge badge-inactive">Inactive</span>';
+
+        // Get last appointment
+        const appointments = APPOINTMENTS_DATA[patientId] || [];
+        const completedAppts = appointments.filter(
+          (a) => a.status === "completed"
+        );
+        const lastVisit =
+          completedAppts.length > 0
+            ? completedAppts[0].date
+            : "No previous visits";
+        document.getElementById("detailLastVisit").textContent = lastVisit;
+
+        // Set contact info
+        document.getElementById("detailPhone").textContent =
+          getContactInfo(patient, "phone") || "N/A";
+        document.getElementById("detailEmail").textContent =
+          getContactInfo(patient, "email") || "N/A";
+        document.getElementById("detailAddress").textContent =
+          getAddress(patient) || "N/A";
+
+        // Set insurance
+        displayInsurance(patientId);
+
+        // Set appointments
+        displayAppointments(patientId);
+
+        // Set treatment history
+        displayTreatmentHistory(patientId);
+
+        // Set coverage details
+        displayCoverageDetails(patientId);
+
+        // Show modal
+        modal.style.display = "block";
+      }
+
+      function displayInsurance(patientId) {
+        const container = document.getElementById("insuranceContainer");
+        const insuranceList = INSURANCE_DATA[patientId] || [];
+
+        if (insuranceList.length === 0) {
+          container.innerHTML =
+            '<div class="no-insurance">🚫 No insurance information on file</div>';
+          return;
+        }
+
+        container.innerHTML = "";
+        insuranceList.forEach((insurance) => {
+          const card = document.createElement("div");
+          card.className = "insurance-card";
+          card.innerHTML = `
+                    <h4>
+                        <span class="insurance-type">${insurance.type}</span>
+                        ${insurance.provider}
+                    </h4>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-item-label">Policy Number</div>
+                            <div class="detail-item-value">${insurance.policyNumber}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-item-label">Group Number</div>
+                            <div class="detail-item-value">${insurance.groupNumber}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-item-label">Subscriber Name</div>
+                            <div class="detail-item-value">${insurance.subscriberName}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-item-label">Subscriber ID</div>
+                            <div class="detail-item-value">${insurance.subscriberId}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-item-label">Relationship</div>
+                            <div class="detail-item-value">${insurance.relationship}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-item-label">Effective Date</div>
+                            <div class="detail-item-value">${insurance.effectiveDate}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-item-label">Expiration Date</div>
+                            <div class="detail-item-value">${insurance.expirationDate}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #e9ecef;">
+                        <strong style="color: #667eea;">Coverage Details:</strong>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">
+                            <div><strong>Deductible:</strong> ${insurance.coverage.deductible}</div>
+                            <div><strong>Deductible Met:</strong> ${insurance.coverage.deductibleMet}</div>
+                            <div><strong>Max Benefit:</strong> ${insurance.coverage.maxBenefit}</div>
+                            <div><strong>Preventive:</strong> ${insurance.coverage.preventiveCoverage}</div>
+                            <div><strong>Basic:</strong> ${insurance.coverage.basicCoverage}</div>
+                            <div><strong>Major:</strong> ${insurance.coverage.majorCoverage}</div>
+                        </div>
+                    </div>
+                `;
+          container.appendChild(card);
+        });
+      }
+
+      function displayAppointments(patientId) {
+        const container = document.getElementById("appointmentsContainer");
+        const appointments = APPOINTMENTS_DATA[patientId] || [];
+
+        if (appointments.length === 0) {
+          container.innerHTML =
+            '<div class="no-insurance">📅 No appointments scheduled</div>';
+          return;
+        }
+
+        container.innerHTML = "";
+        appointments.forEach((appt) => {
+          const item = document.createElement("div");
+          const isPast =
+            new Date(appt.date) < new Date() && appt.status !== "scheduled";
+          item.className = `appointment-item ${isPast ? "past" : ""}`;
+
+          let statusClass = "status-scheduled";
+          if (appt.status === "completed") statusClass = "status-completed";
+          if (appt.status === "cancelled") statusClass = "status-cancelled";
+
+          item.innerHTML = `
+                    <div class="appointment-info">
+                        <div class="appointment-date">${appt.date} at ${appt.time}</div>
+                        <div class="appointment-type">${appt.type} - ${appt.provider}</div>
+                    </div>
+                    <div class="appointment-status ${statusClass}">${appt.status.toUpperCase()}</div>
+                `;
+          container.appendChild(item);
+        });
+      }
+
+      function displayTreatmentHistory(patientId) {
+        const container = document.getElementById("treatmentContainer");
+        const treatments = TREATMENT_HISTORY[patientId] || [];
+
+        if (treatments.length === 0) {
+          container.innerHTML =
+            '<div class="no-insurance">💉 No treatment history available</div>';
+          return;
+        }
+
+        container.innerHTML = "";
+        treatments.forEach((treatment) => {
+          const item = document.createElement("div");
+          item.className = "treatment-item";
+          item.innerHTML = `
+                    <div>
+                        <div class="treatment-name">${treatment.name}</div>
+                        <div class="treatment-date">${treatment.date}</div>
+                    </div>
+                    <div style="font-weight: 600; color: #667eea;">${treatment.cost}</div>
+                `;
+          container.appendChild(item);
+        });
+      }
+
+      function displayCoverageDetails(patientId) {
+        const container = document.getElementById("coverageDetailsContainer");
+        const coverageData = COVERAGE_DETAILS[patientId];
+
+        if (!coverageData || coverageData.procedures.length === 0) {
+          container.innerHTML =
+            '<div class="no-coverage-data">📋 No coverage details available</div>';
+          return;
+        }
+
+        // Create summary cards
+        const remaining =
+          coverageData.annual_maximum - coverageData.annual_used;
+        const deductibleRemaining =
+          coverageData.deductible - coverageData.deductible_met;
+
+        const summaryHTML = `
+                <div class="coverage-summary">
+                    <div class="summary-card">
+                        <div class="summary-card-title">Annual Maximum</div>
+                        <div class="summary-card-value">$${coverageData.annual_maximum.toLocaleString()}</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-card-title">Used This Year</div>
+                        <div class="summary-card-value" style="color: #dc3545;">$${coverageData.annual_used.toLocaleString()}</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-card-title">Remaining Benefit</div>
+                        <div class="summary-card-value" style="color: #28a745;">$${remaining.toLocaleString()}</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-card-title">Deductible Remaining</div>
+                        <div class="summary-card-value" style="color: ${deductibleRemaining > 0 ? "#ffc107" : "#28a745"};">$${deductibleRemaining.toLocaleString()}</div>
+                    </div>
+                </div>
+            `;
+
+        // Create procedure table
+        let tableHTML = `
+                ${summaryHTML}
+                <table class="coverage-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Procedure</th>
+                            <th>Category</th>
+                            <th>Coverage</th>
+                            <th>Estimated Cost</th>
+                            <th>Patient Pays</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+        coverageData.procedures.forEach((procedure) => {
+          const categoryClass = `category-${procedure.category.toLowerCase()}`;
+          tableHTML += `
+                    <tr>
+                        <td><span class="procedure-code">${procedure.code}</span></td>
+                        <td>${procedure.name}</td>
+                        <td><span class="coverage-category ${categoryClass}">${procedure.category}</span></td>
+                        <td><span class="coverage-percent">${procedure.coverage}</span></td>
+                        <td>${procedure.estimated_cost}</td>
+                        <td><span class="coverage-amount">${procedure.patient_pays}</span></td>
+                    </tr>
+                `;
+        });
+
+        tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+        container.innerHTML = tableHTML;
+      }
+
+      function closePatientDetail() {
+        document.getElementById("patientModal").style.display = "none";
+      }
+
+      // Close modal when clicking outside
+      window.onclick = function (event) {
+        const modal = document.getElementById("patientModal");
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
+
+      function getPatientName(patient) {
+        if (!patient.name || patient.name.length === 0) {
+          return "Unknown Patient";
+        }
+        const name = patient.name[0];
+        const given = name.given ? name.given.join(" ") : "";
+        const family = name.family || "";
+        return `${given} ${family}`.trim() || "Unknown Patient";
+      }
+
+      function getContactInfo(patient, type) {
+        if (!patient.telecom) return null;
+        const contact = patient.telecom.find((t) => t.system === type);
+        return contact ? contact.value : null;
+      }
+
+      function getAddress(patient) {
+        if (!patient.address || patient.address.length === 0) return null;
+        const addr = patient.address[0];
+        const parts = [
+          addr.line ? addr.line.join(", ") : "",
+          addr.city,
+          addr.state,
+          addr.postalCode,
+        ].filter(Boolean);
+        return parts.join(", ");
+      }
+
+      function calculateAge(birthDate) {
+        if (!birthDate) return null;
+        const today = new Date();
+        const birth = new Date(birthDate);
+        let age = today.getFullYear() - birth.getFullYear();
+        const monthDiff = today.getMonth() - birth.getMonth();
+        if (
+          monthDiff < 0 ||
+          (monthDiff === 0 && today.getDate() < birth.getDate())
+        ) {
+          age--;
+        }
+        return age;
+      }
+
+      function updateStats() {
+        const patients = allPatients || [];
+        const activePatients = patients.filter(
+          (e) => e.resource.active !== false
+        ).length;
+
+        document.getElementById("statPatients").textContent = patients.length;
+        document.getElementById("statActive").textContent = activePatients;
+        document.getElementById("statAppointments").textContent =
+          patients.length * 2;
+      }
+
+      function filterPatients() {
+        const searchTerm = document
+          .getElementById("patientFilter")
+          .value.toLowerCase();
+        const cards = document.querySelectorAll(".patient-card");
+
+        cards.forEach((card) => {
+          const patientName = card.dataset.patientName;
+          if (patientName.includes(searchTerm)) {
+            card.style.display = "block";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      }
+
+      function exportToCSV() {
+        const patients = allPatients || [];
+        let csv = "Patient ID,Name,Birth Date,Age,Gender,Phone,Email,Status\n";
+
+        patients.forEach((entry) => {
+          const patient = entry.resource;
+          const name = getPatientName(patient);
+          const birthDate = patient.birthDate || "";
+          const age = calculateAge(patient.birthDate) || "";
+          const gender = patient.gender || "";
+          const phone = getContactInfo(patient, "phone") || "";
+          const email = getContactInfo(patient, "email") || "";
+          const status = patient.active !== false ? "Active" : "Inactive";
+
+          csv += `${patient.id},"${name}",${birthDate},${age},${gender},"${phone}","${email}",${status}\n`;
+        });
+
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "patients_export.csv";
+        a.click();
+
+        showMessage("success", "📊 Patient data exported to CSV successfully!");
+      }
+
+      function printReport() {
+        window.print();
+        showMessage("info", "🖨️ Print dialog opened");
+      }
+
+      function showMessage(type, message) {
+        const statusDiv = document.getElementById("statusMessage");
+        statusDiv.innerHTML = `<div class="${type}">${message}</div>`;
+
+        setTimeout(() => {
+          statusDiv.innerHTML = "";
+        }, 5000);
+      }
+
+      // Load demo data on page load
+      window.onload = function () {
+        loadDemoData();
+      };
+    </script>
+  </body>
+</html>

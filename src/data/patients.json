@@ -1,0 +1,1529 @@
+[
+  {
+    "id": "1001",
+    "active": true,
+    "name": {
+      "given": ["Sarah", "Jane"],
+      "family": "Johnson"
+    },
+    "gender": "female",
+    "birthDate": "1985-03-15",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 123-4567"
+      },
+      {
+        "system": "email",
+        "value": "sarah.johnson@email.com"
+      }
+    ],
+    "address": [
+      {
+        "line": ["123 Maple Street", "Apt 4B"],
+        "city": "Springfield",
+        "state": "IL",
+        "postalCode": "62701"
+      }
+    ],
+    "insurance": [
+      {
+        "type": "Primary",
+        "provider": "Blue Cross Blue Shield",
+        "policyNumber": "BCBS-123456789",
+        "groupNumber": "GRP-98765",
+        "subscriberName": "Sarah Jane Johnson",
+        "subscriberId": "123456789",
+        "relationship": "Self",
+        "effectiveDate": "2023-01-01",
+        "expirationDate": "2024-12-31",
+        "coverage": {
+          "deductible": "$1,500",
+          "deductibleMet": "$450",
+          "maxBenefit": "$2,000/year",
+          "preventiveCoverage": "100%",
+          "basicCoverage": "80%",
+          "majorCoverage": "50%"
+        }
+      }
+    ],
+    "appointments": [
+      {
+        "date": "2024-11-15",
+        "time": "10:00 AM",
+        "type": "Regular Checkup",
+        "status": "scheduled",
+        "provider": "Dr. Smith"
+      },
+      {
+        "date": "2024-08-10",
+        "time": "2:00 PM",
+        "type": "Teeth Cleaning",
+        "status": "completed",
+        "provider": "Dr. Johnson"
+      },
+      {
+        "date": "2024-02-20",
+        "time": "9:30 AM",
+        "type": "Crown Placement",
+        "status": "completed",
+        "provider": "Dr. Smith"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Dental Crown - Tooth #14",
+        "date": "2024-02-20",
+        "cost": "$1,200"
+      },
+      {
+        "name": "Teeth Cleaning",
+        "date": "2024-08-10",
+        "cost": "$120"
+      },
+      {
+        "name": "X-Ray (Full Mouth)",
+        "date": "2024-02-15",
+        "cost": "$150"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 2000,
+      "annual_used": 1470,
+      "deductible": 1500,
+      "deductible_met": 450,
+      "procedures": [
+        {
+          "code": "D0120",
+          "name": "Periodic Oral Evaluation",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$50",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D1110",
+          "name": "Prophylaxis - Adult",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$120",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D2391",
+          "name": "Resin-Based Composite - One Surface",
+          "category": "Basic",
+          "coverage": "80%",
+          "estimated_cost": "$195",
+          "patient_pays": "$39"
+        },
+        {
+          "code": "D2740",
+          "name": "Crown - Porcelain/Ceramic",
+          "category": "Major",
+          "coverage": "50%",
+          "estimated_cost": "$1,200",
+          "patient_pays": "$600"
+        },
+        {
+          "code": "D3310",
+          "name": "Root Canal - Anterior",
+          "category": "Major",
+          "coverage": "50%",
+          "estimated_cost": "$800",
+          "patient_pays": "$400"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1002",
+    "active": true,
+    "name": {
+      "given": ["Michael", "Robert"],
+      "family": "Anderson"
+    },
+    "gender": "male",
+    "birthDate": "1978-07-22",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 234-5678"
+      },
+      {
+        "system": "email",
+        "value": "m.anderson@email.com"
+      }
+    ],
+    "address": [
+      {
+        "line": ["456 Oak Avenue"],
+        "city": "Springfield",
+        "state": "IL",
+        "postalCode": "62702"
+      }
+    ],
+    "insurance": [
+      {
+        "type": "Primary",
+        "provider": "Delta Dental",
+        "policyNumber": "DD-987654321",
+        "groupNumber": "GRP-54321",
+        "subscriberName": "Michael Robert Anderson",
+        "subscriberId": "987654321",
+        "relationship": "Self",
+        "effectiveDate": "2023-06-01",
+        "expirationDate": "2024-05-31",
+        "coverage": {
+          "deductible": "$1,000",
+          "deductibleMet": "$1,000",
+          "maxBenefit": "$1,500/year",
+          "preventiveCoverage": "100%",
+          "basicCoverage": "80%",
+          "majorCoverage": "50%"
+        }
+      },
+      {
+        "type": "Secondary",
+        "provider": "MetLife Dental",
+        "policyNumber": "ML-456789123",
+        "groupNumber": "GRP-11111",
+        "subscriberName": "Michael Robert Anderson",
+        "subscriberId": "456789123",
+        "relationship": "Self",
+        "effectiveDate": "2023-06-01",
+        "expirationDate": "2024-05-31",
+        "coverage": {
+          "deductible": "$500",
+          "deductibleMet": "$0",
+          "maxBenefit": "$1,000/year",
+          "preventiveCoverage": "100%",
+          "basicCoverage": "50%",
+          "majorCoverage": "50%"
+        }
+      }
+    ],
+    "appointments": [
+      {
+        "date": "2024-12-05",
+        "time": "3:00 PM",
+        "type": "Root Canal",
+        "status": "scheduled",
+        "provider": "Dr. Williams"
+      },
+      {
+        "date": "2024-09-15",
+        "time": "11:00 AM",
+        "type": "Filling",
+        "status": "completed",
+        "provider": "Dr. Johnson"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Composite Filling - Tooth #18",
+        "date": "2024-09-15",
+        "cost": "$250"
+      },
+      {
+        "name": "Regular Checkup",
+        "date": "2024-03-10",
+        "cost": "$100"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 1500,
+      "annual_used": 250,
+      "deductible": 1000,
+      "deductible_met": 1000,
+      "procedures": [
+        {
+          "code": "D0120",
+          "name": "Periodic Oral Evaluation",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$50",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D1110",
+          "name": "Prophylaxis - Adult",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$120",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D2391",
+          "name": "Resin-Based Composite - One Surface",
+          "category": "Basic",
+          "coverage": "80%",
+          "estimated_cost": "$195",
+          "patient_pays": "$39"
+        },
+        {
+          "code": "D3310",
+          "name": "Root Canal - Anterior",
+          "category": "Major",
+          "coverage": "50%",
+          "estimated_cost": "$800",
+          "patient_pays": "$400"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1003",
+    "active": true,
+    "name": {
+      "given": ["Emily", "Rose"],
+      "family": "Martinez"
+    },
+    "gender": "female",
+    "birthDate": "1992-11-08",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 345-6789"
+      },
+      {
+        "system": "email",
+        "value": "emily.martinez@email.com"
+      }
+    ],
+    "address": [
+      {
+        "line": ["789 Pine Road"],
+        "city": "Riverside",
+        "state": "CA",
+        "postalCode": "92501"
+      }
+    ],
+    "insurance": [
+      {
+        "type": "Primary",
+        "provider": "Cigna Dental",
+        "policyNumber": "CIG-555666777",
+        "groupNumber": "GRP-77777",
+        "subscriberName": "Emily Rose Martinez",
+        "subscriberId": "555666777",
+        "relationship": "Self",
+        "effectiveDate": "2024-01-01",
+        "expirationDate": "2024-12-31",
+        "coverage": {
+          "deductible": "$2,000",
+          "deductibleMet": "$200",
+          "maxBenefit": "$2,500/year",
+          "preventiveCoverage": "100%",
+          "basicCoverage": "80%",
+          "majorCoverage": "60%"
+        }
+      }
+    ],
+    "appointments": [
+      {
+        "date": "2024-11-20",
+        "time": "1:00 PM",
+        "type": "Teeth Whitening",
+        "status": "scheduled",
+        "provider": "Dr. Martinez"
+      },
+      {
+        "date": "2024-07-08",
+        "time": "10:00 AM",
+        "type": "Regular Checkup",
+        "status": "completed",
+        "provider": "Dr. Smith"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Regular Checkup",
+        "date": "2024-07-08",
+        "cost": "$100"
+      },
+      {
+        "name": "Panoramic X-Ray",
+        "date": "2024-07-08",
+        "cost": "$180"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 2500,
+      "annual_used": 280,
+      "deductible": 2000,
+      "deductible_met": 200,
+      "procedures": [
+        {
+          "code": "D0120",
+          "name": "Periodic Oral Evaluation",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$50",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D1110",
+          "name": "Prophylaxis - Adult",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$120",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D2740",
+          "name": "Crown - Porcelain/Ceramic",
+          "category": "Major",
+          "coverage": "60%",
+          "estimated_cost": "$1,200",
+          "patient_pays": "$480"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1004",
+    "active": false,
+    "name": {
+      "given": ["David", "Lee"],
+      "family": "Thompson"
+    },
+    "gender": "male",
+    "birthDate": "1965-05-30",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 456-7890"
+      }
+    ],
+    "address": [
+      {
+        "line": ["321 Elm Street"],
+        "city": "Portland",
+        "state": "OR",
+        "postalCode": "97201"
+      }
+    ],
+    "insurance": [],
+    "appointments": [
+      {
+        "date": "2024-05-12",
+        "time": "2:30 PM",
+        "type": "Extraction",
+        "status": "cancelled",
+        "provider": "Dr. Williams"
+      },
+      {
+        "date": "2023-11-20",
+        "time": "9:00 AM",
+        "type": "Regular Checkup",
+        "status": "completed",
+        "provider": "Dr. Smith"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Regular Checkup",
+        "date": "2023-11-20",
+        "cost": "$100"
+      },
+      {
+        "name": "Teeth Cleaning",
+        "date": "2023-11-20",
+        "cost": "$120"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 0,
+      "annual_used": 0,
+      "deductible": 0,
+      "deductible_met": 0,
+      "procedures": []
+    }
+  },
+  {
+    "id": "1005",
+    "active": true,
+    "name": {
+      "given": ["Jennifer", "Ann"],
+      "family": "Williams"
+    },
+    "gender": "female",
+    "birthDate": "1988-09-12",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 567-8901"
+      },
+      {
+        "system": "email",
+        "value": "j.williams@email.com"
+      }
+    ],
+    "address": [
+      {
+        "line": ["654 Birch Lane"],
+        "city": "Austin",
+        "state": "TX",
+        "postalCode": "78701"
+      }
+    ],
+    "insurance": [
+      {
+        "type": "Primary",
+        "provider": "Aetna Dental",
+        "policyNumber": "AET-111222333",
+        "groupNumber": "GRP-33333",
+        "subscriberName": "Jennifer Ann Williams",
+        "subscriberId": "111222333",
+        "relationship": "Self",
+        "effectiveDate": "2023-03-01",
+        "expirationDate": "2025-02-28",
+        "coverage": {
+          "deductible": "$1,200",
+          "deductibleMet": "$800",
+          "maxBenefit": "$1,800/year",
+          "preventiveCoverage": "100%",
+          "basicCoverage": "80%",
+          "majorCoverage": "50%"
+        }
+      }
+    ],
+    "appointments": [
+      {
+        "date": "2024-11-25",
+        "time": "11:30 AM",
+        "type": "Regular Checkup",
+        "status": "scheduled",
+        "provider": "Dr. Johnson"
+      },
+      {
+        "date": "2024-06-18",
+        "time": "3:00 PM",
+        "type": "Teeth Cleaning",
+        "status": "completed",
+        "provider": "Dr. Martinez"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Teeth Cleaning",
+        "date": "2024-06-18",
+        "cost": "$120"
+      },
+      {
+        "name": "Fluoride Treatment",
+        "date": "2024-06-18",
+        "cost": "$50"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 1800,
+      "annual_used": 170,
+      "deductible": 1200,
+      "deductible_met": 800,
+      "procedures": [
+        {
+          "code": "D0120",
+          "name": "Periodic Oral Evaluation",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$50",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D1110",
+          "name": "Prophylaxis - Adult",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$120",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D2391",
+          "name": "Resin-Based Composite - One Surface",
+          "category": "Basic",
+          "coverage": "80%",
+          "estimated_cost": "$195",
+          "patient_pays": "$39"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1006",
+    "active": true,
+    "name": {
+      "given": ["Christopher", "James"],
+      "family": "Davis"
+    },
+    "gender": "male",
+    "birthDate": "1975-02-18",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 678-9012"
+      },
+      {
+        "system": "email",
+        "value": "chris.davis@email.com"
+      }
+    ],
+    "address": [
+      {
+        "line": ["987 Cedar Court"],
+        "city": "Seattle",
+        "state": "WA",
+        "postalCode": "98101"
+      }
+    ],
+    "insurance": [
+      {
+        "type": "Primary",
+        "provider": "Guardian Dental",
+        "policyNumber": "GRD-888999000",
+        "groupNumber": "GRP-99999",
+        "subscriberName": "Christopher James Davis",
+        "subscriberId": "888999000",
+        "relationship": "Self",
+        "effectiveDate": "2023-01-01",
+        "expirationDate": "2024-12-31",
+        "coverage": {
+          "deductible": "$1,500",
+          "deductibleMet": "$1,500",
+          "maxBenefit": "$2,000/year",
+          "preventiveCoverage": "100%",
+          "basicCoverage": "80%",
+          "majorCoverage": "50%"
+        }
+      }
+    ],
+    "appointments": [
+      {
+        "date": "2024-12-10",
+        "time": "9:00 AM",
+        "type": "Implant Consultation",
+        "status": "scheduled",
+        "provider": "Dr. Williams"
+      },
+      {
+        "date": "2024-08-22",
+        "time": "2:00 PM",
+        "type": "Filling",
+        "status": "completed",
+        "provider": "Dr. Smith"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Composite Filling - Tooth #30",
+        "date": "2024-08-22",
+        "cost": "$280"
+      },
+      {
+        "name": "Regular Checkup",
+        "date": "2024-02-14",
+        "cost": "$100"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 2000,
+      "annual_used": 280,
+      "deductible": 1500,
+      "deductible_met": 1500,
+      "procedures": [
+        {
+          "code": "D0120",
+          "name": "Periodic Oral Evaluation",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$50",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D2391",
+          "name": "Resin-Based Composite - One Surface",
+          "category": "Basic",
+          "coverage": "80%",
+          "estimated_cost": "$195",
+          "patient_pays": "$39"
+        },
+        {
+          "code": "D6010",
+          "name": "Surgical Placement of Implant",
+          "category": "Major",
+          "coverage": "50%",
+          "estimated_cost": "$2,000",
+          "patient_pays": "$1,000"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1007",
+    "active": true,
+    "name": {
+      "given": ["Amanda", "Grace"],
+      "family": "Brown"
+    },
+    "gender": "female",
+    "birthDate": "1995-12-25",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 789-0123"
+      },
+      {
+        "system": "email",
+        "value": "amanda.brown@email.com"
+      }
+    ],
+    "address": [
+      {
+        "line": ["147 Willow Drive"],
+        "city": "Denver",
+        "state": "CO",
+        "postalCode": "80201"
+      }
+    ],
+    "insurance": [
+      {
+        "type": "Primary",
+        "provider": "Humana Dental",
+        "policyNumber": "HUM-444555666",
+        "groupNumber": "GRP-66666",
+        "subscriberName": "Robert Brown",
+        "subscriberId": "444555666",
+        "relationship": "Dependent",
+        "effectiveDate": "2023-09-01",
+        "expirationDate": "2024-08-31",
+        "coverage": {
+          "deductible": "$1,000",
+          "deductibleMet": "$300",
+          "maxBenefit": "$1,500/year",
+          "preventiveCoverage": "100%",
+          "basicCoverage": "80%",
+          "majorCoverage": "50%"
+        }
+      }
+    ],
+    "appointments": [
+      {
+        "date": "2024-11-18",
+        "time": "4:00 PM",
+        "type": "Braces Adjustment",
+        "status": "scheduled",
+        "provider": "Dr. Martinez"
+      },
+      {
+        "date": "2024-09-10",
+        "time": "1:30 PM",
+        "type": "Regular Checkup",
+        "status": "completed",
+        "provider": "Dr. Johnson"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Orthodontic Adjustment",
+        "date": "2024-09-10",
+        "cost": "$200"
+      },
+      {
+        "name": "Regular Checkup",
+        "date": "2024-09-10",
+        "cost": "$100"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 1500,
+      "annual_used": 300,
+      "deductible": 1000,
+      "deductible_met": 300,
+      "procedures": [
+        {
+          "code": "D0120",
+          "name": "Periodic Oral Evaluation",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$50",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D8080",
+          "name": "Comprehensive Orthodontic Treatment",
+          "category": "Orthodontic",
+          "coverage": "50%",
+          "estimated_cost": "$5,000",
+          "patient_pays": "$2,500"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1008",
+    "active": true,
+    "name": {
+      "given": ["Robert", "William"],
+      "family": "Garcia"
+    },
+    "gender": "male",
+    "birthDate": "1982-04-07",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 890-1234"
+      },
+      {
+        "system": "email",
+        "value": "robert.garcia@email.com"
+      }
+    ],
+    "address": [
+      {
+        "line": ["258 Spruce Avenue"],
+        "city": "Miami",
+        "state": "FL",
+        "postalCode": "33101"
+      }
+    ],
+    "insurance": [
+      {
+        "type": "Primary",
+        "provider": "United Healthcare Dental",
+        "policyNumber": "UHC-222333444",
+        "groupNumber": "GRP-44444",
+        "subscriberName": "Robert William Garcia",
+        "subscriberId": "222333444",
+        "relationship": "Self",
+        "effectiveDate": "2024-01-01",
+        "expirationDate": "2024-12-31",
+        "coverage": {
+          "deductible": "$1,500",
+          "deductibleMet": "$0",
+          "maxBenefit": "$2,000/year",
+          "preventiveCoverage": "100%",
+          "basicCoverage": "80%",
+          "majorCoverage": "50%"
+        }
+      }
+    ],
+    "appointments": [
+      {
+        "date": "2024-12-01",
+        "time": "10:30 AM",
+        "type": "Regular Checkup",
+        "status": "scheduled",
+        "provider": "Dr. Smith"
+      },
+      {
+        "date": "2024-06-05",
+        "time": "11:00 AM",
+        "type": "Teeth Cleaning",
+        "status": "completed",
+        "provider": "Dr. Williams"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Teeth Cleaning",
+        "date": "2024-06-05",
+        "cost": "$120"
+      },
+      {
+        "name": "Bitewing X-Rays",
+        "date": "2024-06-05",
+        "cost": "$80"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 2000,
+      "annual_used": 200,
+      "deductible": 1500,
+      "deductible_met": 0,
+      "procedures": [
+        {
+          "code": "D0120",
+          "name": "Periodic Oral Evaluation",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$50",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D1110",
+          "name": "Prophylaxis - Adult",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$120",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D2391",
+          "name": "Resin-Based Composite - One Surface",
+          "category": "Basic",
+          "coverage": "80%",
+          "estimated_cost": "$195",
+          "patient_pays": "$39"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1009",
+    "active": true,
+    "name": {
+      "given": ["Patricia", "Lynn"],
+      "family": "Miller"
+    },
+    "gender": "female",
+    "birthDate": "1970-08-14",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 901-2345"
+      },
+      {
+        "system": "email",
+        "value": "patricia.miller@email.com"
+      }
+    ],
+    "address": [
+      {
+        "line": ["742 Evergreen Terrace"],
+        "city": "Boston",
+        "state": "MA",
+        "postalCode": "02101"
+      }
+    ],
+    "insurance": [
+      {
+        "type": "Primary",
+        "provider": "Anthem Blue Cross",
+        "policyNumber": "ABC-777888999",
+        "groupNumber": "GRP-12345",
+        "subscriberName": "Patricia Lynn Miller",
+        "subscriberId": "777888999",
+        "relationship": "Self",
+        "effectiveDate": "2023-04-01",
+        "expirationDate": "2025-03-31",
+        "coverage": {
+          "deductible": "$1,800",
+          "deductibleMet": "$1,200",
+          "maxBenefit": "$2,200/year",
+          "preventiveCoverage": "100%",
+          "basicCoverage": "85%",
+          "majorCoverage": "60%"
+        }
+      }
+    ],
+    "appointments": [
+      {
+        "date": "2024-11-30",
+        "time": "2:15 PM",
+        "type": "Bridge Fitting",
+        "status": "scheduled",
+        "provider": "Dr. Williams"
+      },
+      {
+        "date": "2024-09-20",
+        "time": "10:00 AM",
+        "type": "Consultation",
+        "status": "completed",
+        "provider": "Dr. Williams"
+      },
+      {
+        "date": "2024-05-15",
+        "time": "3:30 PM",
+        "type": "Regular Checkup",
+        "status": "completed",
+        "provider": "Dr. Smith"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Dental Consultation",
+        "date": "2024-09-20",
+        "cost": "$150"
+      },
+      {
+        "name": "Regular Checkup",
+        "date": "2024-05-15",
+        "cost": "$100"
+      },
+      {
+        "name": "Teeth Cleaning",
+        "date": "2024-05-15",
+        "cost": "$120"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 2200,
+      "annual_used": 370,
+      "deductible": 1800,
+      "deductible_met": 1200,
+      "procedures": [
+        {
+          "code": "D0120",
+          "name": "Periodic Oral Evaluation",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$50",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D1110",
+          "name": "Prophylaxis - Adult",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$120",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D6242",
+          "name": "Pontic - Porcelain Fused to Metal",
+          "category": "Major",
+          "coverage": "60%",
+          "estimated_cost": "$1,100",
+          "patient_pays": "$440"
+        },
+        {
+          "code": "D6750",
+          "name": "Crown - Porcelain Fused to Noble Metal",
+          "category": "Major",
+          "coverage": "60%",
+          "estimated_cost": "$1,250",
+          "patient_pays": "$500"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1010",
+    "active": true,
+    "name": {
+      "given": ["James", "Alexander"],
+      "family": "Wilson"
+    },
+    "gender": "male",
+    "birthDate": "2010-03-22",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 012-3456"
+      },
+      {
+        "system": "email",
+        "value": "jwilson.parent@email.com"
+      }
+    ],
+    "address": [
+      {
+        "line": ["159 Park Avenue"],
+        "city": "Chicago",
+        "state": "IL",
+        "postalCode": "60601"
+      }
+    ],
+    "insurance": [
+      {
+        "type": "Primary",
+        "provider": "Cigna Dental",
+        "policyNumber": "CIG-333444555",
+        "groupNumber": "GRP-22222",
+        "subscriberName": "Sarah Wilson",
+        "subscriberId": "333444555",
+        "relationship": "Dependent",
+        "effectiveDate": "2024-01-01",
+        "expirationDate": "2024-12-31",
+        "coverage": {
+          "deductible": "$800",
+          "deductibleMet": "$400",
+          "maxBenefit": "$1,500/year",
+          "preventiveCoverage": "100%",
+          "basicCoverage": "80%",
+          "majorCoverage": "50%"
+        }
+      }
+    ],
+    "appointments": [
+      {
+        "date": "2024-11-22",
+        "time": "4:30 PM",
+        "type": "Regular Checkup",
+        "status": "scheduled",
+        "provider": "Dr. Johnson"
+      },
+      {
+        "date": "2024-07-10",
+        "time": "9:00 AM",
+        "type": "Sealant Application",
+        "status": "completed",
+        "provider": "Dr. Johnson"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Dental Sealants",
+        "date": "2024-07-10",
+        "cost": "$180"
+      },
+      {
+        "name": "Fluoride Treatment",
+        "date": "2024-07-10",
+        "cost": "$50"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 1500,
+      "annual_used": 230,
+      "deductible": 800,
+      "deductible_met": 400,
+      "procedures": [
+        {
+          "code": "D0120",
+          "name": "Periodic Oral Evaluation",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$50",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D1120",
+          "name": "Prophylaxis - Child",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$85",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D1206",
+          "name": "Topical Fluoride - Child",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$45",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D1351",
+          "name": "Sealant - Per Tooth",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$45",
+          "patient_pays": "$0"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1011",
+    "active": true,
+    "name": {
+      "given": ["Linda", "Marie"],
+      "family": "Taylor"
+    },
+    "gender": "female",
+    "birthDate": "1958-11-30",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 123-7890"
+      },
+      {
+        "system": "email",
+        "value": "linda.taylor@email.com"
+      }
+    ],
+    "address": [
+      {
+        "line": ["890 Highland Road"],
+        "city": "Phoenix",
+        "state": "AZ",
+        "postalCode": "85001"
+      }
+    ],
+    "insurance": [
+      {
+        "type": "Primary",
+        "provider": "Delta Dental",
+        "policyNumber": "DD-666777888",
+        "groupNumber": "GRP-55555",
+        "subscriberName": "Linda Marie Taylor",
+        "subscriberId": "666777888",
+        "relationship": "Self",
+        "effectiveDate": "2023-08-01",
+        "expirationDate": "2024-07-31",
+        "coverage": {
+          "deductible": "$1,000",
+          "deductibleMet": "$1,000",
+          "maxBenefit": "$1,800/year",
+          "preventiveCoverage": "100%",
+          "basicCoverage": "80%",
+          "majorCoverage": "50%"
+        }
+      }
+    ],
+    "appointments": [
+      {
+        "date": "2024-12-15",
+        "time": "11:00 AM",
+        "type": "Denture Fitting",
+        "status": "scheduled",
+        "provider": "Dr. Martinez"
+      },
+      {
+        "date": "2024-10-05",
+        "time": "2:30 PM",
+        "type": "Extraction",
+        "status": "completed",
+        "provider": "Dr. Williams"
+      },
+      {
+        "date": "2024-04-20",
+        "time": "10:00 AM",
+        "type": "Regular Checkup",
+        "status": "completed",
+        "provider": "Dr. Smith"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Tooth Extraction - Tooth #15",
+        "date": "2024-10-05",
+        "cost": "$350"
+      },
+      {
+        "name": "Regular Checkup",
+        "date": "2024-04-20",
+        "cost": "$100"
+      },
+      {
+        "name": "Teeth Cleaning",
+        "date": "2024-04-20",
+        "cost": "$120"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 1800,
+      "annual_used": 570,
+      "deductible": 1000,
+      "deductible_met": 1000,
+      "procedures": [
+        {
+          "code": "D0120",
+          "name": "Periodic Oral Evaluation",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$50",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D1110",
+          "name": "Prophylaxis - Adult",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$120",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D5110",
+          "name": "Complete Denture - Upper",
+          "category": "Major",
+          "coverage": "50%",
+          "estimated_cost": "$1,500",
+          "patient_pays": "$750"
+        },
+        {
+          "code": "D7140",
+          "name": "Extraction, Erupted Tooth",
+          "category": "Basic",
+          "coverage": "80%",
+          "estimated_cost": "$150",
+          "patient_pays": "$30"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1012",
+    "active": true,
+    "name": {
+      "given": ["Daniel", "Scott"],
+      "family": "Moore"
+    },
+    "gender": "male",
+    "birthDate": "1990-06-18",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 234-8901"
+      },
+      {
+        "system": "email",
+        "value": "daniel.moore@email.com"
+      }
+    ],
+    "address": [
+      {
+        "line": ["567 Mountain View Drive"],
+        "city": "San Diego",
+        "state": "CA",
+        "postalCode": "92101"
+      }
+    ],
+    "insurance": [
+      {
+        "type": "Primary",
+        "provider": "MetLife Dental",
+        "policyNumber": "ML-999000111",
+        "groupNumber": "GRP-88888",
+        "subscriberName": "Daniel Scott Moore",
+        "subscriberId": "999000111",
+        "relationship": "Self",
+        "effectiveDate": "2024-02-01",
+        "expirationDate": "2025-01-31",
+        "coverage": {
+          "deductible": "$1,200",
+          "deductibleMet": "$600",
+          "maxBenefit": "$2,000/year",
+          "preventiveCoverage": "100%",
+          "basicCoverage": "80%",
+          "majorCoverage": "60%"
+        }
+      }
+    ],
+    "appointments": [
+      {
+        "date": "2024-11-28",
+        "time": "1:45 PM",
+        "type": "Wisdom Tooth Consultation",
+        "status": "scheduled",
+        "provider": "Dr. Williams"
+      },
+      {
+        "date": "2024-08-15",
+        "time": "3:00 PM",
+        "type": "Regular Checkup",
+        "status": "completed",
+        "provider": "Dr. Johnson"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Regular Checkup",
+        "date": "2024-08-15",
+        "cost": "$100"
+      },
+      {
+        "name": "Bitewing X-Rays",
+        "date": "2024-08-15",
+        "cost": "$80"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 2000,
+      "annual_used": 180,
+      "deductible": 1200,
+      "deductible_met": 600,
+      "procedures": [
+        {
+          "code": "D0120",
+          "name": "Periodic Oral Evaluation",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$50",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D0274",
+          "name": "Bitewing - Four Radiographic Images",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$80",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D7210",
+          "name": "Extraction, Impacted Tooth",
+          "category": "Major",
+          "coverage": "60%",
+          "estimated_cost": "$350",
+          "patient_pays": "$140"
+        },
+        {
+          "code": "D7240",
+          "name": "Removal of Impacted Tooth - Completely Bony",
+          "category": "Major",
+          "coverage": "60%",
+          "estimated_cost": "$450",
+          "patient_pays": "$180"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1013",
+    "active": true,
+    "name": {
+      "given": ["Nancy", "Elizabeth"],
+      "family": "White"
+    },
+    "gender": "female",
+    "birthDate": "1998-01-09",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 345-9012"
+      },
+      {
+        "system": "email",
+        "value": "nancy.white@email.com"
+      }
+    ],
+    "address": [
+      {
+        "line": ["234 College Street", "Unit 5"],
+        "city": "Minneapolis",
+        "state": "MN",
+        "postalCode": "55401"
+      }
+    ],
+    "insurance": [
+      {
+        "type": "Primary",
+        "provider": "Blue Cross Blue Shield",
+        "policyNumber": "BCBS-444555666",
+        "groupNumber": "GRP-77777",
+        "subscriberName": "Nancy Elizabeth White",
+        "subscriberId": "444555666",
+        "relationship": "Self",
+        "effectiveDate": "2024-01-01",
+        "expirationDate": "2024-12-31",
+        "coverage": {
+          "deductible": "$1,000",
+          "deductibleMet": "$200",
+          "maxBenefit": "$1,500/year",
+          "preventiveCoverage": "100%",
+          "basicCoverage": "80%",
+          "majorCoverage": "50%"
+        }
+      }
+    ],
+    "appointments": [
+      {
+        "date": "2024-11-12",
+        "time": "10:15 AM",
+        "type": "Filling",
+        "status": "scheduled",
+        "provider": "Dr. Smith"
+      },
+      {
+        "date": "2024-09-25",
+        "time": "2:00 PM",
+        "type": "Regular Checkup",
+        "status": "completed",
+        "provider": "Dr. Smith"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Regular Checkup",
+        "date": "2024-09-25",
+        "cost": "$100"
+      },
+      {
+        "name": "X-Ray (Bitewing)",
+        "date": "2024-09-25",
+        "cost": "$80"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 1500,
+      "annual_used": 180,
+      "deductible": 1000,
+      "deductible_met": 200,
+      "procedures": [
+        {
+          "code": "D0120",
+          "name": "Periodic Oral Evaluation",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$50",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D1110",
+          "name": "Prophylaxis - Adult",
+          "category": "Preventive",
+          "coverage": "100%",
+          "estimated_cost": "$120",
+          "patient_pays": "$0"
+        },
+        {
+          "code": "D2140",
+          "name": "Amalgam - One Surface",
+          "category": "Basic",
+          "coverage": "80%",
+          "estimated_cost": "$180",
+          "patient_pays": "$36"
+        },
+        {
+          "code": "D2391",
+          "name": "Resin-Based Composite - One Surface",
+          "category": "Basic",
+          "coverage": "80%",
+          "estimated_cost": "$195",
+          "patient_pays": "$39"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1014",
+    "active": false,
+    "name": {
+      "given": ["Thomas", "Edward"],
+      "family": "Harris"
+    },
+    "gender": "male",
+    "birthDate": "1952-07-04",
+    "telecom": [
+      {
+        "system": "phone",
+        "value": "(555) 456-0123"
+      }
+    ],
+    "address": [
+      {
+        "line": ["678 Retirement Village"],
+        "city": "Tampa",
+        "state": "FL",
+        "postalCode": "33601"
+      }
+    ],
+    "insurance": [],
+    "appointments": [
+      {
+        "date": "2023-12-10",
+        "time": "9:30 AM",
+        "type": "Regular Checkup",
+        "status": "completed",
+        "provider": "Dr. Martinez"
+      }
+    ],
+    "treatments": [
+      {
+        "name": "Regular Checkup",
+        "date": "2023-12-10",
+        "cost": "$100"
+      }
+    ],
+    "coverage": {
+      "annual_maximum": 0,
+      "annual_used": 0,
+      "deductible": 0,
+      "deductible_met": 0,
+      "procedures": []
+    }
+  }
+]
