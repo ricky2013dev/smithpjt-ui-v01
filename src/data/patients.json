@@ -8,6 +8,11 @@
     },
     "gender": "female",
     "birthDate": "1985-03-15",
+    "verificationStatus": {
+      "eligibilityCheck": "completed",
+      "benefitsVerification": "in_progress",
+      "authorization": "pending"
+    },
     "telecom": [
       {
         "system": "phone",
@@ -145,6 +150,11 @@
     },
     "gender": "male",
     "birthDate": "1978-07-22",
+    "verificationStatus": {
+      "eligibilityCheck": "completed",
+      "benefitsVerification": "completed",
+      "authorization": "in_progress"
+    },
     "telecom": [
       {
         "system": "phone",
@@ -281,6 +291,11 @@
     },
     "gender": "female",
     "birthDate": "1992-11-08",
+    "verificationStatus": {
+      "eligibilityCheck": "in_progress",
+      "benefitsVerification": "pending",
+      "authorization": "pending"
+    },
     "telecom": [
       {
         "system": "phone",
@@ -450,6 +465,11 @@
     },
     "gender": "female",
     "birthDate": "1988-09-12",
+    "verificationStatus": {
+      "eligibilityCheck": "completed",
+      "benefitsVerification": "completed",
+      "authorization": "completed"
+    },
     "telecom": [
       {
         "system": "phone",
@@ -559,6 +579,11 @@
     },
     "gender": "male",
     "birthDate": "1975-02-18",
+    "verificationStatus": {
+      "eligibilityCheck": "pending",
+      "benefitsVerification": "pending",
+      "authorization": "pending"
+    },
     "telecom": [
       {
         "system": "phone",
@@ -668,6 +693,11 @@
     },
     "gender": "female",
     "birthDate": "1995-12-25",
+    "verificationStatus": {
+      "eligibilityCheck": "completed",
+      "benefitsVerification": "pending",
+      "authorization": "pending"
+    },
     "telecom": [
       {
         "system": "phone",
@@ -769,6 +799,11 @@
     },
     "gender": "male",
     "birthDate": "1982-04-07",
+    "verificationStatus": {
+      "eligibilityCheck": "in_progress",
+      "benefitsVerification": "pending",
+      "authorization": "pending"
+    },
     "telecom": [
       {
         "system": "phone",
@@ -878,6 +913,11 @@
     },
     "gender": "female",
     "birthDate": "1970-08-14",
+    "verificationStatus": {
+      "eligibilityCheck": "completed",
+      "benefitsVerification": "in_progress",
+      "authorization": "pending"
+    },
     "telecom": [
       {
         "system": "phone",
@@ -1007,6 +1047,11 @@
     },
     "gender": "male",
     "birthDate": "2010-03-22",
+    "verificationStatus": {
+      "eligibilityCheck": "completed",
+      "benefitsVerification": "completed",
+      "authorization": "pending"
+    },
     "telecom": [
       {
         "system": "phone",
@@ -1124,6 +1169,11 @@
     },
     "gender": "female",
     "birthDate": "1958-11-30",
+    "verificationStatus": {
+      "eligibilityCheck": "completed",
+      "benefitsVerification": "completed",
+      "authorization": "in_progress"
+    },
     "telecom": [
       {
         "system": "phone",
@@ -1253,6 +1303,11 @@
     },
     "gender": "male",
     "birthDate": "1990-06-18",
+    "verificationStatus": {
+      "eligibilityCheck": "pending",
+      "benefitsVerification": "pending",
+      "authorization": "pending"
+    },
     "telecom": [
       {
         "system": "phone",
@@ -1370,6 +1425,11 @@
     },
     "gender": "female",
     "birthDate": "1998-01-09",
+    "verificationStatus": {
+      "eligibilityCheck": "in_progress",
+      "benefitsVerification": "pending",
+      "authorization": "pending"
+    },
     "telecom": [
       {
         "system": "phone",

@@ -12,16 +12,67 @@ interface PatientDetailProps {
   patient: Patient;
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
+  onClose: () => void;
 }
 
 const PatientDetail: React.FC<PatientDetailProps> = ({
   patient,
   activeTab,
   onTabChange,
+  onClose,
 }) => {
   const getFullName = () => {
     const given = patient.name.given.join(" ");
     return `${given} ${patient.name.family}`.trim();
+  };
+
+  const getVerificationStep = () => {
+    const status = patient.verificationStatus;
+    if (!status) return 1;
+
+    if (status.authorization === 'completed') return 3;
+    if (status.authorization === 'in_progress') return 3;
+    if (status.benefitsVerification === 'completed') return 3;
+    if (status.benefitsVerification === 'in_progress') return 2;
+    if (status.eligibilityCheck === 'completed') return 2;
+    if (status.eligibilityCheck === 'in_progress') return 1;
+    return 1;
+  };
+
+  const getStepConfig = (stepKey: 'eligibilityCheck' | 'benefitsVerification' | 'authorization') => {
+    const status = patient.verificationStatus?.[stepKey] || 'pending';
+    const configs = {
+      eligibilityCheck: {
+        icon: status === 'completed' ? 'check' : status === 'in_progress' ? 'sync' : 'schedule',
+        bgColor: status === 'completed' ? 'bg-status-green' : status === 'in_progress' ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700',
+        textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-500 dark:text-slate-400',
+        label: 'Eligibility Check',
+        statusText: status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Pending',
+        statusColor: status === 'completed' ? 'text-status-green' : status === 'in_progress' ? 'text-primary' : 'text-slate-500 dark:text-slate-400',
+      },
+      benefitsVerification: {
+        icon: status === 'completed' ? 'check' : status === 'in_progress' ? 'sync' : 'schedule',
+        bgColor: status === 'completed' ? 'bg-status-green' : status === 'in_progress' ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700',
+        textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-500 dark:text-slate-400',
+        label: 'Benefits Verification',
+        statusText: status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Pending',
+        statusColor: status === 'completed' ? 'text-status-green' : status === 'in_progress' ? 'text-primary' : 'text-slate-500 dark:text-slate-400',
+      },
+      authorization: {
+        icon: status === 'completed' ? 'check' : status === 'in_progress' ? 'sync' : 'schedule',
+        bgColor: status === 'completed' ? 'bg-status-green' : status === 'in_progress' ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700',
+        textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-500 dark:text-slate-400',
+        label: 'Authorization',
+        statusText: status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Pending',
+        statusColor: status === 'completed' ? 'text-status-green' : status === 'in_progress' ? 'text-primary' : 'text-slate-500 dark:text-slate-400',
+      }
+    };
+    return configs[stepKey];
+  };
+
+  const getConnectorColor = (fromStep: 'eligibilityCheck' | 'benefitsVerification') => {
+    const status = patient.verificationStatus?.[fromStep];
+    return status === 'completed' ? 'bg-status-green' : 'bg-slate-300 dark:bg-slate-600';
   };
 
   const getPhone = () => {
@@ -58,7 +109,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
     <section className="hidden w-0 flex-1 flex-col bg-background-light dark:bg-background-dark lg:flex lg:w-[70%]">
       {/* Profile Header */}
       <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 mb-4">
           <div className="rounded-full h-24 w-24 bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shrink-0">
             <span className="material-symbols-outlined text-white text-5xl">
               person
@@ -79,6 +130,83 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             <button className="rounded-lg border border-transparent bg-transparent p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
               <span className="material-symbols-outlined">more_horiz</span>
             </button>
+            <button
+              onClick={onClose}
+              className="rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+              title="Close patient detail"
+            >
+              <span className="material-symbols-outlined">close</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Verification Steps Progress */}
+        <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+              Insurance Verification Status
+            </h3>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Step {getVerificationStep()} of 3
+            </span>
+          </div>
+          <div className="space-y-3">
+            {/* Progress Line with Steps */}
+            <div className="flex items-center">
+              {/* Step 1 Circle */}
+              <div className={`flex items-center justify-center w-10 h-10 rounded-full ${getStepConfig('eligibilityCheck').bgColor} ${getStepConfig('eligibilityCheck').textColor} shrink-0 z-10`}>
+                <span className="material-symbols-outlined text-lg">{getStepConfig('eligibilityCheck').icon}</span>
+              </div>
+
+              {/* Connector Line 1 */}
+              <div className={`h-0.5 flex-1 ${getConnectorColor('eligibilityCheck')} -mx-0.5`}></div>
+
+              {/* Step 2 Circle */}
+              <div className={`flex items-center justify-center w-10 h-10 rounded-full ${getStepConfig('benefitsVerification').bgColor} ${getStepConfig('benefitsVerification').textColor} shrink-0 z-10`}>
+                <span className="material-symbols-outlined text-lg">{getStepConfig('benefitsVerification').icon}</span>
+              </div>
+
+              {/* Connector Line 2 */}
+              <div className={`h-0.5 flex-1 ${getConnectorColor('benefitsVerification')} -mx-0.5`}></div>
+
+              {/* Step 3 Circle */}
+              <div className={`flex items-center justify-center w-10 h-10 rounded-full ${getStepConfig('authorization').bgColor} ${getStepConfig('authorization').textColor} shrink-0 z-10`}>
+                <span className="material-symbols-outlined text-lg">{getStepConfig('authorization').icon}</span>
+              </div>
+            </div>
+
+            {/* Step Labels */}
+            <div className="flex items-start">
+              {/* Step 1 Label */}
+              <div className="flex-1 text-center" style={{ maxWidth: '33.333%' }}>
+                <p className="text-xs font-semibold text-slate-900 dark:text-white">
+                  {getStepConfig('eligibilityCheck').label}
+                </p>
+                <p className={`text-xs ${getStepConfig('eligibilityCheck').statusColor}`}>
+                  {getStepConfig('eligibilityCheck').statusText}
+                </p>
+              </div>
+
+              {/* Step 2 Label */}
+              <div className="flex-1 text-center" style={{ maxWidth: '33.333%' }}>
+                <p className="text-xs font-semibold text-slate-900 dark:text-white">
+                  {getStepConfig('benefitsVerification').label}
+                </p>
+                <p className={`text-xs ${getStepConfig('benefitsVerification').statusColor}`}>
+                  {getStepConfig('benefitsVerification').statusText}
+                </p>
+              </div>
+
+              {/* Step 3 Label */}
+              <div className="flex-1 text-center" style={{ maxWidth: '33.333%' }}>
+                <p className="text-xs font-semibold text-slate-900 dark:text-white">
+                  {getStepConfig('authorization').label}
+                </p>
+                <p className={`text-xs ${getStepConfig('authorization').statusColor}`}>
+                  {getStepConfig('authorization').statusText}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
