@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Patient,
   Appointment,
@@ -7,6 +7,7 @@ import {
   Procedure,
   TabType,
 } from "../types/patient";
+import SmithAICenter from "./SmithAICenter";
 
 interface PatientDetailProps {
   patient: Patient;
@@ -21,6 +22,8 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   onTabChange,
   onClose,
 }) => {
+  const [showAICenter, setShowAICenter] = useState(false);
+
   const getFullName = () => {
     const given = patient.name.given.join(" ");
     return `${given} ${patient.name.family}`.trim();
@@ -124,6 +127,13 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowAICenter(true)}
+              className="rounded-lg border border-transparent bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-2 text-sm font-semibold text-white hover:from-cyan-600 hover:to-blue-600 shadow-lg shadow-cyan-500/30 transition-all flex items-center gap-2"
+            >
+              <span className="material-symbols-outlined">smart_toy</span>
+              Call with Smith AI Center
+            </button>
             <button className="rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800">
               Edit Profile
             </button>
@@ -682,6 +692,14 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           </div>
         )}
       </div>
+
+      {/* Smith AI Center Modal */}
+      {showAICenter && (
+        <SmithAICenter
+          patient={patient}
+          onClose={() => setShowAICenter(false)}
+        />
+      )}
     </section>
   );
 };

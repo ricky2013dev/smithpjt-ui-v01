@@ -113,23 +113,6 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
 
   return (
     <section className="flex w-full flex-1 flex-col bg-background-light dark:bg-background-dark overflow-y-auto">
-      {/* Dashboard Header */}
-      <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-              Insurance & Coverage Dashboard
-            </h2>
-            <p className="text-slate-500 dark:text-slate-400">
-              Real-time insurance verification and coverage monitoring
-            </p>
-          </div>
-          <span className="material-symbols-outlined text-4xl text-primary">
-            verified_user
-          </span>
-        </div>
-      </div>
-
       {/* Dashboard Content */}
       <div className="p-6 space-y-6">
         {/* Stats Cards */}
