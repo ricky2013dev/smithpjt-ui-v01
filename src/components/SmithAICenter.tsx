@@ -74,7 +74,7 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
       <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-cyan-500 to-blue-500 p-6 text-white">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
                 <span className="material-symbols-outlined text-3xl">smart_toy</span>
@@ -91,37 +91,37 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
               <span className="material-symbols-outlined">close</span>
             </button>
           </div>
+        </div>
 
-          {/* Patient Info Card */}
-          <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                <span className="material-symbols-outlined text-4xl">person</span>
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold">{getFullName()}</h3>
-                <div className="grid grid-cols-2 gap-x-6 gap-y-1 mt-1 text-sm text-cyan-100">
-                  <div>
-                    <span className="material-symbols-outlined text-xs align-middle mr-1">badge</span>
-                    ID: {patient.id}
-                  </div>
-                  <div>
-                    <span className="material-symbols-outlined text-xs align-middle mr-1">cake</span>
-                    {calculateAge(patient.birthDate)} years
-                  </div>
-                  <div>
-                    <span className="material-symbols-outlined text-xs align-middle mr-1">phone</span>
-                    {getPhone()}
-                  </div>
-                  <div>
-                    <span className="material-symbols-outlined text-xs align-middle mr-1">email</span>
-                    {getEmail()}
-                  </div>
+        {/* Patient Info Card - Separate Section */}
+        <div className="bg-white dark:bg-slate-900 px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-cyan-100 to-blue-100 dark:from-cyan-900 dark:to-blue-900 rounded-full flex items-center justify-center">
+              <span className="material-symbols-outlined text-4xl text-cyan-600 dark:text-cyan-400">person</span>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{getFullName()}</h3>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-1 mt-1 text-sm text-slate-600 dark:text-slate-400">
+                <div>
+                  <span className="material-symbols-outlined text-xs align-middle mr-1">badge</span>
+                  ID: {patient.id}
+                </div>
+                <div>
+                  <span className="material-symbols-outlined text-xs align-middle mr-1">cake</span>
+                  {calculateAge(patient.birthDate)} years
+                </div>
+                <div>
+                  <span className="material-symbols-outlined text-xs align-middle mr-1">phone</span>
+                  {getPhone()}
+                </div>
+                <div>
+                  <span className="material-symbols-outlined text-xs align-middle mr-1">email</span>
+                  {getEmail()}
                 </div>
               </div>
-              <div className={`px-4 py-2 rounded-lg font-semibold ${patient.active ? 'bg-green-500' : 'bg-red-500'}`}>
-                {patient.active ? 'Active' : 'Inactive'}
-              </div>
+            </div>
+            <div className={`px-4 py-2 rounded-lg font-semibold ${patient.active ? 'bg-green-500' : 'bg-red-500'} text-white`}>
+              {patient.active ? 'Active' : 'Inactive'}
             </div>
           </div>
         </div>
@@ -257,12 +257,20 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
               )}
             </div>
 
-            <div className="mt-6 p-4 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-lg">
-              <div className="flex items-start gap-2">
-                <span className="material-symbols-outlined text-cyan-500 text-lg">info</span>
-                <div className="flex-1">
-                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">AI Assistant Tip</p>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+            <div className="mt-6 relative overflow-hidden bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 dark:from-cyan-900/20 dark:via-blue-900/20 dark:to-indigo-900/20 border border-cyan-200 dark:border-cyan-800 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+              {/* Decorative gradient orbs */}
+              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-cyan-400/20 to-blue-400/20 rounded-full blur-2xl"></div>
+              <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-blue-400/20 to-indigo-400/20 rounded-full blur-xl"></div>
+
+              <div className="relative p-4 flex items-start gap-3">
+                <div className="flex-shrink-0 w-9 h-9 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center shadow-sm">
+                  <span className="material-symbols-outlined text-white text-lg">lightbulb</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-400 mb-1">
+                    AI Assistant Tip
+                  </h4>
+                  <p className="text-xs leading-relaxed text-slate-700 dark:text-slate-300">
                     I can help verify insurance, check benefits, and process authorizations in real-time.
                   </p>
                 </div>
