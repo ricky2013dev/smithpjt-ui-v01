@@ -134,7 +134,7 @@ const PatientsManagement: React.FC = () => {
     setSelectedPatientId(null);
   };
 
-  const handleBackToDashboard = () => {
+  const handleHeaderClick = () => {
     setViewMode('dashboard');
     setSelectedPatientId(null);
   };
@@ -142,30 +142,9 @@ const PatientsManagement: React.FC = () => {
   return (
     <div className="flex h-screen w-full flex-col">
       {/* Smith AI Center Header */}
-      <Header />
+      <Header onLogoClick={handleHeaderClick} />
 
-      {/* Sub-header for list view */}
-      {viewMode === 'list' && (
-        <div className="flex items-center border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 px-4 py-3 shrink-0">
-          <button
-            onClick={handleBackToDashboard}
-            className="flex items-center justify-center p-2 mr-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
-            title="Back to Dashboard"
-          >
-            <span className="material-symbols-outlined">arrow_back</span>
-          </button>
-          <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 mr-4">
-            person
-          </span>
-          <h1 className="text-xl font-bold text-slate-900 dark:text-white flex-1">
-            Patient Insurance & Coverage
-          </h1>
-          <button className="flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary/90">
-            <span className="material-symbols-outlined text-base">add</span>
-            Add New Patient
-          </button>
-        </div>
-      )}
+
 
       {/* Main Content */}
       <main className="flex flex-1 overflow-hidden">

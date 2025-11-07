@@ -1,9 +1,23 @@
 import React from 'react';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onLogoClick?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onLogoClick }) => {
   return (
     <header className="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 px-6 py-4 shrink-0">
-      <div className="flex items-center gap-4">
+      <div
+        className="flex items-center gap-4 cursor-pointer hover:opacity-90 transition-opacity w-fit"
+        onClick={onLogoClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            onLogoClick?.();
+          }
+        }}
+      >
         {/* Robot Logo */}
         <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/30 shadow-lg">
           <span className="material-symbols-outlined text-4xl text-white drop-shadow-lg">
