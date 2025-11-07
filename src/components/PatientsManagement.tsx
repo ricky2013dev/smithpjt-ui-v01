@@ -41,9 +41,10 @@ const PatientsManagement: React.FC = () => {
       if (stepFilters.length > 0) {
         const getPatientVerificationStep = (p: Patient) => {
           if (!p.verificationStatus) return 0;
-          const { eligibilityCheck, benefitsVerification, authorization } = p.verificationStatus;
+          const { eligibilityCheck, benefitsVerification, aiCallVerification, sendToPMS } = p.verificationStatus;
 
-          if (authorization === 'completed' || authorization === 'in_progress') return 3;
+          if (sendToPMS === 'completed' || sendToPMS === 'in_progress') return 4;
+          if (aiCallVerification === 'completed' || aiCallVerification === 'in_progress') return 3;
           if (benefitsVerification === 'completed' || benefitsVerification === 'in_progress') return 2;
           if (eligibilityCheck === 'completed' || eligibilityCheck === 'in_progress') return 1;
           return 0;
@@ -78,24 +79,26 @@ const PatientsManagement: React.FC = () => {
         return;
       }
 
-      const { eligibilityCheck, benefitsVerification, authorization } = patient.verificationStatus;
+      const { eligibilityCheck, benefitsVerification, aiCallVerification, sendToPMS } = patient.verificationStatus;
 
       // Fully verified
-      if (authorization === 'completed') {
+      if (sendToPMS === 'completed') {
         verified++;
       }
       // In progress (any step in progress)
       else if (
         eligibilityCheck === 'in_progress' ||
         benefitsVerification === 'in_progress' ||
-        authorization === 'in_progress'
+        aiCallVerification === 'in_progress' ||
+        sendToPMS === 'in_progress'
       ) {
         inProgress++;
       }
       // Pending (at least one step completed but not all)
       else if (
         eligibilityCheck === 'completed' ||
-        benefitsVerification === 'completed'
+        benefitsVerification === 'completed' ||
+        aiCallVerification === 'completed'
       ) {
         pending++;
       }

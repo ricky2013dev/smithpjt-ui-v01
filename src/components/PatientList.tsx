@@ -59,32 +59,42 @@ const PatientList: React.FC<PatientListProps> = ({
       return { text: 'Not Started', color: 'text-slate-400', step: 0, percentage: 0 };
     }
 
-    const { eligibilityCheck, benefitsVerification, authorization } = patient.verificationStatus;
+    const { eligibilityCheck, benefitsVerification, aiCallVerification, sendToPMS } = patient.verificationStatus;
 
-    if (authorization === 'completed') {
-      return { text: 'Verified', color: 'text-status-green', step: 3, percentage: 100 };
+    if (sendToPMS === 'completed') {
+      return { text: 'Verified', color: 'text-status-green', step: 4, percentage: 100 };
     }
-    if (authorization === 'in_progress') {
-      return { text: 'Authorization', color: 'text-primary', step: 3, percentage: 83 };
+    if (sendToPMS === 'in_progress') {
+      return { text: 'Sending to PMS', color: 'text-primary', step: 4, percentage: 87 };
+    }
+    if (aiCallVerification === 'completed') {
+      return { text: 'PMS Pending', color: 'text-status-orange', step: 4, percentage: 75 };
+    }
+    if (aiCallVerification === 'in_progress') {
+      return { text: 'AI Call Verification', color: 'text-primary', step: 3, percentage: 62 };
     }
     if (benefitsVerification === 'completed') {
-      return { text: 'Authorization Pending', color: 'text-status-orange', step: 3, percentage: 67 };
+      return { text: 'AI Call Pending', color: 'text-status-orange', step: 3, percentage: 50 };
     }
     if (benefitsVerification === 'in_progress') {
-      return { text: 'Benefits Check', color: 'text-primary', step: 2, percentage: 50 };
+      return { text: 'Benefits Check', color: 'text-primary', step: 2, percentage: 37 };
     }
     if (eligibilityCheck === 'completed') {
-      return { text: 'Benefits Pending', color: 'text-status-orange', step: 2, percentage: 33 };
+      return { text: 'Benefits Pending', color: 'text-status-orange', step: 2, percentage: 25 };
     }
     if (eligibilityCheck === 'in_progress') {
-      return { text: 'Eligibility Check', color: 'text-primary', step: 1, percentage: 17 };
+      return { text: 'Eligibility Check', color: 'text-primary', step: 1, percentage: 12 };
     }
 
     return { text: 'Not Started', color: 'text-slate-400', step: 0, percentage: 0 };
   };
 
-  const getStepDots = (currentStep: number) => {
-    return [1, 2, 3].map((step) => {
+  const getStepDots = (currentStep: number, percentage: number) => {
+    return [1, 2, 3, 4].map((step) => {
+      // If 100% complete, all dots should be green
+      if (percentage === 100) {
+        return 'bg-status-green';
+      }
       if (step < currentStep) {
         return 'bg-status-green';
       } else if (step === currentStep) {
@@ -191,7 +201,7 @@ const PatientList: React.FC<PatientListProps> = ({
           const phone = getPhone(patient);
           const age = calculateAge(patient.birthDate);
           const verificationStatus = getVerificationStatus(patient);
-          const stepDots = getStepDots(verificationStatus.step);
+          const stepDots = getStepDots(verificationStatus.step, verificationStatus.percentage);
           const isSelected = selectedPatientId === patient.id;
 
           return (

@@ -16,7 +16,8 @@ export interface Patient {
 export interface VerificationStatus {
   eligibilityCheck: 'completed' | 'in_progress' | 'pending';
   benefitsVerification: 'completed' | 'in_progress' | 'pending';
-  authorization: 'completed' | 'in_progress' | 'pending';
+  aiCallVerification: 'completed' | 'in_progress' | 'pending';
+  sendToPMS: 'completed' | 'in_progress' | 'pending';
 }
 
 export interface PatientName {
@@ -93,4 +94,4 @@ export type FilterType =
   | 'Eligibility'
   | 'Verification'
   | 'Authorization';
-export type TabType = 'Demographics' | 'Insurance' | 'Appointments' | 'Treatment History' | 'Coverage Details';
+export type TabType = 'Demographics' | 'Insurance' | 'Appointments' | 'Treatment History' | 'Coverage Details' | 'AI Call History';

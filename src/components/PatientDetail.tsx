@@ -33,8 +33,10 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
     const status = patient.verificationStatus;
     if (!status) return 1;
 
-    if (status.authorization === 'completed') return 3;
-    if (status.authorization === 'in_progress') return 3;
+    if (status.sendToPMS === 'completed') return 4;
+    if (status.sendToPMS === 'in_progress') return 4;
+    if (status.aiCallVerification === 'completed') return 4;
+    if (status.aiCallVerification === 'in_progress') return 3;
     if (status.benefitsVerification === 'completed') return 3;
     if (status.benefitsVerification === 'in_progress') return 2;
     if (status.eligibilityCheck === 'completed') return 2;
@@ -42,7 +44,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
     return 1;
   };
 
-  const getStepConfig = (stepKey: 'eligibilityCheck' | 'benefitsVerification' | 'authorization') => {
+  const getStepConfig = (stepKey: 'eligibilityCheck' | 'benefitsVerification' | 'aiCallVerification' | 'sendToPMS') => {
     const status = patient.verificationStatus?.[stepKey] || 'pending';
     const configs = {
       eligibilityCheck: {
@@ -61,11 +63,19 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
         statusText: status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Pending',
         statusColor: status === 'completed' ? 'text-status-green' : status === 'in_progress' ? 'text-primary' : 'text-slate-500 dark:text-slate-400',
       },
-      authorization: {
+      aiCallVerification: {
         icon: status === 'completed' ? 'check' : status === 'in_progress' ? 'sync' : 'schedule',
         bgColor: status === 'completed' ? 'bg-status-green' : status === 'in_progress' ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700',
         textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-500 dark:text-slate-400',
-        label: 'Authorization',
+        label: 'AI Call Verification',
+        statusText: status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Pending',
+        statusColor: status === 'completed' ? 'text-status-green' : status === 'in_progress' ? 'text-primary' : 'text-slate-500 dark:text-slate-400',
+      },
+      sendToPMS: {
+        icon: status === 'completed' ? 'check' : status === 'in_progress' ? 'sync' : 'schedule',
+        bgColor: status === 'completed' ? 'bg-status-green' : status === 'in_progress' ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700',
+        textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-500 dark:text-slate-400',
+        label: 'Send To PMS',
         statusText: status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Pending',
         statusColor: status === 'completed' ? 'text-status-green' : status === 'in_progress' ? 'text-primary' : 'text-slate-500 dark:text-slate-400',
       }
@@ -73,7 +83,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
     return configs[stepKey];
   };
 
-  const getConnectorColor = (fromStep: 'eligibilityCheck' | 'benefitsVerification') => {
+  const getConnectorColor = (fromStep: 'eligibilityCheck' | 'benefitsVerification' | 'aiCallVerification') => {
     const status = patient.verificationStatus?.[fromStep];
     return status === 'completed' ? 'bg-status-green' : 'bg-slate-300 dark:bg-slate-600';
   };
@@ -157,7 +167,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               Insurance Verification Status
             </h3>
             <span className="text-xs text-slate-500 dark:text-slate-400">
-              Step {getVerificationStep()} of 3
+              Step {getVerificationStep()} of 4
             </span>
           </div>
           <div className="space-y-3">
@@ -180,15 +190,23 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               <div className={`h-0.5 flex-1 ${getConnectorColor('benefitsVerification')} -mx-0.5`}></div>
 
               {/* Step 3 Circle */}
-              <div className={`flex items-center justify-center w-10 h-10 rounded-full ${getStepConfig('authorization').bgColor} ${getStepConfig('authorization').textColor} shrink-0 z-10`}>
-                <span className="material-symbols-outlined text-lg">{getStepConfig('authorization').icon}</span>
+              <div className={`flex items-center justify-center w-10 h-10 rounded-full ${getStepConfig('aiCallVerification').bgColor} ${getStepConfig('aiCallVerification').textColor} shrink-0 z-10`}>
+                <span className="material-symbols-outlined text-lg">{getStepConfig('aiCallVerification').icon}</span>
+              </div>
+
+              {/* Connector Line 3 */}
+              <div className={`h-0.5 flex-1 ${getConnectorColor('aiCallVerification')} -mx-0.5`}></div>
+
+              {/* Step 4 Circle */}
+              <div className={`flex items-center justify-center w-10 h-10 rounded-full ${getStepConfig('sendToPMS').bgColor} ${getStepConfig('sendToPMS').textColor} shrink-0 z-10`}>
+                <span className="material-symbols-outlined text-lg">{getStepConfig('sendToPMS').icon}</span>
               </div>
             </div>
 
             {/* Step Labels */}
             <div className="flex items-start">
               {/* Step 1 Label */}
-              <div className="flex-1 text-center" style={{ maxWidth: '33.333%' }}>
+              <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
                 <p className="text-xs font-semibold text-slate-900 dark:text-white">
                   {getStepConfig('eligibilityCheck').label}
                 </p>
@@ -198,7 +216,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               </div>
 
               {/* Step 2 Label */}
-              <div className="flex-1 text-center" style={{ maxWidth: '33.333%' }}>
+              <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
                 <p className="text-xs font-semibold text-slate-900 dark:text-white">
                   {getStepConfig('benefitsVerification').label}
                 </p>
@@ -208,12 +226,22 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               </div>
 
               {/* Step 3 Label */}
-              <div className="flex-1 text-center" style={{ maxWidth: '33.333%' }}>
+              <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
                 <p className="text-xs font-semibold text-slate-900 dark:text-white">
-                  {getStepConfig('authorization').label}
+                  {getStepConfig('aiCallVerification').label}
                 </p>
-                <p className={`text-xs ${getStepConfig('authorization').statusColor}`}>
-                  {getStepConfig('authorization').statusText}
+                <p className={`text-xs ${getStepConfig('aiCallVerification').statusColor}`}>
+                  {getStepConfig('aiCallVerification').statusText}
+                </p>
+              </div>
+
+              {/* Step 4 Label */}
+              <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
+                <p className="text-xs font-semibold text-slate-900 dark:text-white">
+                  {getStepConfig('sendToPMS').label}
+                </p>
+                <p className={`text-xs ${getStepConfig('sendToPMS').statusColor}`}>
+                  {getStepConfig('sendToPMS').statusText}
                 </p>
               </div>
             </div>
@@ -232,17 +260,23 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 "Coverage Details",
                 "Appointments",
                 "Treatment History",
+                "AI Call History",
               ] as TabType[]
             ).map((tab) => (
               <button
                 key={tab}
                 onClick={() => onTabChange(tab)}
-                className={`shrink-0 border-b-2 px-1 pb-3 text-sm font-semibold whitespace-nowrap ${
+                className={`shrink-0 border-b-2 px-1 pb-3 text-sm font-semibold whitespace-nowrap flex items-center gap-2 ${
                   activeTab === tab
-                    ? "border-primary text-primary"
+                    ? tab === "AI Call History"
+                      ? "border-cyan-500 text-cyan-600 dark:text-cyan-400"
+                      : "border-primary text-primary"
                     : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-300"
                 }`}
               >
+                {tab === "AI Call History" && (
+                  <span className="material-symbols-outlined text-lg">smart_toy</span>
+                )}
                 {tab}
               </button>
             ))}
@@ -687,6 +721,93 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 <p className="text-slate-500 dark:text-slate-400">
                   No coverage details available
                 </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Tab Content - AI Call History */}
+        {activeTab === "AI Call History" && (
+          <div className="mt-6 space-y-4">
+            {(patient as any).aiCallHistory &&
+            (patient as any).aiCallHistory.length > 0 ? (
+              (patient as any).aiCallHistory.map(
+                (call: any, index: number) => (
+                  <div
+                    key={index}
+                    className="rounded-xl border border-cyan-200 dark:border-cyan-800/50 bg-gradient-to-br from-cyan-50/50 via-blue-50/30 to-white dark:from-cyan-900/10 dark:via-blue-900/10 dark:to-slate-900 p-4 hover:shadow-lg hover:shadow-cyan-500/10 transition-all duration-200"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 p-3 shrink-0 shadow-lg shadow-cyan-500/30">
+                        <span className="material-symbols-outlined text-white text-xl">
+                          smart_toy
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                            <span className="material-symbols-outlined text-cyan-600 dark:text-cyan-400 text-lg">
+                              call
+                            </span>
+                            {call.topic || "AI Consultation"}
+                          </p>
+                          <span className="text-xs text-slate-500 dark:text-slate-400">
+                            {call.date} at {call.time}
+                          </span>
+                        </div>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">
+                          {call.summary || "AI-assisted consultation"}
+                        </p>
+                        <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+                          <div className="flex items-center gap-1">
+                            <span className="material-symbols-outlined text-sm text-cyan-600 dark:text-cyan-400">
+                              schedule
+                            </span>
+                            <span>Duration: {call.duration || "N/A"}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="material-symbols-outlined text-sm text-cyan-600 dark:text-cyan-400">
+                              person
+                            </span>
+                            <span>Agent: {call.agent || "Smith AI"}</span>
+                          </div>
+                          <span
+                            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
+                              call.status === "completed"
+                                ? "bg-status-green/20 text-status-green"
+                                : call.status === "in_progress"
+                                  ? "bg-cyan-500/20 text-cyan-600 dark:text-cyan-400"
+                                  : "bg-status-orange/20 text-status-orange"
+                            }`}
+                          >
+                            {call.status?.toUpperCase() || "COMPLETED"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              )
+            ) : (
+              <div className="rounded-xl border border-cyan-200 dark:border-cyan-800/50 bg-gradient-to-br from-cyan-50/30 via-blue-50/20 to-white dark:from-cyan-900/10 dark:via-blue-900/10 dark:to-slate-900 p-8 text-center">
+                <div className="flex flex-col items-center justify-center gap-4">
+                  <div className="rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 p-6 shadow-lg shadow-cyan-500/30">
+                    <span className="material-symbols-outlined text-white text-5xl">
+                      smart_toy
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-slate-900 dark:text-white font-semibold mb-1 flex items-center justify-center gap-2">
+                      <span className="material-symbols-outlined text-cyan-600 dark:text-cyan-400">
+                        history
+                      </span>
+                      No AI Call History
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">
+                      Start a call with Smith AI Center to see call history here
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
           </div>

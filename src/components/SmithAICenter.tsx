@@ -12,7 +12,7 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
   const [messages, setMessages] = useState<Array<{ sender: 'ai' | 'user', text: string, time: string }>>([
     {
       sender: 'ai',
-      text: `Hello! I'm Smith AI Assistant. I'm ready to help with insurance verification for ${patient.name.given.join(' ')} ${patient.name.family}. How can I assist you today?`,
+      text: `Hello! I'm Smith AI Assistant. I'm ready to help with insurance verification for ${patient.name.given.join(' ')} ${patient.name.family}. Start Call when you're ready.`,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
@@ -44,6 +44,15 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
   const startCall = () => {
     setIsCallActive(true);
     setCallDuration(0);
+
+    // Add message when call starts
+    const callMessage = {
+      sender: 'ai' as const,
+      text: `Initiating call to insurance provider on behalf of ${getFullName()}. Connecting with verification agent to process insurance eligibility and benefits verification...`,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    setMessages(prev => [...prev, callMessage]);
+
     const interval = setInterval(() => {
       setCallDuration(prev => prev + 1);
     }, 1000);
@@ -247,9 +256,17 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
                   </div>
                   <div className="bg-white dark:bg-slate-900 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Authorization</span>
-                      <span className={`text-xs font-semibold ${patient.verificationStatus.authorization === 'completed' ? 'text-green-500' : patient.verificationStatus.authorization === 'in_progress' ? 'text-blue-500' : 'text-slate-400'}`}>
-                        {patient.verificationStatus.authorization === 'completed' ? 'Completed' : patient.verificationStatus.authorization === 'in_progress' ? 'In Progress' : 'Pending'}
+                      <span className="text-xs font-medium text-slate-600 dark:text-slate-400">AI Call Verification</span>
+                      <span className={`text-xs font-semibold ${patient.verificationStatus.aiCallVerification === 'completed' ? 'text-green-500' : patient.verificationStatus.aiCallVerification === 'in_progress' ? 'text-blue-500' : 'text-slate-400'}`}>
+                        {patient.verificationStatus.aiCallVerification === 'completed' ? 'Completed' : patient.verificationStatus.aiCallVerification === 'in_progress' ? 'In Progress' : 'Pending'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="bg-white dark:bg-slate-900 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Send To PMS</span>
+                      <span className={`text-xs font-semibold ${patient.verificationStatus.sendToPMS === 'completed' ? 'text-green-500' : patient.verificationStatus.sendToPMS === 'in_progress' ? 'text-blue-500' : 'text-slate-400'}`}>
+                        {patient.verificationStatus.sendToPMS === 'completed' ? 'Completed' : patient.verificationStatus.sendToPMS === 'in_progress' ? 'In Progress' : 'Pending'}
                       </span>
                     </div>
                   </div>

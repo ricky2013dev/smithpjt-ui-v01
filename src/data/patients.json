@@ -11,7 +11,8 @@
     "verificationStatus": {
       "eligibilityCheck": "completed",
       "benefitsVerification": "in_progress",
-      "authorization": "pending"
+      "aiCallVerification": "pending",
+      "sendToPMS": "pending"
     },
     "telecom": [
       {
@@ -153,7 +154,8 @@
     "verificationStatus": {
       "eligibilityCheck": "completed",
       "benefitsVerification": "completed",
-      "authorization": "in_progress"
+      "aiCallVerification": "in_progress",
+      "sendToPMS": "pending"
     },
     "telecom": [
       {
@@ -280,7 +282,18 @@
           "patient_pays": "$400"
         }
       ]
-    }
+    },
+    "aiCallHistory": [
+      {
+        "topic": "AI Verification Call - Root Canal Pre-Auth",
+        "date": "2024-11-06",
+        "time": "10:15 AM",
+        "summary": "Currently verifying pre-authorization for upcoming root canal procedure with Delta Dental. Awaiting final confirmation from insurance representative.",
+        "duration": "In Progress",
+        "agent": "Smith AI - Authorization Agent",
+        "status": "in_progress"
+      }
+    ]
   },
   {
     "id": "1003",
@@ -294,7 +307,8 @@
     "verificationStatus": {
       "eligibilityCheck": "in_progress",
       "benefitsVerification": "pending",
-      "authorization": "pending"
+      "aiCallVerification": "pending",
+      "sendToPMS": "pending"
     },
     "telecom": [
       {
@@ -468,7 +482,8 @@
     "verificationStatus": {
       "eligibilityCheck": "completed",
       "benefitsVerification": "completed",
-      "authorization": "completed"
+      "aiCallVerification": "completed",
+      "sendToPMS": "completed"
     },
     "telecom": [
       {
@@ -568,7 +583,45 @@
           "patient_pays": "$39"
         }
       ]
-    }
+    },
+    "aiCallHistory": [
+      {
+        "topic": "Insurance Eligibility Verification",
+        "date": "2024-10-15",
+        "time": "9:30 AM",
+        "summary": "Verified patient's Aetna Dental insurance eligibility for upcoming procedures. Confirmed active coverage and deductible status.",
+        "duration": "5 min 23 sec",
+        "agent": "Smith AI - Verification Bot",
+        "status": "completed"
+      },
+      {
+        "topic": "Benefits Verification Call",
+        "date": "2024-10-22",
+        "time": "2:15 PM",
+        "summary": "Contacted insurance provider to verify detailed benefits coverage for preventive and basic procedures. Confirmed 100% preventive and 80% basic coverage.",
+        "duration": "8 min 47 sec",
+        "agent": "Smith AI - Benefits Specialist",
+        "status": "completed"
+      },
+      {
+        "topic": "Pre-Authorization Request",
+        "date": "2024-11-01",
+        "time": "11:00 AM",
+        "summary": "Submitted pre-authorization request for upcoming dental cleaning and fluoride treatment. Authorization approved with reference number AET-2024-11-001.",
+        "duration": "12 min 15 sec",
+        "agent": "Smith AI - Authorization Agent",
+        "status": "completed"
+      },
+      {
+        "topic": "Appointment Reminder Call",
+        "date": "2024-11-20",
+        "time": "3:45 PM",
+        "summary": "Automated reminder call for upcoming appointment on November 25th. Patient confirmed attendance and requested reminder email.",
+        "duration": "2 min 10 sec",
+        "agent": "Smith AI - Scheduler",
+        "status": "completed"
+      }
+    ]
   },
   {
     "id": "1006",
@@ -582,7 +635,8 @@
     "verificationStatus": {
       "eligibilityCheck": "pending",
       "benefitsVerification": "pending",
-      "authorization": "pending"
+      "aiCallVerification": "pending",
+      "sendToPMS": "pending"
     },
     "telecom": [
       {
@@ -696,7 +750,8 @@
     "verificationStatus": {
       "eligibilityCheck": "completed",
       "benefitsVerification": "pending",
-      "authorization": "pending"
+      "aiCallVerification": "pending",
+      "sendToPMS": "pending"
     },
     "telecom": [
       {
@@ -802,7 +857,8 @@
     "verificationStatus": {
       "eligibilityCheck": "in_progress",
       "benefitsVerification": "pending",
-      "authorization": "pending"
+      "aiCallVerification": "pending",
+      "sendToPMS": "pending"
     },
     "telecom": [
       {
@@ -916,7 +972,8 @@
     "verificationStatus": {
       "eligibilityCheck": "completed",
       "benefitsVerification": "in_progress",
-      "authorization": "pending"
+      "aiCallVerification": "pending",
+      "sendToPMS": "pending"
     },
     "telecom": [
       {
@@ -1050,7 +1107,8 @@
     "verificationStatus": {
       "eligibilityCheck": "completed",
       "benefitsVerification": "completed",
-      "authorization": "pending"
+      "aiCallVerification": "pending",
+      "sendToPMS": "pending"
     },
     "telecom": [
       {
@@ -1172,7 +1230,8 @@
     "verificationStatus": {
       "eligibilityCheck": "completed",
       "benefitsVerification": "completed",
-      "authorization": "in_progress"
+      "aiCallVerification": "in_progress",
+      "sendToPMS": "pending"
     },
     "telecom": [
       {
@@ -1306,7 +1365,8 @@
     "verificationStatus": {
       "eligibilityCheck": "pending",
       "benefitsVerification": "pending",
-      "authorization": "pending"
+      "aiCallVerification": "pending",
+      "sendToPMS": "pending"
     },
     "telecom": [
       {
@@ -1428,7 +1488,8 @@
     "verificationStatus": {
       "eligibilityCheck": "in_progress",
       "benefitsVerification": "pending",
-      "authorization": "pending"
+      "aiCallVerification": "pending",
+      "sendToPMS": "pending"
     },
     "telecom": [
       {

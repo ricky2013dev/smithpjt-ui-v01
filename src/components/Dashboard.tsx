@@ -14,7 +14,7 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
 
   // Insurance and Coverage Metrics
   const patientsWithInsurance = patients.filter(p => (p as any).insurance && (p as any).insurance.length > 0).length;
-  const patientsWithoutInsurance = patients.length - patientsWithInsurance;
+  // const patientsWithoutInsurance = patients.length - patientsWithInsurance;
 
   const getTotalInsurancePolicies = () => {
     let count = 0;
@@ -65,23 +65,24 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
     return utilization.slice(0, 5);
   };
 
-  const getDeductibleStatus = () => {
-    const statuses: Array<{patient: Patient, coverage: any, deductiblePercent: number}> = [];
+  // Commented out unused function
+  // const getDeductibleStatus = () => {
+  //   const statuses: Array<{patient: Patient, coverage: any, deductiblePercent: number}> = [];
 
-    patients.forEach(patient => {
-      if ((patient as any).coverage) {
-        const cov = (patient as any).coverage;
-        const percent = (cov.deductible_met / cov.deductible) * 100;
-        statuses.push({
-          patient,
-          coverage: cov,
-          deductiblePercent: Math.round(percent)
-        });
-      }
-    });
+  //   patients.forEach(patient => {
+  //     if ((patient as any).coverage) {
+  //       const cov = (patient as any).coverage;
+  //       const percent = (cov.deductible_met / cov.deductible) * 100;
+  //       statuses.push({
+  //         patient,
+  //         coverage: cov,
+  //         deductiblePercent: Math.round(percent)
+  //       });
+  //     }
+  //   });
 
-    return statuses.slice(0, 5);
-  };
+  //   return statuses.slice(0, 5);
+  // };
 
   const getPendingVerifications = () => {
     // Simulated - policies expiring or needing verification
@@ -108,7 +109,7 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
   const totalPolicies = getTotalInsurancePolicies();
   const expiringPolicies = getExpiringPolicies();
   const coverageUtilization = getCoverageUtilization();
-  const deductibleStatus = getDeductibleStatus();
+  // const deductibleStatus = getDeductibleStatus();
   const pendingVerifications = getPendingVerifications();
 
   return (
