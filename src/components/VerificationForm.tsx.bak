@@ -122,6 +122,8 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
+    const formData = formRef.current;
+
     printWindow.document.write(`
       <!DOCTYPE html>
       <html>
@@ -234,29 +236,20 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
             }
 
             .checkbox {
-              width: 16px;
-              height: 16px;
+              width: 14px;
+              height: 14px;
               border: 2px solid #000;
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
+              display: inline-block;
               vertical-align: middle;
-              font-size: 12pt;
-              font-weight: bold;
             }
 
             .radio {
-              width: 16px;
-              height: 16px;
+              width: 14px;
+              height: 14px;
               border: 2px solid #000;
               border-radius: 50%;
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
+              display: inline-block;
               vertical-align: middle;
-              font-size: 14pt;
-              font-weight: bold;
-              line-height: 1;
             }
 
             .footer {
@@ -297,11 +290,11 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
             <p>Form Date: ${new Date().toLocaleDateString()}</p>
           </div>
 
-          ${generatePrintContent()}
+          ${generatePrintContent(formData)}
 
           <div class="footer">
             <div class="section-header">Additional Notes</div>
-            <div class="field-value large">${formData.additionalNotes}</div>
+            <div class="field-value large"></div>
 
             <div class="signature-section">
               <div>
@@ -327,10 +320,24 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
     printWindow.document.close();
   };
 
-  const generatePrintContent = (): string => {
-    // Helper function to get checkbox symbol
-    const getCheckbox = (checked: boolean) => checked ? '☑' : '☐';
-    const getRadio = (checked: boolean) => checked ? '●' : '○';
+  const generatePrintContent = (formElement: HTMLDivElement): string => {
+    const inputs = formElement.querySelectorAll('input, textarea');
+    const values: { [key: string]: string } = {};
+
+    inputs.forEach((input) => {
+      const element = input as HTMLInputElement | HTMLTextAreaElement;
+      if (element.type === 'checkbox') {
+        values[element.name || ''] = (element as HTMLInputElement).checked ? '☑' : '☐';
+      } else if (element.type === 'radio') {
+        if ((element as HTMLInputElement).checked) {
+          values[element.name || ''] = '●';
+        } else if (!values[element.name || '']) {
+          values[element.name || ''] = '○';
+        }
+      } else {
+        values[element.name || ''] = element.value || '';
+      }
+    });
 
     return `
       <div class="section">
@@ -342,7 +349,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           </div>
           <div class="field">
             <span class="field-label">SSN:</span>
-            <div class="field-value">${formData.patientSSN}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Date of Birth:</span>
@@ -350,7 +357,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           </div>
           <div class="field">
             <span class="field-label">Relationship to Subscriber:</span>
-            <div class="field-value">${formData.relationshipToSubscriber}</div>
+            <div class="field-value"></div>
           </div>
         </div>
       </div>
@@ -360,19 +367,19 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
         <div class="field-group">
           <div class="field">
             <span class="field-label">Subscriber Name:</span>
-            <div class="field-value">${formData.subscriberName}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">SSN:</span>
-            <div class="field-value">${formData.subscriberSSN}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Date of Birth:</span>
-            <div class="field-value">${formData.subscriberDOB}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Subscriber ID Number:</span>
-            <div class="field-value">${formData.subscriberID}</div>
+            <div class="field-value"></div>
           </div>
         </div>
       </div>
@@ -382,59 +389,59 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
         <div class="field-group">
           <div class="field">
             <span class="field-label">Insurance Company:</span>
-            <div class="field-value">${formData.insuranceCompany}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Insurer Type:</span>
             <div class="checkbox-group">
-              <span class="checkbox-item"><span class="checkbox">${formData.insurerType.primary ? '✓' : ''}</span> Primary</span>
-              <span class="checkbox-item"><span class="checkbox">${formData.insurerType.secondary ? '✓' : ''}</span> Secondary</span>
+              <span class="checkbox-item"><span class="checkbox"></span> Primary</span>
+              <span class="checkbox-item"><span class="checkbox"></span> Secondary</span>
             </div>
           </div>
           <div class="field">
             <span class="field-label">Address:</span>
-            <div class="field-value">${formData.insuranceAddress}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Phone:</span>
-            <div class="field-value">${formData.insurancePhone}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Employer:</span>
-            <div class="field-value">${formData.employer}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Group Number:</span>
-            <div class="field-value">${formData.groupNumber}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Effective Date:</span>
-            <div class="field-value">${formData.effectiveDate}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Renewal Month:</span>
-            <div class="field-value">${formData.renewalMonth}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Yearly Max:</span>
-            <div class="field-value">${formData.yearlyMax}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Deductible Per Individual:</span>
-            <div class="field-value">${formData.deductiblePerIndividual}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Deductible Per Family:</span>
-            <div class="field-value">${formData.deductiblePerFamily}</div>
+            <div class="field-value"></div>
           </div>
         </div>
         <div class="field-group-full">
           <div class="field">
             <span class="field-label">Deductible Applies To:</span>
             <div class="checkbox-group">
-              <span class="checkbox-item"><span class="checkbox">${formData.deductibleAppliesTo.preventative ? '✓' : ''}</span> Preventative</span>
-              <span class="checkbox-item"><span class="checkbox">${formData.deductibleAppliesTo.basic ? '✓' : ''}</span> Basic</span>
-              <span class="checkbox-item"><span class="checkbox">${formData.deductibleAppliesTo.major ? '✓' : ''}</span> Major</span>
+              <span class="checkbox-item"><span class="checkbox"></span> Preventative</span>
+              <span class="checkbox-item"><span class="checkbox"></span> Basic</span>
+              <span class="checkbox-item"><span class="checkbox"></span> Major</span>
             </div>
           </div>
         </div>
@@ -444,55 +451,31 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
         <div class="section-header">Preventative Coverage</div>
         <div class="field-group">
           <div class="field">
-            <span class="field-label">Covered at:</span>
-            <div class="field-value">${formData.preventativeCoveredAt}%</div>
+            <span class="field-label">Covered at (%):</span>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Waiting Period:</span>
             <div class="checkbox-group">
-              <span class="checkbox-item"><span class="radio">${formData.preventativeWaitingPeriod ? '●' : '○'}</span> Yes</span>
-              <span class="checkbox-item"><span class="radio">${!formData.preventativeWaitingPeriod ? '●' : '○'}</span> No</span>
+              <span class="checkbox-item"><span class="radio"></span> Yes</span>
+              <span class="checkbox-item"><span class="radio"></span> No</span>
             </div>
           </div>
           <div class="field">
             <span class="field-label">Effective Date:</span>
-            <div class="field-value">${formData.preventativeEffectiveDate}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Bitewing Frequency:</span>
-            <div class="field-value">${formData.bitewingFrequency}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Prophylaxis/Exam Frequency:</span>
-            <div class="field-value">${formData.prophylaxisExamFrequency}</div>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Last FMS:</span>
-            <div class="field-value">${formData.lastFMS}</div>
-          </div>
-          <div class="field">
-            <span class="field-label">Eligible for FMS Now:</span>
-            <div class="checkbox-group">
-              <span class="checkbox-item"><span class="radio">${formData.eligibleForFMSNow ? '●' : '○'}</span> Yes</span>
-              <span class="checkbox-item"><span class="radio">${!formData.eligibleForFMSNow ? '●' : '○'}</span> No</span>
-            </div>
-          </div>
-          <div class="field">
-            <span class="field-label">Eligible for FMS Every:</span>
-            <div class="field-value">${formData.eligibleForFMSEvery} Years</div>
-          </div>
-        </div>
-        <div class="field-group-full">
-          <div class="field">
-            <span class="field-label">Fluoride Varnish Frequency:</span>
-            <div class="field-value">${formData.fluorideVarnishFrequency}</div>
-          </div>
-          <div class="field">
-            <span class="field-label">Sealant Coverage:</span>
-            <div class="checkbox-group">
-              <span class="checkbox-item"><span class="checkbox">${formData.sealantTeethCovered.molars ? '✓' : ''}</span> Molars</span>
-              <span class="checkbox-item"><span class="checkbox">${formData.sealantTeethCovered.premolars ? '✓' : ''}</span> Premolars</span>
-            </div>
+            <div class="field-value"></div>
           </div>
         </div>
       </div>
@@ -501,25 +484,25 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
         <div class="section-header">Basic Coverage</div>
         <div class="field-group">
           <div class="field">
-            <span class="field-label">Covered at:</span>
-            <div class="field-value">${formData.basicCoveredAt}%</div>
+            <span class="field-label">Covered at (%):</span>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Waiting Period:</span>
             <div class="checkbox-group">
-              <span class="checkbox-item"><span class="radio">${formData.basicWaitingPeriod ? '●' : '○'}</span> Yes</span>
-              <span class="checkbox-item"><span class="radio">${!formData.basicWaitingPeriod ? '●' : '○'}</span> No</span>
+              <span class="checkbox-item"><span class="radio"></span> Yes</span>
+              <span class="checkbox-item"><span class="radio"></span> No</span>
             </div>
           </div>
           <div class="field">
             <span class="field-label">Effective Date:</span>
-            <div class="field-value">${formData.basicEffectiveDate}</div>
+            <div class="field-value"></div>
           </div>
         </div>
         <div class="field-group-full">
           <div class="field">
             <span class="field-label">Includes:</span>
-            <div class="field-value">${formData.basicIncludes}</div>
+            <div class="field-value"></div>
           </div>
         </div>
       </div>
@@ -528,68 +511,25 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
         <div class="section-header">Major Coverage</div>
         <div class="field-group">
           <div class="field">
-            <span class="field-label">Covered at:</span>
-            <div class="field-value">${formData.majorCoveredAt}%</div>
+            <span class="field-label">Covered at (%):</span>
+            <div class="field-value"></div>
           </div>
           <div class="field">
             <span class="field-label">Waiting Period:</span>
             <div class="checkbox-group">
-              <span class="checkbox-item"><span class="radio">${formData.majorWaitingPeriod ? '●' : '○'}</span> Yes</span>
-              <span class="checkbox-item"><span class="radio">${!formData.majorWaitingPeriod ? '●' : '○'}</span> No</span>
+              <span class="checkbox-item"><span class="radio"></span> Yes</span>
+              <span class="checkbox-item"><span class="radio"></span> No</span>
             </div>
           </div>
           <div class="field">
             <span class="field-label">Effective Date:</span>
-            <div class="field-value">${formData.majorEffectiveDate}</div>
+            <div class="field-value"></div>
           </div>
         </div>
         <div class="field-group-full">
           <div class="field">
             <span class="field-label">Includes:</span>
-            <div class="field-value">${formData.majorIncludes}</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-header">Periodontal Coverage</div>
-        <div class="field-group">
-          <div class="field">
-            <span class="field-label">SRP History:</span>
-            <div class="checkbox-group">
-              <span class="checkbox-item"><span class="radio">${formData.srpHistory ? '●' : '○'}</span> Yes</span>
-              <span class="checkbox-item"><span class="radio">${!formData.srpHistory ? '●' : '○'}</span> No</span>
-            </div>
-          </div>
-          <div class="field">
-            <span class="field-label">SRP History Date:</span>
-            <div class="field-value">${formData.srpHistoryDate}</div>
-          </div>
-          <div class="field">
-            <span class="field-label">SRP Frequency:</span>
-            <div class="field-value">${formData.srpFrequency}</div>
-          </div>
-          <div class="field">
-            <span class="field-label">Periodontal Maintenance Frequency:</span>
-            <div class="field-value">${formData.periodontalMaintenanceFrequency}</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-header">Implant & Orthodontic Coverage</div>
-        <div class="field-group">
-          <div class="field">
-            <span class="field-label">Endosteal Implants:</span>
-            <div class="field-value">${formData.endostealImplantsCovered ? formData.endostealImplantsCoveredAt + '%' : 'Not Covered'}</div>
-          </div>
-          <div class="field">
-            <span class="field-label">Orthodontics:</span>
-            <div class="field-value">${formData.orthodonticsCovered ? formData.orthodonticsCoveredAt + '%' : 'Not Covered'}</div>
-          </div>
-          <div class="field">
-            <span class="field-label">Orthodontics Lifetime Max:</span>
-            <div class="field-value">${formData.orthodonticsLifetimeMaxExists ? formData.orthodonticsLifetimeMax : 'N/A'}</div>
+            <div class="field-value"></div>
           </div>
         </div>
       </div>
@@ -598,27 +538,12 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
         <div class="section-header">Miscellaneous</div>
         <div class="field-group">
           <div class="field">
-            <span class="field-label">Nightguards:</span>
-            <div class="field-value">${formData.nightguardsCovered ? formData.nightguardsCoveredAt + '%' : 'Not Covered'}</div>
+            <span class="field-label">Replacement on Crowns/Bridges (Years):</span>
+            <div class="field-value"></div>
           </div>
           <div class="field">
-            <span class="field-label">Nitrous Oxide:</span>
-            <div class="field-value">${formData.nitrousOxideCovered ? formData.nitrousOxideCoveredAt + '%' : 'Not Covered'}</div>
-          </div>
-          <div class="field">
-            <span class="field-label">Replacement on Crowns/Bridges:</span>
-            <div class="field-value">${formData.crownsAndBridgesReplacement} Years</div>
-          </div>
-          <div class="field">
-            <span class="field-label">Replacement on Dentures:</span>
-            <div class="field-value">${formData.denturesReplacement} Years</div>
-          </div>
-          <div class="field">
-            <span class="field-label">Missing Tooth Clause:</span>
-            <div class="checkbox-group">
-              <span class="checkbox-item"><span class="radio">${formData.missingToothClauseCovered ? '●' : '○'}</span> Yes</span>
-              <span class="checkbox-item"><span class="radio">${!formData.missingToothClauseCovered ? '●' : '○'}</span> No</span>
-            </div>
+            <span class="field-label">Replacement on Dentures (Years):</span>
+            <div class="field-value"></div>
           </div>
         </div>
       </div>
@@ -752,7 +677,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.insuranceCompany}
+                  placeholder="Insurance company name"
                 />
               </div>
               <div>
@@ -761,11 +686,11 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 </label>
                 <div className="flex gap-4 items-center h-10">
                   <label className="flex items-center gap-2">
-                    <input type="checkbox" className="rounded" defaultChecked={formData.insurerType.primary} />
+                    <input type="checkbox" className="rounded" />
                     <span className="text-sm text-slate-700 dark:text-slate-300">Primary</span>
                   </label>
                   <label className="flex items-center gap-2">
-                    <input type="checkbox" className="rounded" defaultChecked={formData.insurerType.secondary} />
+                    <input type="checkbox" className="rounded" />
                     <span className="text-sm text-slate-700 dark:text-slate-300">Secondary</span>
                   </label>
                 </div>
@@ -777,7 +702,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.insuranceAddress}
+                  placeholder="Insurance address"
                 />
               </div>
               <div>
@@ -787,7 +712,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.insurancePhone}
+                  placeholder="Phone number"
                 />
               </div>
               <div>
@@ -797,7 +722,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.employer}
+                  placeholder="Employer name"
                 />
               </div>
               <div>
@@ -807,7 +732,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.groupNumber}
+                  placeholder="Group number"
                 />
               </div>
               <div>
@@ -817,7 +742,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.effectiveDate}
+                  placeholder="MM/DD/YYYY"
                 />
               </div>
               <div>
@@ -827,7 +752,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.renewalMonth}
+                  placeholder="Month"
                 />
               </div>
               <div>
@@ -837,7 +762,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.yearlyMax}
+                  placeholder="$"
                 />
               </div>
               <div>
@@ -847,7 +772,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.deductiblePerIndividual}
+                  placeholder="$"
                 />
               </div>
               <div>
@@ -857,7 +782,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.deductiblePerFamily}
+                  placeholder="$"
                 />
               </div>
               <div className="md:col-span-2">
@@ -866,15 +791,15 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 </label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2">
-                    <input type="checkbox" className="rounded" defaultChecked={formData.deductibleAppliesTo.preventative} />
+                    <input type="checkbox" className="rounded" />
                     <span className="text-sm text-slate-700 dark:text-slate-300">Preventative</span>
                   </label>
                   <label className="flex items-center gap-2">
-                    <input type="checkbox" className="rounded" defaultChecked={formData.deductibleAppliesTo.basic} />
+                    <input type="checkbox" className="rounded" />
                     <span className="text-sm text-slate-700 dark:text-slate-300">Basic</span>
                   </label>
                   <label className="flex items-center gap-2">
-                    <input type="checkbox" className="rounded" defaultChecked={formData.deductibleAppliesTo.major} />
+                    <input type="checkbox" className="rounded" />
                     <span className="text-sm text-slate-700 dark:text-slate-300">Major</span>
                   </label>
                 </div>
@@ -897,7 +822,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.preventativeCoveredAt}
+                  placeholder="%"
                 />
               </div>
               <div>
@@ -922,7 +847,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.lastFMS}
+                  placeholder="MM/DD/YYYY"
                 />
               </div>
               <div>
@@ -932,7 +857,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.bitewingFrequency}
+                  placeholder="e.g., Every 6 months"
                 />
               </div>
               <div>
@@ -942,7 +867,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.prophylaxisExamFrequency}
+                  placeholder="e.g., Every 6 months"
                 />
               </div>
               <div>
@@ -977,7 +902,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.eligibleForFMSEvery}
+                  placeholder="Years"
                 />
               </div>
               <div className="md:col-span-2">
@@ -987,7 +912,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.fluorideVarnishFrequency}
+                  placeholder="Frequency"
                 />
               </div>
               <div>
@@ -1012,7 +937,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.fluorideAgeLimit}
+                  placeholder="Age"
                 />
               </div>
               <div>
@@ -1036,11 +961,11 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 </label>
                 <div className="flex gap-4 items-center h-10">
                   <label className="flex items-center gap-2">
-                    <input type="checkbox" className="rounded" defaultChecked={formData.sealantTeethCovered.molars} />
+                    <input type="checkbox" className="rounded" />
                     <span className="text-sm text-slate-700 dark:text-slate-300">Molars</span>
                   </label>
                   <label className="flex items-center gap-2">
-                    <input type="checkbox" className="rounded" defaultChecked={formData.sealantTeethCovered.premolars} />
+                    <input type="checkbox" className="rounded" />
                     <span className="text-sm text-slate-700 dark:text-slate-300">Premolars</span>
                   </label>
                 </div>
@@ -1067,7 +992,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.sealantAgeLimit}
+                  placeholder="Age"
                 />
               </div>
               <div className="md:col-span-2">
@@ -1077,7 +1002,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.sealantReplacement}
+                  placeholder="Replacement policy"
                 />
               </div>
             </div>
@@ -1098,7 +1023,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.basicCoveredAt}
+                  placeholder="%"
                 />
               </div>
               <div>
@@ -1133,7 +1058,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <textarea
                   rows={2}
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.basicIncludes}
+                  placeholder="List covered services"
                 />
               </div>
             </div>
@@ -1154,7 +1079,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.majorCoveredAt}
+                  placeholder="%"
                 />
               </div>
               <div>
@@ -1189,7 +1114,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <textarea
                   rows={2}
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.majorIncludes}
+                  placeholder="List covered services"
                 />
               </div>
             </div>
@@ -1675,7 +1600,6 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               <textarea
                 rows={6}
                 className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                defaultValue={formData.additionalNotes}
                 placeholder="Add any additional notes or information..."
               />
             </div>
