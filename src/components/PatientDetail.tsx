@@ -123,13 +123,13 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
     <section className="hidden w-0 flex-1 flex-col bg-background-light dark:bg-background-dark lg:flex lg:w-[70%]">
       {/* Profile Header */}
       <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-        <div className="flex items-center gap-6 mb-4">
+        <div className="flex items-start gap-3">
           <div className="rounded-full h-24 w-24 bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shrink-0">
             <span className="material-symbols-outlined text-white text-5xl">
               person
             </span>
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
               {fullName}
             </h2>
@@ -137,7 +137,104 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               Patient ID: {patient.id}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+
+          {/* Verification Steps Progress - Compact */}
+          <div className="p-3 flex-1 max-w-2xl -ml-4">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                Insurance Verification Status
+              </h3>
+              <span className="text-xs text-slate-500 dark:text-slate-400">
+                Step {getVerificationStep()} of 4
+              </span>
+            </div>
+            {/* Progress Line with Steps - Combined with status labels */}
+            <div className="relative">
+              <div className="flex items-center mb-1 justify-between">
+                {/* Step 1 */}
+                <div className="group/step1 flex flex-col items-center">
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${getStepConfig('eligibilityCheck').bgColor} ${getStepConfig('eligibilityCheck').textColor} shrink-0 z-10 cursor-pointer`}>
+                    <span className="material-symbols-outlined text-base">{getStepConfig('eligibilityCheck').icon}</span>
+                  </div>
+                </div>
+
+                {/* Connector Line 1 */}
+                <div className={`h-0.5 flex-1 ${getConnectorColor('eligibilityCheck')}`}></div>
+
+                {/* Step 2 */}
+                <div className="group/step2 flex flex-col items-center">
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${getStepConfig('benefitsVerification').bgColor} ${getStepConfig('benefitsVerification').textColor} shrink-0 z-10 cursor-pointer`}>
+                    <span className="material-symbols-outlined text-base">{getStepConfig('benefitsVerification').icon}</span>
+                  </div>
+                </div>
+
+                {/* Connector Line 2 */}
+                <div className={`h-0.5 flex-1 ${getConnectorColor('benefitsVerification')}`}></div>
+
+                {/* Step 3 */}
+                <div className="group/step3 flex flex-col items-center">
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${getStepConfig('aiCallVerification').bgColor} ${getStepConfig('aiCallVerification').textColor} shrink-0 z-10 cursor-pointer`}>
+                    <span className="material-symbols-outlined text-base">{getStepConfig('aiCallVerification').icon}</span>
+                  </div>
+                </div>
+
+                {/* Connector Line 3 */}
+                <div className={`h-0.5 flex-1 ${getConnectorColor('aiCallVerification')}`}></div>
+
+                {/* Step 4 */}
+                <div className="group/step4 flex flex-col items-center">
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${getStepConfig('sendToPMS').bgColor} ${getStepConfig('sendToPMS').textColor} shrink-0 z-10 cursor-pointer`}>
+                    <span className="material-symbols-outlined text-base">{getStepConfig('sendToPMS').icon}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step Status Labels */}
+              <div className="flex items-start -mt-1">
+                {/* Step 1 Label */}
+                <div className="flex-1 text-center relative group/step1" style={{ maxWidth: '25%' }}>
+                  <p className={`text-xs ${getStepConfig('eligibilityCheck').statusColor}`}>
+                    {getStepConfig('eligibilityCheck').statusText}
+                  </p>
+                  <p className="text-xs font-semibold text-slate-900 dark:text-white leading-tight absolute left-0 right-0 top-full mt-1 opacity-0 group-hover/step1:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    {getStepConfig('eligibilityCheck').label}
+                  </p>
+                </div>
+
+                {/* Step 2 Label */}
+                <div className="flex-1 text-center relative group/step2" style={{ maxWidth: '25%' }}>
+                  <p className={`text-xs ${getStepConfig('benefitsVerification').statusColor}`}>
+                    {getStepConfig('benefitsVerification').statusText}
+                  </p>
+                  <p className="text-xs font-semibold text-slate-900 dark:text-white leading-tight absolute left-0 right-0 top-full mt-1 opacity-0 group-hover/step2:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    {getStepConfig('benefitsVerification').label}
+                  </p>
+                </div>
+
+                {/* Step 3 Label */}
+                <div className="flex-1 text-center relative group/step3" style={{ maxWidth: '25%' }}>
+                  <p className={`text-xs ${getStepConfig('aiCallVerification').statusColor}`}>
+                    {getStepConfig('aiCallVerification').statusText}
+                  </p>
+                  <p className="text-xs font-semibold text-slate-900 dark:text-white leading-tight absolute left-0 right-0 top-full mt-1 opacity-0 group-hover/step3:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    {getStepConfig('aiCallVerification').label}
+                  </p>
+                </div>
+
+                {/* Step 4 Label */}
+                <div className="flex-1 text-center relative group/step4" style={{ maxWidth: '25%' }}>
+                  <p className={`text-xs ${getStepConfig('sendToPMS').statusColor}`}>
+                    {getStepConfig('sendToPMS').statusText}
+                  </p>
+                  <p className="text-xs font-semibold text-slate-900 dark:text-white leading-tight absolute left-0 right-0 top-full mt-1 opacity-0 group-hover/step4:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    {getStepConfig('sendToPMS').label}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setShowAICenter(true)}
               className="rounded-lg border border-transparent bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-2 text-sm font-semibold text-white hover:from-cyan-600 hover:to-blue-600 shadow-lg shadow-cyan-500/30 transition-all flex items-center gap-2"
@@ -158,94 +255,6 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             >
               <span className="material-symbols-outlined">close</span>
             </button>
-          </div>
-        </div>
-
-        {/* Verification Steps Progress */}
-        <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-              Insurance Verification Status
-            </h3>
-            <span className="text-xs text-slate-500 dark:text-slate-400">
-              Step {getVerificationStep()} of 4
-            </span>
-          </div>
-          <div className="space-y-3">
-            {/* Progress Line with Steps */}
-            <div className="flex items-center">
-              {/* Step 1 Circle */}
-              <div className={`flex items-center justify-center w-10 h-10 rounded-full ${getStepConfig('eligibilityCheck').bgColor} ${getStepConfig('eligibilityCheck').textColor} shrink-0 z-10`}>
-                <span className="material-symbols-outlined text-lg">{getStepConfig('eligibilityCheck').icon}</span>
-              </div>
-
-              {/* Connector Line 1 */}
-              <div className={`h-0.5 flex-1 ${getConnectorColor('eligibilityCheck')} -mx-0.5`}></div>
-
-              {/* Step 2 Circle */}
-              <div className={`flex items-center justify-center w-10 h-10 rounded-full ${getStepConfig('benefitsVerification').bgColor} ${getStepConfig('benefitsVerification').textColor} shrink-0 z-10`}>
-                <span className="material-symbols-outlined text-lg">{getStepConfig('benefitsVerification').icon}</span>
-              </div>
-
-              {/* Connector Line 2 */}
-              <div className={`h-0.5 flex-1 ${getConnectorColor('benefitsVerification')} -mx-0.5`}></div>
-
-              {/* Step 3 Circle */}
-              <div className={`flex items-center justify-center w-10 h-10 rounded-full ${getStepConfig('aiCallVerification').bgColor} ${getStepConfig('aiCallVerification').textColor} shrink-0 z-10`}>
-                <span className="material-symbols-outlined text-lg">{getStepConfig('aiCallVerification').icon}</span>
-              </div>
-
-              {/* Connector Line 3 */}
-              <div className={`h-0.5 flex-1 ${getConnectorColor('aiCallVerification')} -mx-0.5`}></div>
-
-              {/* Step 4 Circle */}
-              <div className={`flex items-center justify-center w-10 h-10 rounded-full ${getStepConfig('sendToPMS').bgColor} ${getStepConfig('sendToPMS').textColor} shrink-0 z-10`}>
-                <span className="material-symbols-outlined text-lg">{getStepConfig('sendToPMS').icon}</span>
-              </div>
-            </div>
-
-            {/* Step Labels */}
-            <div className="flex items-start">
-              {/* Step 1 Label */}
-              <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
-                <p className="text-xs font-semibold text-slate-900 dark:text-white">
-                  {getStepConfig('eligibilityCheck').label}
-                </p>
-                <p className={`text-xs ${getStepConfig('eligibilityCheck').statusColor}`}>
-                  {getStepConfig('eligibilityCheck').statusText}
-                </p>
-              </div>
-
-              {/* Step 2 Label */}
-              <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
-                <p className="text-xs font-semibold text-slate-900 dark:text-white">
-                  {getStepConfig('benefitsVerification').label}
-                </p>
-                <p className={`text-xs ${getStepConfig('benefitsVerification').statusColor}`}>
-                  {getStepConfig('benefitsVerification').statusText}
-                </p>
-              </div>
-
-              {/* Step 3 Label */}
-              <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
-                <p className="text-xs font-semibold text-slate-900 dark:text-white">
-                  {getStepConfig('aiCallVerification').label}
-                </p>
-                <p className={`text-xs ${getStepConfig('aiCallVerification').statusColor}`}>
-                  {getStepConfig('aiCallVerification').statusText}
-                </p>
-              </div>
-
-              {/* Step 4 Label */}
-              <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
-                <p className="text-xs font-semibold text-slate-900 dark:text-white">
-                  {getStepConfig('sendToPMS').label}
-                </p>
-                <p className={`text-xs ${getStepConfig('sendToPMS').statusColor}`}>
-                  {getStepConfig('sendToPMS').statusText}
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
