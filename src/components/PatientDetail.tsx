@@ -8,6 +8,7 @@ import {
   TabType,
 } from "../types/patient";
 import SmithAICenter from "./SmithAICenter";
+import VerificationForm from "./VerificationForm";
 
 interface PatientDetailProps {
   patient: Patient;
@@ -258,6 +259,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 "Demographics",
                 "Insurance",
                 "Coverage Details",
+                "Verification Form",
                 "Appointments",
                 "Treatment History",
                 "AI Call History",
@@ -276,6 +278,9 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               >
                 {tab === "AI Call History" && (
                   <span className="material-symbols-outlined text-lg">smart_toy</span>
+                )}
+                {tab === "Verification Form" && (
+                  <span className="material-symbols-outlined text-lg">assignment</span>
                 )}
                 {tab}
               </button>
@@ -724,6 +729,11 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               </div>
             )}
           </div>
+        )}
+
+        {/* Tab Content - Verification Form */}
+        {activeTab === "Verification Form" && (
+          <VerificationForm patient={patient} />
         )}
 
         {/* Tab Content - AI Call History */}

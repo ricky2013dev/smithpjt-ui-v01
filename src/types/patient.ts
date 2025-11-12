@@ -88,10 +88,120 @@ export interface CoverageDetails {
   procedures: Procedure[];
 }
 
+export interface VerificationFormData {
+  // Patient Information
+  patientName: string;
+  patientSSN: string;
+  patientDOB: string;
+  relationshipToSubscriber: string;
+
+  // Subscriber Information
+  subscriberName: string;
+  subscriberSSN: string;
+  subscriberDOB: string;
+  subscriberID: string;
+
+  // Insurance Information
+  insuranceCompany: string;
+  insurerType: 'Primary' | 'Secondary';
+  insuranceAddress: string;
+  insurancePhone: string;
+  employer: string;
+  groupNumber: string;
+  effectiveDate: string;
+  renewalMonth: string;
+  yearlyMax: string;
+  deductiblePerIndividual: string;
+  deductiblePerFamily: string;
+  deductibleAppliesTo: {
+    preventative: boolean;
+    basic: boolean;
+    major: boolean;
+  };
+
+  // Preventative Coverage
+  preventativeCoveredAt: string;
+  preventativeWaitingPeriod: boolean;
+  preventativeEffectiveDate: string;
+  bitewingFrequency: string;
+  prophylaxisExamFrequency: string;
+  lastFMS: string;
+  eligibleForFMSNow: boolean;
+  eligibleForFMSEvery: string;
+  fluorideVarnishFrequency: string;
+  fluorideAgeLimitExists: boolean;
+  fluorideAgeLimit: string;
+  sealantCoverage: boolean;
+  sealantTeethCovered: {
+    molars: boolean;
+    premolars: boolean;
+  };
+  sealantAgeLimitExists: boolean;
+  sealantAgeLimit: string;
+  sealantReplacement: string;
+
+  // Basic Coverage
+  basicCoveredAt: string;
+  basicWaitingPeriod: boolean;
+  basicEffectiveDate: string;
+  basicIncludes: string;
+
+  // Major Coverage
+  majorCoveredAt: string;
+  majorWaitingPeriod: boolean;
+  majorEffectiveDate: string;
+  majorIncludes: string;
+
+  // Periodontal Coverage
+  srpHistory: boolean;
+  srpHistoryDate: string;
+  srpCovered: boolean;
+  srpFrequency: string;
+  srpAllQuadrantsSameVisit: boolean;
+  srpWaitingPeriod: string;
+  adultProphylaxisWithSRP: boolean;
+  adultProphylaxisWaitingPeriod: string;
+  periodontalMaintenanceCovered: boolean;
+  periodontalMaintenanceFrequency: string;
+
+  // Implant Coverage
+  endostealImplantsCovered: boolean;
+  endostealImplantsCoveredAt: string;
+  boneReplacementGraftsCovered: boolean;
+  boneReplacementGraftsCoveredAt: string;
+  guidedTissueRegenerationCovered: boolean;
+  guidedTissueRegenerationCoveredAt: string;
+  implantAbutmentsCovered: boolean;
+  implantAbutmentsCoveredAt: string;
+  implantCrownsCovered: boolean;
+  implantCrownsCoveredAt: string;
+  implantPreDeterminationRequired: boolean;
+
+  // Orthodontic Coverage
+  orthodonticsCovered: boolean;
+  orthodonticsCoveredAt: string;
+  orthodonticsAgeLimitExists: boolean;
+  orthodonticsAgeLimit: string;
+  orthodonticsLifetimeMaxExists: boolean;
+  orthodonticsLifetimeMax: string;
+
+  // Miscellaneous
+  nightguardsCovered: boolean;
+  nightguardsCoveredAt: string;
+  nitrousOxideCovered: boolean;
+  nitrousOxideCoveredAt: string;
+  crownsAndBridgesReplacement: string;
+  denturesReplacement: string;
+  missingToothClauseCovered: boolean;
+
+  // Additional Notes
+  additionalNotes: string;
+}
+
 export type FilterType =
   | 'Active'
   | 'Inactive'
   | 'Eligibility'
   | 'Verification'
   | 'Authorization';
-export type TabType = 'Demographics' | 'Insurance' | 'Appointments' | 'Treatment History' | 'Coverage Details' | 'AI Call History';
+export type TabType = 'Demographics' | 'Insurance' | 'Appointments' | 'Treatment History' | 'Coverage Details' | 'AI Call History' | 'Verification Form';
