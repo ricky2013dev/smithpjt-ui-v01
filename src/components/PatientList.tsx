@@ -172,16 +172,7 @@ const PatientList: React.FC<PatientListProps> = ({
           >
             Verification
           </button>
-          <button
-            onClick={() => toggleFilter('Authorization')}
-            className={`flex h-8 shrink-0 items-center justify-center px-3 rounded-lg text-sm font-medium transition-colors ${
-              activeFilters.includes('Authorization')
-                ? 'bg-primary text-white'
-                : 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
-            }`}
-          >
-            Authorization
-          </button>
+
         </div>
       </div>
 

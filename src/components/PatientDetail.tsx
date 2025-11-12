@@ -129,7 +129,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0">
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
               {fullName}
             </h2>
@@ -138,16 +138,18 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             </p>
           </div>
 
-          <button
-            onClick={() => setShowAICenter(true)}
-            className="rounded-lg border border-transparent bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-2 text-sm font-semibold text-white hover:from-cyan-600 hover:to-blue-600 shadow-lg shadow-cyan-500/30 transition-all flex items-center gap-2 shrink-0"
-          >
-            <span className="material-symbols-outlined">smart_toy</span>
-            Start AI Call
-          </button>
+          <div className="flex-1 flex justify-center">
+            <button
+              onClick={() => setShowAICenter(true)}
+              className="rounded-lg border border-transparent bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-2 text-sm font-semibold text-white hover:from-cyan-600 hover:to-blue-600 shadow-lg shadow-cyan-500/30 transition-all flex items-center gap-2 shrink-0"
+            >
+              <span className="material-symbols-outlined">smart_toy</span>
+              Start AI Call
+            </button>
+          </div>
 
           {/* Verification Steps Progress - Compact */}
-          <div className="p-3 flex-1 max-w-2xl ml-6">
+          <div className="p-3 flex-1 max-w-2xl">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 Insurance Verification Status
@@ -253,9 +255,10 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               "Insurance",
               "Coverage Details",
               "Verification Form",
+               "AI Call History",
               "Appointments",
               "Treatment History",
-              "AI Call History",
+             
             ] as TabType[]
           ).map((tab) => (
             <button

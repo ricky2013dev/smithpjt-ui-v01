@@ -1,115 +1,14 @@
 import React, { useRef, useState } from "react";
 import { Patient } from "../types/patient";
+import verificationData from "../data/verificationData.json";
 
 interface VerificationFormProps {
   patient: Patient;
 }
 
-// Dummy data for the verification form
-const dummyVerificationData = {
-  // Patient Information - will be overridden by parent component data
-  patientSSN: "123-45-6789",
-  relationshipToSubscriber: "Self",
-
-  // Subscriber Information
-  subscriberName: "John Smith",
-  subscriberSSN: "987-65-4321",
-  subscriberDOB: "01/15/1975",
-  subscriberID: "SUB123456789",
-
-  // Insurance Information
-  insuranceCompany: "Blue Cross Blue Shield",
-  insurerType: { primary: true, secondary: false },
-  insuranceAddress: "123 Insurance Way, Chicago, IL 60601",
-  insurancePhone: "(800) 555-1234",
-  employer: "ABC Corporation",
-  groupNumber: "GRP-987654",
-  effectiveDate: "01/01/2024",
-  renewalMonth: "January",
-  yearlyMax: "$2,000",
-  deductiblePerIndividual: "$50",
-  deductiblePerFamily: "$150",
-  deductibleAppliesTo: { preventative: false, basic: true, major: true },
-
-  // Preventative Coverage
-  preventativeCoveredAt: "100",
-  preventativeWaitingPeriod: false,
-  preventativeEffectiveDate: "01/01/2024",
-  bitewingFrequency: "Every 6 months",
-  prophylaxisExamFrequency: "Every 6 months",
-  lastFMS: "03/15/2023",
-  eligibleForFMSNow: true,
-  eligibleForFMSEvery: "3",
-  fluorideVarnishFrequency: "Every 6 months (under 18)",
-  fluorideAgeLimitExists: true,
-  fluorideAgeLimit: "18",
-  sealantCoverage: true,
-  sealantTeethCovered: { molars: true, premolars: true },
-  sealantAgeLimitExists: true,
-  sealantAgeLimit: "16",
-  sealantReplacement: "Once per tooth per lifetime",
-
-  // Basic Coverage
-  basicCoveredAt: "80",
-  basicWaitingPeriod: false,
-  basicEffectiveDate: "01/01/2024",
-  basicIncludes: "Fillings, extractions, root canals, periodontal treatment",
-
-  // Major Coverage
-  majorCoveredAt: "50",
-  majorWaitingPeriod: true,
-  majorEffectiveDate: "07/01/2024",
-  majorIncludes: "Crowns, bridges, dentures, implants",
-
-  // Periodontal Coverage
-  srpHistory: true,
-  srpHistoryDate: "06/15/2023",
-  srpCovered: true,
-  srpFrequency: "Once per quadrant per 24 months",
-  srpAllQuadrantsSameVisit: false,
-  srpWaitingPeriod: "3 months between quadrants",
-  adultProphylaxisWithSRP: false,
-  adultProphylaxisWaitingPeriod: "Same day not allowed",
-  periodontalMaintenanceCovered: true,
-  periodontalMaintenanceFrequency: "4 times per year",
-
-  // Implant Coverage
-  endostealImplantsCovered: true,
-  endostealImplantsCoveredAt: "50",
-  boneReplacementGraftsCovered: true,
-  boneReplacementGraftsCoveredAt: "50",
-  guidedTissueRegenerationCovered: true,
-  guidedTissueRegenerationCoveredAt: "50",
-  implantAbutmentsCovered: true,
-  implantAbutmentsCoveredAt: "50",
-  implantCrownsCovered: true,
-  implantCrownsCoveredAt: "50",
-  implantPreDeterminationRequired: true,
-
-  // Orthodontic Coverage
-  orthodonticsCovered: true,
-  orthodonticsCoveredAt: "50",
-  orthodonticsAgeLimitExists: true,
-  orthodonticsAgeLimit: "19",
-  orthodonticsLifetimeMaxExists: true,
-  orthodonticsLifetimeMax: "$2,000",
-
-  // Miscellaneous
-  nightguardsCovered: true,
-  nightguardsCoveredAt: "80",
-  nitrousOxideCovered: true,
-  nitrousOxideCoveredAt: "50",
-  crownsAndBridgesReplacement: "5",
-  denturesReplacement: "7",
-  missingToothClauseCovered: false,
-
-  // Additional Notes
-  additionalNotes: "Patient has history of dental anxiety. Recommend gentle approach and consider sedation options for major procedures."
-};
-
 const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
   const formRef = useRef<HTMLDivElement>(null);
-  const [formData] = useState(dummyVerificationData);
+  const [formData] = useState(verificationData);
   const [collapsedSections, setCollapsedSections] = useState<{[key: string]: boolean}>({
     patient: false,
     subscriber: false,
@@ -642,7 +541,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
   };
 
   return (
-    <div className="mt-6">
+    <div className="mt-6" key={patient.id}>
       <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
         <div className="p-4 border-b border-slate-200 dark:border-slate-800">
           <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
