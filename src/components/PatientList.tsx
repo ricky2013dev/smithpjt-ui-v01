@@ -108,7 +108,7 @@ const PatientList: React.FC<PatientListProps> = ({
   };
 
   return (
-    <aside className="flex w-full flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/50 lg:w-[30%] lg:shrink-0">
+    <aside className="flex w-full flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/50 lg:w-[25%] lg:shrink-0">
       {/* Search and Filters */}
       <div className="p-4 border-b border-slate-200 dark:border-slate-800">
         <label className="flex flex-col min-w-40 h-11 w-full">
@@ -217,11 +217,11 @@ const PatientList: React.FC<PatientListProps> = ({
             >
               {/* Column 1: Patient Info */}
               <div className="flex items-center gap-3 min-w-0">
-                <div className={`rounded-lg h-14 w-14 ${patient.active ? 'bg-status-green' : 'bg-status-red'} flex flex-col items-center justify-center shrink-0`}>
-                  <span className="text-white text-lg font-bold leading-none">
+                <div className={`rounded-lg h-12 w-12 ${patient.active ? 'bg-status-green' : 'bg-status-red'} flex flex-col items-center justify-center shrink-0`}>
+                  <span className="text-white text-base font-bold leading-none">
                     {getInitials(patient)}
                   </span>
-                  <span className="text-white text-[9px] font-medium leading-none mt-0.5">
+                  <span className="text-white text-[8px] font-medium leading-none mt-0.5">
                     {patient.id}
                   </span>
                 </div>
@@ -249,7 +249,7 @@ const PatientList: React.FC<PatientListProps> = ({
               </div>
 
               {/* Column 2: Verification Status */}
-              <div className="flex flex-col items-center justify-center gap-2">
+              <div className="flex flex-col items-center justify-center gap-1.5">
                 <div className="flex items-center gap-2">
                   {stepDots.map((dotColor, index) => (
                     <div
@@ -258,7 +258,7 @@ const PatientList: React.FC<PatientListProps> = ({
                     />
                   ))}
                 </div>
-                <span className={`text-2xl font-bold ${verificationStatus.color} text-center whitespace-nowrap`}>
+                <span className={`text-lg font-bold ${verificationStatus.color} text-center whitespace-nowrap`}>
                   {verificationStatus.percentage}%
                 </span>
               </div>

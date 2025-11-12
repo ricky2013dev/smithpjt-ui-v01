@@ -118,7 +118,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   const fullName = getFullName();
 
   return (
-    <section className="hidden w-0 flex-1 flex-col bg-background-light dark:bg-background-dark lg:flex lg:w-[70%]">
+    <section className="hidden w-0 flex-1 flex-col bg-background-light dark:bg-background-dark lg:flex lg:w-[75%]">
       {/* Profile Header */}
       <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
         <div className="flex items-center gap-3">

@@ -15,7 +15,7 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
   verificationStats = { verified: 0, inProgress: 0, pending: 0, notStarted: 0 }
 }) => {
   return (
-    <section className="hidden w-0 flex-1 flex-col bg-background-light dark:bg-background-dark lg:flex lg:w-[70%] overflow-y-auto">
+    <section className="hidden w-0 flex-1 flex-col bg-background-light dark:bg-background-dark lg:flex lg:w-[75%] overflow-y-auto">
       <div className="p-8">
         {/* Header */}
         <div className="mb-8">
