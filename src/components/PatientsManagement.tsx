@@ -123,11 +123,6 @@ const PatientsManagement: React.FC = () => {
     }
   };
 
-  const handleCloseDetail = () => {
-    setSelectedPatientId(null);
-    setViewMode('dashboard');
-  };
-
   const handleDashboardItemClick = () => {
     setViewMode('list');
     // Do not select any patient - let user choose
@@ -168,7 +163,6 @@ const PatientsManagement: React.FC = () => {
                 patient={selectedPatient}
                 activeTab={activeTab}
                 onTabChange={setActiveTab}
-                onClose={handleCloseDetail}
               />
             ) : (
               <PatientGuide

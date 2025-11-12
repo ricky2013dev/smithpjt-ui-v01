@@ -35,10 +35,6 @@ const PatientList: React.FC<PatientListProps> = ({
     return `${given} ${patient.name.family}`.trim();
   };
 
-  const getEmail = (patient: Patient) => {
-    return patient.telecom.find(t => t.system === 'email')?.value || '';
-  };
-
   const getPhone = (patient: Patient) => {
     return patient.telecom.find(t => t.system === 'phone')?.value || '';
   };
@@ -52,6 +48,12 @@ const PatientList: React.FC<PatientListProps> = ({
       age--;
     }
     return age;
+  };
+
+  const getInitials = (patient: Patient) => {
+    const given = patient.name.given[0] || '';
+    const family = patient.name.family || '';
+    return `${given.charAt(0)}${family.charAt(0)}`.toUpperCase();
   };
 
   const getVerificationStatus = (patient: Patient) => {
@@ -197,7 +199,6 @@ const PatientList: React.FC<PatientListProps> = ({
       <div className="flex-1 overflow-y-auto">
         {patients.map((patient) => {
           const fullName = getFullName(patient);
-          const email = getEmail(patient);
           const phone = getPhone(patient);
           const age = calculateAge(patient.birthDate);
           const verificationStatus = getVerificationStatus(patient);
@@ -208,46 +209,40 @@ const PatientList: React.FC<PatientListProps> = ({
             <div
               key={patient.id}
               onClick={() => onSelectPatient(patient.id)}
-              className={`grid grid-cols-[1fr,200px] cursor-pointer items-center gap-4 px-4 min-h-[72px] py-3 ${
+              className={`grid grid-cols-[1fr,200px] cursor-pointer items-center gap-4 px-4 py-3 ${
                 isSelected
                   ? 'bg-primary/10 dark:bg-primary/20 border-r-4 border-primary'
                   : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
               }`}
             >
               {/* Column 1: Patient Info */}
-              <div className="flex items-start gap-4 min-w-0">
-                <div className={`rounded-full h-12 w-12 ${patient.active ? 'bg-status-green' : 'bg-status-red'} flex flex-col items-center justify-center shrink-0 relative`}>
-                  <span className="material-symbols-outlined text-white text-xl">
-                    person
+              <div className="flex items-center gap-3 min-w-0">
+                <div className={`rounded-lg h-14 w-14 ${patient.active ? 'bg-status-green' : 'bg-status-red'} flex flex-col items-center justify-center shrink-0`}>
+                  <span className="text-white text-lg font-bold leading-none">
+                    {getInitials(patient)}
                   </span>
-                  <span className="text-white text-[8px] font-semibold uppercase leading-none">
-                    {patient.active ? 'Active' : 'Inactive'}
+                  <span className="text-white text-[9px] font-medium leading-none mt-0.5">
+                    {patient.id}
                   </span>
                 </div>
                 <div className="flex flex-col justify-center flex-1 min-w-0">
-                  <p className="text-slate-900 dark:text-white text-base font-semibold leading-normal line-clamp-1">
+                  <p className="text-slate-900 dark:text-white text-sm font-semibold leading-normal line-clamp-1">
                     {fullName}
                   </p>
-                  <p className="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal line-clamp-1">
-                    {email}
-                  </p>
                   {phone && (
-                    <p className="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal line-clamp-1">
-                      <span className="material-symbols-outlined text-xs align-middle mr-1">phone</span>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs font-normal leading-normal line-clamp-1">
+                      <span className="material-symbols-outlined text-[10px] align-middle mr-1">phone</span>
                       {phone}
                     </p>
                   )}
-                  <div className="flex items-center gap-3 mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  <div className="flex items-center gap-2 mt-1 text-[10px] text-slate-500 dark:text-slate-400">
                     <span className="capitalize">
-                      <span className="material-symbols-outlined text-xs align-middle mr-1">person</span>
+                      <span className="material-symbols-outlined text-[10px] align-middle mr-0.5">person</span>
                       {patient.gender}
                     </span>
                     <span>
-                      <span className="material-symbols-outlined text-xs align-middle mr-1">cake</span>
+                      <span className="material-symbols-outlined text-[10px] align-middle mr-0.5">cake</span>
                       {age} years
-                    </span>
-                    <span className="line-clamp-1">
-                      ID: {patient.id}
                     </span>
                   </div>
                 </div>

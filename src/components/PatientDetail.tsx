@@ -14,14 +14,12 @@ interface PatientDetailProps {
   patient: Patient;
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
-  onClose: () => void;
 }
 
 const PatientDetail: React.FC<PatientDetailProps> = ({
   patient,
   activeTab,
   onTabChange,
-  onClose,
 }) => {
   const [showAICenter, setShowAICenter] = useState(false);
 
@@ -123,11 +121,13 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
     <section className="hidden w-0 flex-1 flex-col bg-background-light dark:bg-background-dark lg:flex lg:w-[70%]">
       {/* Profile Header */}
       <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-        <div className="flex items-start gap-3">
-          <div className="rounded-full h-24 w-24 bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shrink-0">
-            <span className="material-symbols-outlined text-white text-5xl">
-              person
-            </span>
+        <div className="flex items-center gap-3">
+          <div className="rounded-full h-24 w-24 overflow-hidden shrink-0 ring-4 ring-slate-100 dark:ring-slate-800">
+            <img
+              src={`https://i.pravatar.cc/150?img=${Math.abs(patient.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % 70) + 1}`}
+              alt={fullName}
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="flex-1 min-w-0">
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
@@ -138,8 +138,16 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             </p>
           </div>
 
+          <button
+            onClick={() => setShowAICenter(true)}
+            className="rounded-lg border border-transparent bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-2 text-sm font-semibold text-white hover:from-cyan-600 hover:to-blue-600 shadow-lg shadow-cyan-500/30 transition-all flex items-center gap-2 shrink-0"
+          >
+            <span className="material-symbols-outlined">smart_toy</span>
+            Start AI Call
+          </button>
+
           {/* Verification Steps Progress - Compact */}
-          <div className="p-3 flex-1 max-w-2xl -ml-4">
+          <div className="p-3 flex-1 max-w-2xl ml-6">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 Insurance Verification Status
@@ -233,69 +241,48 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               </div>
             </div>
           </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => setShowAICenter(true)}
-              className="rounded-lg border border-transparent bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-2 text-sm font-semibold text-white hover:from-cyan-600 hover:to-blue-600 shadow-lg shadow-cyan-500/30 transition-all flex items-center gap-2"
-            >
-              <span className="material-symbols-outlined">smart_toy</span>
-              Call with Smith AI Center
-            </button>
-            <button className="rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800">
-              Edit Profile
-            </button>
-            <button className="rounded-lg border border-transparent bg-transparent p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
-              <span className="material-symbols-outlined">more_horiz</span>
-            </button>
-            <button
-              onClick={onClose}
-              className="rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
-              title="Close patient detail"
-            >
-              <span className="material-symbols-outlined">close</span>
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* Tab Navigation */}
+      {/* Tab Navigation - Fixed */}
+      <div className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-6 sticky top-0 z-10">
+        <nav aria-label="Tabs" className="flex -mb-px gap-6 overflow-x-auto">
+          {(
+            [
+              "Demographics",
+              "Insurance",
+              "Coverage Details",
+              "Verification Form",
+              "Appointments",
+              "Treatment History",
+              "AI Call History",
+            ] as TabType[]
+          ).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => onTabChange(tab)}
+              className={`shrink-0 border-b-2 px-1 pb-3 text-sm font-semibold whitespace-nowrap flex items-center gap-2 ${
+                activeTab === tab
+                  ? tab === "AI Call History"
+                    ? "border-cyan-500 text-cyan-600 dark:text-cyan-400"
+                    : "border-primary text-primary"
+                  : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-300"
+              }`}
+            >
+              {tab === "AI Call History" && (
+                <span className="material-symbols-outlined text-lg">smart_toy</span>
+              )}
+              {tab === "Verification Form" && (
+                <span className="material-symbols-outlined text-lg">assignment</span>
+              )}
+              {tab}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Tab Content - Scrollable */}
       <div className="flex-1 overflow-y-auto p-6">
-        <div className="border-b border-slate-200 dark:border-slate-700">
-          <nav aria-label="Tabs" className="flex -mb-px gap-6 overflow-x-auto">
-            {(
-              [
-                "Demographics",
-                "Insurance",
-                "Coverage Details",
-                "Verification Form",
-                "Appointments",
-                "Treatment History",
-                "AI Call History",
-              ] as TabType[]
-            ).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => onTabChange(tab)}
-                className={`shrink-0 border-b-2 px-1 pb-3 text-sm font-semibold whitespace-nowrap flex items-center gap-2 ${
-                  activeTab === tab
-                    ? tab === "AI Call History"
-                      ? "border-cyan-500 text-cyan-600 dark:text-cyan-400"
-                      : "border-primary text-primary"
-                    : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-300"
-                }`}
-              >
-                {tab === "AI Call History" && (
-                  <span className="material-symbols-outlined text-lg">smart_toy</span>
-                )}
-                {tab === "Verification Form" && (
-                  <span className="material-symbols-outlined text-lg">assignment</span>
-                )}
-                {tab}
-              </button>
-            ))}
-          </nav>
-        </div>
 
         {/* Tab Content - Demographics */}
         {activeTab === "Demographics" && (
