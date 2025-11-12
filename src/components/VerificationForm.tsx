@@ -9,6 +9,8 @@ interface VerificationFormProps {
 const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
   const formRef = useRef<HTMLDivElement>(null);
   const [formData] = useState(verificationData);
+  const [showPatientSSN, setShowPatientSSN] = useState(false);
+  const [showSubscriberSSN, setShowSubscriberSSN] = useState(false);
   const [collapsedSections, setCollapsedSections] = useState<{[key: string]: boolean}>({
     patient: false,
     subscriber: false,
@@ -33,6 +35,15 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
   const getFullName = () => {
     const given = patient.name.given.join(" ");
     return `${given} ${patient.name.family}`.trim();
+  };
+
+  const maskSSN = (ssn: string) => {
+    // Show only last 4 digits, mask the rest
+    const digits = ssn.replace(/\D/g, ''); // Remove non-digits
+    if (digits.length >= 4) {
+      return `***-**-${digits.slice(-4)}`;
+    }
+    return '***-**-****';
   };
 
   const handlePrint = () => {
@@ -579,11 +590,23 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   SSN
                 </label>
-                <input
-                  type="text"
-                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.patientSSN}
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                    value={showPatientSSN ? formData.patientSSN : maskSSN(formData.patientSSN)}
+                    readOnly
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPatientSSN(!showPatientSSN)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                  >
+                    <span className="material-symbols-outlined text-lg">
+                      {showPatientSSN ? 'visibility_off' : 'visibility'}
+                    </span>
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
@@ -638,11 +661,23 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   SSN
                 </label>
-                <input
-                  type="text"
-                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  defaultValue={formData.subscriberSSN}
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                    value={showSubscriberSSN ? formData.subscriberSSN : maskSSN(formData.subscriberSSN)}
+                    readOnly
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowSubscriberSSN(!showSubscriberSSN)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                  >
+                    <span className="material-symbols-outlined text-lg">
+                      {showSubscriberSSN ? 'visibility_off' : 'visibility'}
+                    </span>
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
