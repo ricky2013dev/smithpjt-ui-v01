@@ -285,11 +285,11 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
       </div>
 
       {/* Tab Content - Scrollable */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto p-4">
 
         {/* Tab Content - Demographics */}
         {activeTab === "Demographics" && (
-          <div className="mt-6 space-y-6 animate-fadeIn">
+          <div className="space-y-6 animate-fadeIn">
             <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
               <div className="p-4 border-b border-slate-200 dark:border-slate-800">
                 <h3 className="font-semibold text-slate-900 dark:text-white">
@@ -386,7 +386,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
 
         {/* Tab Content - Insurance */}
         {activeTab === "Insurance" && (
-          <div className="mt-6 space-y-6 animate-fadeIn">
+          <div className="space-y-6 animate-fadeIn">
             {(patient as any).insurance &&
             (patient as any).insurance.length > 0 ? (
               (patient as any).insurance.map(
@@ -513,7 +513,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
 
         {/* Tab Content - Appointments */}
         {activeTab === "Appointments" && (
-          <div className="mt-6 space-y-4 animate-fadeIn">
+          <div className="space-y-4 animate-fadeIn">
             {(patient as any).appointments &&
             (patient as any).appointments.length > 0 ? (
               (patient as any).appointments.map(
@@ -558,7 +558,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
 
         {/* Tab Content - Treatment History */}
         {activeTab === "Treatment History" && (
-          <div className="mt-6 space-y-4 animate-fadeIn">
+          <div className="space-y-4 animate-fadeIn">
             {(patient as any).treatments &&
             (patient as any).treatments.length > 0 ? (
               (patient as any).treatments.map(
@@ -595,7 +595,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
 
         {/* Tab Content - Coverage Details */}
         {activeTab === "Coverage Details" && (
-          <div className="mt-6 space-y-6 animate-fadeIn">
+          <div className="space-y-6 animate-fadeIn">
             {(patient as any).coverage &&
             (patient as any).coverage.procedures.length > 0 ? (
               <>
@@ -737,7 +737,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
 
         {/* Tab Content - AI Call History */}
         {activeTab === "AI Call History" && (
-          <div className="mt-6 space-y-4 animate-fadeIn">
+          <div className="space-y-4 animate-fadeIn">
             {(patient as any).aiCallHistory &&
             (patient as any).aiCallHistory.length > 0 ? (
               (patient as any).aiCallHistory.map(

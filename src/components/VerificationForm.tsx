@@ -552,14 +552,33 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
   };
 
   return (
-    <div className="mt-6" key={patient.id}>
+    <div key={patient.id}>
       <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-        <div className="p-4 border-b border-slate-200 dark:border-slate-800">
-          <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-            <span className="material-symbols-outlined">assignment</span>
-            Dental Insurance Verification Form
-          </h3>
+        {/* Header with Title and Action Buttons - Sticky */}
+        <div className="sticky top-0 z-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 shadow-md rounded-t-xl">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+              <span className="material-symbols-outlined">assignment</span>
+              Dental Insurance Verification Form
+            </h3>
+            <div className="flex gap-3">
+              <button
+                onClick={handlePrint}
+                className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 bg-white dark:bg-slate-900"
+              >
+                <span className="material-symbols-outlined text-lg">print</span>
+                Print Form
+              </button>
+              <button className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 bg-white dark:bg-slate-900">
+                Clear Form
+              </button>
+              <button className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
+                Save Verification Form
+              </button>
+            </div>
+          </div>
         </div>
+
         <div ref={formRef} className="p-6 space-y-8">
           {/* Patient Information Section */}
           <div className="space-y-4">
@@ -1717,23 +1736,6 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               />
             </div>
             )}
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-700">
-            <button
-              onClick={handlePrint}
-              className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2"
-            >
-              <span className="material-symbols-outlined text-lg">print</span>
-              Print Form
-            </button>
-            <button className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800">
-              Clear Form
-            </button>
-            <button className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
-              Save Verification Form
-            </button>
           </div>
         </div>
       </div>
