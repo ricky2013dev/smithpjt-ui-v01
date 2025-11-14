@@ -37,11 +37,17 @@ export default {
           '0%': { opacity: '0', transform: 'translateY(30px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        progress: {
+          '0%': { width: '0%' },
+          '50%': { width: '70%' },
+          '100%': { width: '100%' },
+        },
       },
       animation: {
         fadeIn: 'fadeIn 0.6s ease-in-out',
         slideDown: 'slideDown 0.8s ease-out',
         slideUp: 'slideUp 0.8s ease-out',
+        progress: 'progress 1.5s ease-in-out infinite',
       },
     },
   },

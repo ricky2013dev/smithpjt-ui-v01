@@ -1,6 +1,9 @@
 import React, { useRef, useState } from "react";
 import { Patient } from "../types/patient";
 import verificationData from "../data/verificationData.json";
+import sampleCoverageData from "../data/sampleCoverageData.json";
+// import availityService from "../services/availityService"; // Not currently used
+import CoverageModal from "./CoverageModal";
 
 interface VerificationFormProps {
   patient: Patient;
@@ -25,11 +28,118 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
     notes: false,
   });
 
+  // Modal and API states
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isVerifying] = useState(false);
+  const [isVerifyingByPayerId] = useState(false);
+  const [isLoadingSampleData, setIsLoadingSampleData] = useState(false);
+  const [verificationError, setVerificationError] = useState<string | null>(null);
+  const [coverageData, setCoverageData] = useState<any>(null);
+  const [curlCommand, setCurlCommand] = useState<string | null>(null);
+
   const toggleSection = (section: string) => {
     setCollapsedSections(prev => ({
       ...prev,
       [section]: !prev[section]
     }));
+  };
+
+  // Commented out - not currently used in UI
+  // const handleStartVerification = async () => {
+  //   // Validate coverage ID
+  //   if (!coverageId || coverageId.trim() === '') {
+  //     setVerificationError('Please enter a Coverage ID');
+  //     setIsModalOpen(true);
+  //     return;
+  //   }
+
+  //   setIsVerifying(true);
+  //   setVerificationError(null);
+  //   setIsModalOpen(true);
+
+  //   try {
+  //     // Get access token first
+  //     const accessToken = await availityService.getAccessToken();
+
+  //     // Generate curl command with actual token for testing
+  //     const baseUrl = import.meta.env.VITE_AVAILITY_API_BASE_URL;
+  //     const curl = `curl --request GET \\
+  // --url ${baseUrl}/coverages/${coverageId.trim()} \\
+  // --header 'Authorization: Bearer ${accessToken}' \\
+  // --header 'accept: application/json'`;
+  //     setCurlCommand(curl);
+
+  //     const data = await availityService.startVerification(coverageId.trim());
+  //     setCoverageData(data);
+  //   } catch (error) {
+  //     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+  //     setVerificationError(errorMessage);
+  //     console.error('Verification failed:', error);
+  //   } finally {
+  //     setIsVerifying(false);
+  //   }
+  // };
+
+  // const handleVerifyByPayerId = async () => {
+  //   // Validate payer ID
+  //   if (!payerId || payerId.trim() === '') {
+  //     setVerificationError('Please enter a Payer ID');
+  //     setIsModalOpen(true);
+  //     return;
+  //   }
+
+  //   setIsVerifyingByPayerId(true);
+  //   setVerificationError(null);
+  //   setIsModalOpen(true);
+
+  //   try {
+  //     // Get access token first
+  //     const accessToken = await availityService.getAccessToken();
+
+  //     // Generate curl command with actual token for testing
+  //     const baseUrl = import.meta.env.VITE_AVAILITY_API_BASE_URL;
+  //     const curl = `curl --request POST \\
+  // --url ${baseUrl}/coverages \\
+  // --header 'Authorization: Bearer ${accessToken}' \\
+  // --header 'accept: application/json' \\
+  // --header 'content-type: application/x-www-form-urlencoded' \\
+  // --data payerId=${payerId.trim()}`;
+  //     setCurlCommand(curl);
+
+  //     const data = await availityService.startVerificationByPayerId(payerId.trim());
+  //     setCoverageData(data);
+  //   } catch (error) {
+  //     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+  //     setVerificationError(errorMessage);
+  //     console.error('Verification by Payer ID failed:', error);
+  //   } finally {
+  //     setIsVerifyingByPayerId(false);
+  //   }
+  // };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    // Reset states after modal closes
+    setTimeout(() => {
+      setVerificationError(null);
+      setCoverageData(null);
+      setCurlCommand(null);
+    }, 300);
+  };
+
+  const handleLoadSampleData = async () => {
+    // Show loading state and open modal
+    setIsLoadingSampleData(true);
+    setVerificationError(null);
+    setCurlCommand(null);
+    setIsModalOpen(true);
+
+    // Simulate API call with 2 second delay to show progress animation
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Load sample data and display in modal
+    setCoverageData(sampleCoverageData);
+    setIsLoadingSampleData(false);
   };
 
   const getFullName = () => {
@@ -556,12 +666,74 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
       <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
         {/* Header with Title and Action Buttons - Sticky */}
         <div className="sticky top-0 z-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 shadow-md rounded-t-xl">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-              <span className="material-symbols-outlined">assignment</span>
-              Dental Insurance Verification Form
-            </h3>
-            <div className="flex gap-3">
+          <div className="flex flex-col gap-3">
+            {/* Top row with Verification buttons */}
+            <div className="flex flex-col gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+              <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                <span className="material-symbols-outlined">assignment</span>
+                Dental Insurance Verification Form
+              </h3>
+
+     
+
+
+
+                {/* Verify by Payer ID */}
+                {/* <div className="flex items-end gap-2">
+                  <div className="flex flex-col">
+                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                      Payer ID
+                    </label>
+                    <input
+                      type="text"
+                      value={payerId}
+                      onChange={(e) => setPayerId(e.target.value)}
+                      placeholder="Enter Payer ID"
+                      className="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm min-w-[200px]"
+                    />
+                  </div>
+                  <button
+                    onClick={handleVerifyByPayerId}
+                    disabled={isVerifying || isVerifyingByPayerId}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center gap-2 font-medium shadow-sm transition-all whitespace-nowrap"
+                  >
+                    {isVerifyingByPayerId ? (
+                      <>
+                        <span className="animate-spin material-symbols-outlined text-lg">refresh</span>
+                        Verifying...
+                      </>
+                    ) : (
+                      <>
+                        <span className="material-symbols-outlined text-lg">search</span>
+                        Verify by Payer
+                      </>
+                    )}
+                  </button>
+                </div> */}
+
+       
+
+            </div>
+
+            {/* Bottom row with other action buttons */}
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={handleLoadSampleData}
+                disabled={isVerifying || isVerifyingByPayerId || isLoadingSampleData}
+                className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 bg-white dark:bg-slate-900 transition-all"
+              >
+                {isLoadingSampleData ? (
+                  <>
+                    <span className="animate-spin material-symbols-outlined text-lg">refresh</span>
+                    Loading...
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-lg">description</span>
+                    Verify Via Availity API
+                  </>
+                )}
+              </button>
               <button
                 onClick={handlePrint}
                 className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 bg-white dark:bg-slate-900"
@@ -572,9 +744,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               <button className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 bg-white dark:bg-slate-900">
                 Clear Form
               </button>
-              <button className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90">
-                Save Verification Form
-              </button>
+
             </div>
           </div>
         </div>
@@ -1739,6 +1909,16 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           </div>
         </div>
       </div>
+
+      {/* Coverage Verification Modal */}
+      <CoverageModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        data={coverageData}
+        isLoading={isVerifying || isVerifyingByPayerId || isLoadingSampleData}
+        error={verificationError}
+        curlCommand={curlCommand}
+      />
     </div>
   );
 };
