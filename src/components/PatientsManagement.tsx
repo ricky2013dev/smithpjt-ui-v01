@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PatientList from './PatientList';
 import PatientDetail from './PatientDetail';
 import Dashboard from './Dashboard';
 import PatientGuide from './PatientGuide';
 import Header from './Header';
-import { Patient, FilterType, TabType } from '../types/patient';
+import { Patient, FilterType, TabType, TAB_TYPES } from '../types/patient';
 import patientsData from '../data/patients.json';
 
 const patients = patientsData as Patient[];
 
 const PatientsManagement: React.FC = () => {
-  const [viewMode, setViewMode] = useState<'dashboard' | 'list'>('dashboard');
+  const [isAdmin, setIsAdmin] = useState<boolean>(false); // Default to user mode
+  const [viewMode, setViewMode] = useState<'dashboard' | 'list'>('list'); // Default to list for non-admin
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeFilters, setActiveFilters] = useState<FilterType[]>([]);
-  const [activeTab, setActiveTab] = useState<TabType>('Demographics');
+  const [activeTab, setActiveTab] = useState<TabType>(TAB_TYPES.PATIENT_BASIC_INFO);
+
+  // Update viewMode when isAdmin changes
+  useEffect(() => {
+    setViewMode(isAdmin ? 'dashboard' : 'list');
+  }, [isAdmin]);
 
   // Filter and search patients
   const filteredPatients = React.useMemo(() => {
@@ -130,14 +136,19 @@ const PatientsManagement: React.FC = () => {
   };
 
   const handleHeaderClick = () => {
-    setViewMode('dashboard');
+    // Admin mode: go to dashboard, User mode: go to list
+    setViewMode(isAdmin ? 'dashboard' : 'list');
     setSelectedPatientId(null);
   };
 
   return (
     <div className="flex h-screen w-full flex-col">
       {/* Smith AI Center Header */}
-      <Header onLogoClick={handleHeaderClick} />
+      <Header
+        onLogoClick={handleHeaderClick}
+        isAdmin={isAdmin}
+        onToggleAdmin={setIsAdmin}
+      />
 
 
 
@@ -156,6 +167,7 @@ const PatientsManagement: React.FC = () => {
               onSearchChange={setSearchQuery}
               onRemoveFilter={handleRemoveFilter}
               onAddFilter={handleAddFilter}
+              isAdmin={isAdmin}
             />
 
             {selectedPatient ? (
@@ -163,6 +175,7 @@ const PatientsManagement: React.FC = () => {
                 patient={selectedPatient}
                 activeTab={activeTab}
                 onTabChange={setActiveTab}
+                isAdmin={isAdmin}
               />
             ) : (
               <PatientGuide

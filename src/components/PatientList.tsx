@@ -10,6 +10,7 @@ interface PatientListProps {
   onSearchChange: (query: string) => void;
   onRemoveFilter: (filter: string) => void;
   onAddFilter: (filter: FilterType) => void;
+  isAdmin?: boolean;
 }
 
 const PatientList: React.FC<PatientListProps> = ({
@@ -21,6 +22,7 @@ const PatientList: React.FC<PatientListProps> = ({
   onSearchChange,
   onRemoveFilter,
   onAddFilter,
+  isAdmin = false,
 }) => {
   const toggleFilter = (filter: FilterType) => {
     if (activeFilters.includes(filter)) {
@@ -125,55 +127,57 @@ const PatientList: React.FC<PatientListProps> = ({
           </div>
         </label>
 
-        {/* Filter Chips */}
-        <div className="flex gap-2 pt-3 overflow-x-auto pb-1">
-          {/* Active/Inactive Filters */}
-          <button
-            onClick={() => toggleFilter('Active')}
-            className={`flex h-8 shrink-0 items-center justify-center px-3 rounded-lg text-sm font-medium transition-colors ${
-              activeFilters.includes('Active')
-                ? 'bg-status-green text-white'
-                : 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
-            }`}
-          >
-            Active
-          </button>
-          <button
-            onClick={() => toggleFilter('Inactive')}
-            className={`flex h-8 shrink-0 items-center justify-center px-3 rounded-lg text-sm font-medium transition-colors ${
-              activeFilters.includes('Inactive')
-                ? 'bg-status-red text-white'
-                : 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
-            }`}
-          >
-            Inactive
-          </button>
+        {/* Filter Chips - Only visible for admin */}
+        {isAdmin && (
+          <div className="flex gap-2 pt-3 overflow-x-auto pb-1">
+            {/* Active/Inactive Filters */}
+            <button
+              onClick={() => toggleFilter('Active')}
+              className={`flex h-8 shrink-0 items-center justify-center px-3 rounded-lg text-sm font-medium transition-colors ${
+                activeFilters.includes('Active')
+                  ? 'bg-status-green text-white'
+                  : 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
+              }`}
+            >
+              Active
+            </button>
+            <button
+              onClick={() => toggleFilter('Inactive')}
+              className={`flex h-8 shrink-0 items-center justify-center px-3 rounded-lg text-sm font-medium transition-colors ${
+                activeFilters.includes('Inactive')
+                  ? 'bg-status-red text-white'
+                  : 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
+              }`}
+            >
+              Inactive
+            </button>
 
-          <div className="w-px h-6 bg-slate-300 dark:bg-slate-600 self-center mx-1"></div>
+            <div className="w-px h-6 bg-slate-300 dark:bg-slate-600 self-center mx-1"></div>
 
-          {/* Verification Step Filters */}
-          <button
-            onClick={() => toggleFilter('Eligibility')}
-            className={`flex h-8 shrink-0 items-center justify-center px-3 rounded-lg text-sm font-medium transition-colors ${
-              activeFilters.includes('Eligibility')
-                ? 'bg-primary text-white'
-                : 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
-            }`}
-          >
-            Eligibility
-          </button>
-          <button
-            onClick={() => toggleFilter('Verification')}
-            className={`flex h-8 shrink-0 items-center justify-center px-3 rounded-lg text-sm font-medium transition-colors ${
-              activeFilters.includes('Verification')
-                ? 'bg-primary text-white'
-                : 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
-            }`}
-          >
-            Verification
-          </button>
+            {/* Verification Step Filters */}
+            <button
+              onClick={() => toggleFilter('Eligibility')}
+              className={`flex h-8 shrink-0 items-center justify-center px-3 rounded-lg text-sm font-medium transition-colors ${
+                activeFilters.includes('Eligibility')
+                  ? 'bg-primary text-white'
+                  : 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
+              }`}
+            >
+              Eligibility
+            </button>
+            <button
+              onClick={() => toggleFilter('Verification')}
+              className={`flex h-8 shrink-0 items-center justify-center px-3 rounded-lg text-sm font-medium transition-colors ${
+                activeFilters.includes('Verification')
+                  ? 'bg-primary text-white'
+                  : 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
+              }`}
+            >
+              Verification
+            </button>
 
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Column Headers */}

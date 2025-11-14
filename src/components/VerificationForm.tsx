@@ -1,9 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Patient } from "../types/patient";
 import verificationData from "../data/verificationData.json";
-import sampleCoverageData from "../data/sampleCoverageData.json";
 // import availityService from "../services/availityService"; // Not currently used
-import CoverageModal from "./CoverageModal";
 
 interface VerificationFormProps {
   patient: Patient;
@@ -27,15 +25,6 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
     miscellaneous: false,
     notes: false,
   });
-
-  // Modal and API states
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isVerifying] = useState(false);
-  const [isVerifyingByPayerId] = useState(false);
-  const [isLoadingSampleData, setIsLoadingSampleData] = useState(false);
-  const [verificationError, setVerificationError] = useState<string | null>(null);
-  const [coverageData, setCoverageData] = useState<any>(null);
-  const [curlCommand, setCurlCommand] = useState<string | null>(null);
 
   const toggleSection = (section: string) => {
     setCollapsedSections(prev => ({
@@ -116,31 +105,6 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
   //     setIsVerifyingByPayerId(false);
   //   }
   // };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    // Reset states after modal closes
-    setTimeout(() => {
-      setVerificationError(null);
-      setCoverageData(null);
-      setCurlCommand(null);
-    }, 300);
-  };
-
-  const handleLoadSampleData = async () => {
-    // Show loading state and open modal
-    setIsLoadingSampleData(true);
-    setVerificationError(null);
-    setCurlCommand(null);
-    setIsModalOpen(true);
-
-    // Simulate API call with 2 second delay to show progress animation
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // Load sample data and display in modal
-    setCoverageData(sampleCoverageData);
-    setIsLoadingSampleData(false);
-  };
 
   const getFullName = () => {
     const given = patient.name.given.join(" ");
@@ -671,100 +635,41 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
             <div className="flex flex-col gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
               <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
                 <span className="material-symbols-outlined">assignment</span>
-                Dental Insurance Verification Form
+                Verification Form
               </h3>
-
-     
-
-
-
-                {/* Verify by Payer ID */}
-                {/* <div className="flex items-end gap-2">
-                  <div className="flex flex-col">
-                    <label className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
-                      Payer ID
-                    </label>
-                    <input
-                      type="text"
-                      value={payerId}
-                      onChange={(e) => setPayerId(e.target.value)}
-                      placeholder="Enter Payer ID"
-                      className="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm min-w-[200px]"
-                    />
-                  </div>
-                  <button
-                    onClick={handleVerifyByPayerId}
-                    disabled={isVerifying || isVerifyingByPayerId}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed flex items-center gap-2 font-medium shadow-sm transition-all whitespace-nowrap"
-                  >
-                    {isVerifyingByPayerId ? (
-                      <>
-                        <span className="animate-spin material-symbols-outlined text-lg">refresh</span>
-                        Verifying...
-                      </>
-                    ) : (
-                      <>
-                        <span className="material-symbols-outlined text-lg">search</span>
-                        Verify by Payer
-                      </>
-                    )}
-                  </button>
-                </div> */}
-
-       
 
             </div>
 
             {/* Bottom row with other action buttons */}
             <div className="flex items-center justify-end gap-3">
               <button
-                onClick={handleLoadSampleData}
-                disabled={isVerifying || isVerifyingByPayerId || isLoadingSampleData}
-                className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 bg-white dark:bg-slate-900 transition-all"
-              >
-                {isLoadingSampleData ? (
-                  <>
-                    <span className="animate-spin material-symbols-outlined text-lg">refresh</span>
-                    Loading...
-                  </>
-                ) : (
-                  <>
-                    <span className="material-symbols-outlined text-lg">description</span>
-                    Verify Via Availity API
-                  </>
-                )}
-              </button>
-              <button
                 onClick={handlePrint}
                 className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 bg-white dark:bg-slate-900"
               >
                 <span className="material-symbols-outlined text-lg">print</span>
-                Print Form
+                Print
               </button>
-              <button className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 bg-white dark:bg-slate-900">
-                Clear Form
-              </button>
-
             </div>
           </div>
         </div>
 
         <div ref={formRef} className="p-6 space-y-8">
           {/* Patient Information Section */}
-          <div className="space-y-4">
+          <div className="border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
             <button
               onClick={() => toggleSection('patient')}
-              className="w-full bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors"
+              className="w-full px-4 py-3 flex items-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-all group border-b-2 border-slate-200 dark:border-slate-700"
             >
-              <span className="material-symbols-outlined text-slate-700 dark:text-slate-300">
+              <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.patient ? 'expand_more' : 'expand_less'}
               </span>
-              <h4 className="font-semibold text-slate-900 dark:text-white uppercase text-sm">
-                Patient Information
+              <span className="material-symbols-outlined text-primary">account_circle</span>
+              <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
+                PATIENT INFORMATION
               </h4>
             </button>
             {!collapsedSections.patient && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Patient Name
@@ -822,20 +727,21 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           </div>
 
           {/* Subscriber Information Section */}
-          <div className="space-y-4">
+          <div className="border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
             <button
               onClick={() => toggleSection('subscriber')}
-              className="w-full bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors"
+              className="w-full px-4 py-3 flex items-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-all group border-b-2 border-slate-200 dark:border-slate-700"
             >
-              <span className="material-symbols-outlined text-slate-700 dark:text-slate-300">
+              <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.subscriber ? 'expand_more' : 'expand_less'}
               </span>
-              <h4 className="font-semibold text-slate-900 dark:text-white uppercase text-sm">
-                Subscriber Information
+              <span className="material-symbols-outlined text-primary">badge</span>
+              <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
+                SUBSCRIBER INFORMATION
               </h4>
             </button>
             {!collapsedSections.subscriber && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Subscriber Name
@@ -893,20 +799,21 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           </div>
 
           {/* Insurance Information Section */}
-          <div className="space-y-4">
+          <div className="border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
             <button
               onClick={() => toggleSection('insurance')}
-              className="w-full bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors"
+              className="w-full px-4 py-3 flex items-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-all group border-b-2 border-slate-200 dark:border-slate-700"
             >
-              <span className="material-symbols-outlined text-slate-700 dark:text-slate-300">
+              <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.insurance ? 'expand_more' : 'expand_less'}
               </span>
-              <h4 className="font-semibold text-slate-900 dark:text-white uppercase text-sm">
-                Insurance Information
+              <span className="material-symbols-outlined text-primary">health_and_safety</span>
+              <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
+                INSURANCE INFORMATION
               </h4>
             </button>
             {!collapsedSections.insurance && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Insurance Company
@@ -1046,20 +953,21 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           </div>
 
           {/* Preventative Coverage Section */}
-          <div className="space-y-4">
+          <div className="border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
             <button
               onClick={() => toggleSection('preventative')}
-              className="w-full bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors"
+              className="w-full px-4 py-3 flex items-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-all group border-b-2 border-slate-200 dark:border-slate-700"
             >
-              <span className="material-symbols-outlined text-slate-700 dark:text-slate-300">
+              <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.preventative ? 'expand_more' : 'expand_less'}
               </span>
-              <h4 className="font-semibold text-slate-900 dark:text-white uppercase text-sm">
-                Preventative Coverage
+              <span className="material-symbols-outlined text-primary">shield_with_heart</span>
+              <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
+                PREVENTATIVE COVERAGE
               </h4>
             </button>
             {!collapsedSections.preventative && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Covered at (%)
@@ -1255,20 +1163,21 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           </div>
 
           {/* Basic Coverage Section */}
-          <div className="space-y-4">
+          <div className="border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
             <button
               onClick={() => toggleSection('basic')}
-              className="w-full bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors"
+              className="w-full px-4 py-3 flex items-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-all group border-b-2 border-slate-200 dark:border-slate-700"
             >
-              <span className="material-symbols-outlined text-slate-700 dark:text-slate-300">
+              <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.basic ? 'expand_more' : 'expand_less'}
               </span>
-              <h4 className="font-semibold text-slate-900 dark:text-white uppercase text-sm">
-                Basic Coverage
+              <span className="material-symbols-outlined text-primary">medical_services</span>
+              <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
+                BASIC COVERAGE
               </h4>
             </button>
             {!collapsedSections.basic && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Covered at (%)
@@ -1319,20 +1228,21 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           </div>
 
           {/* Major Coverage Section */}
-          <div className="space-y-4">
+          <div className="border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
             <button
               onClick={() => toggleSection('major')}
-              className="w-full bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors"
+              className="w-full px-4 py-3 flex items-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-all group border-b-2 border-slate-200 dark:border-slate-700"
             >
-              <span className="material-symbols-outlined text-slate-700 dark:text-slate-300">
+              <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.major ? 'expand_more' : 'expand_less'}
               </span>
-              <h4 className="font-semibold text-slate-900 dark:text-white uppercase text-sm">
-                Major Coverage
+              <span className="material-symbols-outlined text-primary">verified</span>
+              <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
+                MAJOR COVERAGE
               </h4>
             </button>
             {!collapsedSections.major && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Covered at (%)
@@ -1383,20 +1293,21 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           </div>
 
           {/* Periodontal Coverage Section */}
-          <div className="space-y-4">
+          <div className="border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
             <button
               onClick={() => toggleSection('periodontal')}
-              className="w-full bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors"
+              className="w-full px-4 py-3 flex items-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-all group border-b-2 border-slate-200 dark:border-slate-700"
             >
-              <span className="material-symbols-outlined text-slate-700 dark:text-slate-300">
+              <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.periodontal ? 'expand_more' : 'expand_less'}
               </span>
-              <h4 className="font-semibold text-slate-900 dark:text-white uppercase text-sm">
-                Periodontal Coverage
+              <span className="material-symbols-outlined text-primary">dentistry</span>
+              <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
+                PERIODONTAL COVERAGE
               </h4>
             </button>
             {!collapsedSections.periodontal && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   History of SRP (D4341/D4342)?
@@ -1527,20 +1438,21 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           </div>
 
           {/* Implant Coverage Section */}
-          <div className="space-y-4">
+          <div className="border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
             <button
               onClick={() => toggleSection('implant')}
-              className="w-full bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors"
+              className="w-full px-4 py-3 flex items-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-all group border-b-2 border-slate-200 dark:border-slate-700"
             >
-              <span className="material-symbols-outlined text-slate-700 dark:text-slate-300">
+              <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.implant ? 'expand_more' : 'expand_less'}
               </span>
-              <h4 className="font-semibold text-slate-900 dark:text-white uppercase text-sm">
-                Implant Coverage
+              <span className="material-symbols-outlined text-primary">folder_special</span>
+              <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
+                IMPLANT COVERAGE
               </h4>
             </button>
             {!collapsedSections.implant && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Endosteal Implants (D6012) Covered?
@@ -1686,20 +1598,21 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           </div>
 
           {/* Orthodontic Coverage Section */}
-          <div className="space-y-4">
+          <div className="border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
             <button
               onClick={() => toggleSection('orthodontic')}
-              className="w-full bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors"
+              className="w-full px-4 py-3 flex items-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-all group border-b-2 border-slate-200 dark:border-slate-700"
             >
-              <span className="material-symbols-outlined text-slate-700 dark:text-slate-300">
+              <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.orthodontic ? 'expand_more' : 'expand_less'}
               </span>
-              <h4 className="font-semibold text-slate-900 dark:text-white uppercase text-sm">
-                Orthodontic Coverage
+              <span className="material-symbols-outlined text-primary">sentiment_satisfied</span>
+              <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
+                ORTHODONTIC COVERAGE
               </h4>
             </button>
             {!collapsedSections.orthodontic && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Orthodontics Covered?
@@ -1780,20 +1693,21 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           </div>
 
           {/* Miscellaneous Section */}
-          <div className="space-y-4">
+          <div className="border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
             <button
               onClick={() => toggleSection('miscellaneous')}
-              className="w-full bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors"
+              className="w-full px-4 py-3 flex items-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-all group border-b-2 border-slate-200 dark:border-slate-700"
             >
-              <span className="material-symbols-outlined text-slate-700 dark:text-slate-300">
+              <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.miscellaneous ? 'expand_more' : 'expand_less'}
               </span>
-              <h4 className="font-semibold text-slate-900 dark:text-white uppercase text-sm">
-                Miscellaneous
+              <span className="material-symbols-outlined text-primary">more_horiz</span>
+              <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
+                MISCELLANEOUS
               </h4>
             </button>
             {!collapsedSections.miscellaneous && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Nightguards (D9940) Covered?
@@ -1884,20 +1798,21 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           </div>
 
           {/* Additional Notes Section */}
-          <div className="space-y-4">
+          <div className="border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-900">
             <button
               onClick={() => toggleSection('notes')}
-              className="w-full bg-yellow-50 dark:bg-yellow-900/20 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors"
+              className="w-full px-4 py-3 flex items-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-all group border-b-2 border-slate-200 dark:border-slate-700"
             >
-              <span className="material-symbols-outlined text-slate-700 dark:text-slate-300">
+              <h4 className="font-semibold text-slate-900 dark:text-white text-sm flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary">note_add</span>
+                ADDITIONAL NOTES
+              </h4>
+              <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.notes ? 'expand_more' : 'expand_less'}
               </span>
-              <h4 className="font-semibold text-slate-900 dark:text-white uppercase text-sm">
-                Additional Notes
-              </h4>
             </button>
             {!collapsedSections.notes && (
-            <div>
+            <div className="p-4">
               <textarea
                 rows={6}
                 className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
@@ -1910,15 +1825,6 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
         </div>
       </div>
 
-      {/* Coverage Verification Modal */}
-      <CoverageModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        data={coverageData}
-        isLoading={isVerifying || isVerifyingByPayerId || isLoadingSampleData}
-        error={verificationError}
-        curlCommand={curlCommand}
-      />
     </div>
   );
 };

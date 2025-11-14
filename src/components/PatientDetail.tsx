@@ -6,14 +6,23 @@ import {
   Treatment,
   Procedure,
   TabType,
+  TAB_TYPES,
+  TAB_LABELS,
+  InsuranceSubTabType,
+  INSURANCE_SUB_TAB_TYPES,
+  INSURANCE_SUB_TAB_LABELS,
 } from "../types/patient";
 import SmithAICenter from "./SmithAICenter";
 import VerificationForm from "./VerificationForm";
+import CoverageModal from "./CoverageModal";
+import sampleCoverageData from "../data/sampleCoverageData.json";
+import { PRIMARY_BUTTON } from "../styles/buttonStyles";
 
 interface PatientDetailProps {
   patient: Patient;
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
+  isAdmin?: boolean;
 }
 
 // Tab content wrapper component for consistent spacing
@@ -28,8 +37,17 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   patient,
   activeTab,
   onTabChange,
+  isAdmin = false,
 }) => {
   const [showAICenter, setShowAICenter] = useState(false);
+  const [insuranceSubTab, setInsuranceSubTab] = useState<InsuranceSubTabType>(INSURANCE_SUB_TAB_TYPES.INSURANCE_INFO);
+
+  // Run Validity API states
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoadingSampleData, setIsLoadingSampleData] = useState(false);
+  const [verificationError, setVerificationError] = useState<string | null>(null);
+  const [coverageData, setCoverageData] = useState<any>(null);
+  const [curlCommand, setCurlCommand] = useState<string | null>(null);
 
   const getFullName = () => {
     const given = patient.name.given.join(" ");
@@ -66,7 +84,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
         icon: status === 'completed' ? 'check' : status === 'in_progress' ? 'sync' : 'schedule',
         bgColor: status === 'completed' ? 'bg-status-green' : status === 'in_progress' ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700',
         textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-500 dark:text-slate-400',
-        label: 'Benefits Verification',
+        label: 'API Verification',
         statusText: status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Pending',
         statusColor: status === 'completed' ? 'text-status-green' : status === 'in_progress' ? 'text-primary' : 'text-slate-500 dark:text-slate-400',
       },
@@ -123,6 +141,32 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
     return age;
   };
 
+  // Run Validity API handlers
+  const handleLoadSampleData = async () => {
+    // Show loading state and open modal
+    setIsLoadingSampleData(true);
+    setVerificationError(null);
+    setCurlCommand(null);
+    setIsModalOpen(true);
+
+    // Simulate API call with 2 second delay to show progress animation
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Load sample data and display in modal
+    setCoverageData(sampleCoverageData);
+    setIsLoadingSampleData(false);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    // Reset states after modal closes
+    setTimeout(() => {
+      setVerificationError(null);
+      setCoverageData(null);
+      setCurlCommand(null);
+    }, 300);
+  };
+
   const fullName = getFullName();
 
   return (
@@ -130,9 +174,9 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
       {/* Profile Header */}
       <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 animate-slideDown">
         <div className="flex items-center gap-3">
-          <div className="rounded-full h-24 w-24 overflow-hidden shrink-0 ring-4 ring-slate-100 dark:ring-slate-800">
+          <div className="rounded-full h-20 w-20 overflow-hidden shrink-0 ring-4 ring-slate-100 dark:ring-slate-800 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800">
             <img
-              src={`https://i.pravatar.cc/150?img=${Math.abs(patient.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % 70) + 1}`}
+              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&size=150&background=3b82f6&color=ffffff&bold=true&format=svg`}
               alt={fullName}
               className="w-full h-full object-cover"
             />
@@ -146,10 +190,27 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             </p>
           </div>
 
-          <div className="flex-1 flex justify-center">
+          <div className="flex-1 flex justify-center gap-3">
+            <button
+              onClick={handleLoadSampleData}
+              disabled={isLoadingSampleData}
+              className={PRIMARY_BUTTON}
+            >
+              {isLoadingSampleData ? (
+                <>
+                  <span className="animate-spin material-symbols-outlined">refresh</span>
+                  Loading...
+                </>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined">description</span>
+                  Run Vaility API
+                </>
+              )}
+            </button>
             <button
               onClick={() => setShowAICenter(true)}
-              className="rounded-lg border border-transparent bg-gradient-to-r from-cyan-500 to-blue-500 px-4 py-2 text-sm font-semibold text-white hover:from-cyan-600 hover:to-blue-600 shadow-lg shadow-cyan-500/30 transition-all flex items-center gap-2 shrink-0"
+              className={PRIMARY_BUTTON}
             >
               <span className="material-symbols-outlined">smart_toy</span>
               Start AI Call
@@ -160,7 +221,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           <div className="p-3 flex-1 max-w-2xl">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Insurance Verification Status
+                
               </h3>
               <span className="text-xs text-slate-500 dark:text-slate-400">
                 Step {getVerificationStep()} of 4
@@ -208,44 +269,44 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               </div>
 
               {/* Step Status Labels */}
-              <div className="flex items-start -mt-1">
+              <div className="flex items-start mt-2">
                 {/* Step 1 Label */}
-                <div className="flex-1 text-center relative group/step1" style={{ maxWidth: '25%' }}>
-                  <p className={`text-xs ${getStepConfig('eligibilityCheck').statusColor}`}>
-                    {getStepConfig('eligibilityCheck').statusText}
-                  </p>
-                  <p className="text-xs font-semibold text-slate-900 dark:text-white leading-tight absolute left-0 right-0 top-full mt-1 opacity-0 group-hover/step1:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
+                  <p className="text-[10px] font-semibold text-slate-700 dark:text-slate-300 leading-tight mb-0.5">
                     {getStepConfig('eligibilityCheck').label}
+                  </p>
+                  <p className={`text-xs font-medium ${getStepConfig('eligibilityCheck').statusColor}`}>
+                    {getStepConfig('eligibilityCheck').statusText}
                   </p>
                 </div>
 
                 {/* Step 2 Label */}
-                <div className="flex-1 text-center relative group/step2" style={{ maxWidth: '25%' }}>
-                  <p className={`text-xs ${getStepConfig('benefitsVerification').statusColor}`}>
-                    {getStepConfig('benefitsVerification').statusText}
-                  </p>
-                  <p className="text-xs font-semibold text-slate-900 dark:text-white leading-tight absolute left-0 right-0 top-full mt-1 opacity-0 group-hover/step2:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
+                  <p className="text-[10px] font-semibold text-slate-700 dark:text-slate-300 leading-tight mb-0.5">
                     {getStepConfig('benefitsVerification').label}
+                  </p>
+                  <p className={`text-xs font-medium ${getStepConfig('benefitsVerification').statusColor}`}>
+                    {getStepConfig('benefitsVerification').statusText}
                   </p>
                 </div>
 
                 {/* Step 3 Label */}
-                <div className="flex-1 text-center relative group/step3" style={{ maxWidth: '25%' }}>
-                  <p className={`text-xs ${getStepConfig('aiCallVerification').statusColor}`}>
-                    {getStepConfig('aiCallVerification').statusText}
-                  </p>
-                  <p className="text-xs font-semibold text-slate-900 dark:text-white leading-tight absolute left-0 right-0 top-full mt-1 opacity-0 group-hover/step3:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
+                  <p className="text-[10px] font-semibold text-slate-700 dark:text-slate-300 leading-tight mb-0.5">
                     {getStepConfig('aiCallVerification').label}
+                  </p>
+                  <p className={`text-xs font-medium ${getStepConfig('aiCallVerification').statusColor}`}>
+                    {getStepConfig('aiCallVerification').statusText}
                   </p>
                 </div>
 
                 {/* Step 4 Label */}
-                <div className="flex-1 text-center relative group/step4" style={{ maxWidth: '25%' }}>
-                  <p className={`text-xs ${getStepConfig('sendToPMS').statusColor}`}>
-                    {getStepConfig('sendToPMS').statusText}
-                  </p>
-                  <p className="text-xs font-semibold text-slate-900 dark:text-white leading-tight absolute left-0 right-0 top-full mt-1 opacity-0 group-hover/step4:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
+                  <p className="text-[10px] font-semibold text-slate-700 dark:text-slate-300 leading-tight mb-0.5">
                     {getStepConfig('sendToPMS').label}
+                  </p>
+                  <p className={`text-xs font-medium ${getStepConfig('sendToPMS').statusColor}`}>
+                    {getStepConfig('sendToPMS').statusText}
                   </p>
                 </div>
               </div>
@@ -257,51 +318,69 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
       {/* Tab Navigation - Fixed */}
       <div className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-6 sticky top-0 z-10">
         <nav aria-label="Tabs" className="flex -mb-px gap-6 overflow-x-auto">
-          {(
-            [
-              "Demographics",
-              "Insurance",
-              "Coverage Details",
-              "Verification Form",
-               "AI Call History",
-              "Appointments",
-              "Treatment History",
-             
-            ] as TabType[]
-          ).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => onTabChange(tab)}
-              className={`shrink-0 border-b-2 px-1 pb-3 text-sm font-semibold whitespace-nowrap flex items-center gap-2 ${
-                activeTab === tab
-                  ? tab === "AI Call History"
-                    ? "border-cyan-500 text-cyan-600 dark:text-cyan-400"
-                    : "border-primary text-primary"
-                  : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-300"
-              }`}
-            >
-              {tab === "AI Call History" && (
-                <span className="material-symbols-outlined text-lg">smart_toy</span>
-              )}
-              {tab === "Verification Form" && (
-                <span className="material-symbols-outlined text-lg">assignment</span>
-              )}
-              {tab}
-            </button>
-          ))}
+          {Object.values(TAB_TYPES)
+            .filter(tab => {
+              // Hide Appointments and Treatment History tabs for non-admin users
+              if (!isAdmin && (tab === TAB_TYPES.APPOINTMENTS || tab === TAB_TYPES.TREATMENT_HISTORY)) {
+                return false;
+              }
+              return true;
+            })
+            .map((tab) => (
+              <button
+                key={tab}
+                onClick={() => onTabChange(tab)}
+                className={`shrink-0 border-b-2 px-1 pb-3 text-sm font-semibold whitespace-nowrap flex items-center gap-2 ${
+                  activeTab === tab
+                    ? tab === TAB_TYPES.AI_CALL_HISTORY
+                      ? "border-cyan-500 text-cyan-600 dark:text-cyan-400"
+                      : "border-primary text-primary"
+                    : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-300"
+                }`}
+              >
+                {tab === TAB_TYPES.AI_CALL_HISTORY && (
+                  <span className="material-symbols-outlined text-lg">smart_toy</span>
+                )}
+                {TAB_LABELS[tab]}
+              </button>
+            ))}
         </nav>
       </div>
+
+      {/* Sub-Tab Navigation - Only visible when Insurance tab is active */}
+      {activeTab === TAB_TYPES.INSURANCE && (
+        <div className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 px-6 py-2">
+          <nav aria-label="Insurance Sub Tabs" className="flex gap-4">
+            {Object.values(INSURANCE_SUB_TAB_TYPES).map((subTab) => (
+              <button
+                key={subTab}
+                onClick={() => setInsuranceSubTab(subTab)}
+                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  insuranceSubTab === subTab
+                    ? "bg-primary text-white"
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                {subTab === INSURANCE_SUB_TAB_TYPES.VERIFICATION_FORM && (
+                  <span className="material-symbols-outlined text-base mr-1 align-middle">assignment</span>
+                )}
+                {INSURANCE_SUB_TAB_LABELS[subTab]}
+              </button>
+            ))}
+          </nav>
+        </div>
+      )}
 
       {/* Tab Content - Scrollable */}
       <div className="flex-1 overflow-y-auto p-4">
 
-        {/* Tab Content - Demographics */}
-        {activeTab === "Demographics" && (
+        {/* Tab Content - Patient Basic Info */}
+        {activeTab === TAB_TYPES.PATIENT_BASIC_INFO && (
           <TabContent>
             <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
               <div className="p-4 border-b border-slate-200 dark:border-slate-800">
                 <h3 className="font-semibold text-slate-900 dark:text-white">
-                  Patient Demographics
+                  Patient Basic Info
                 </h3>
               </div>
               <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -392,135 +471,282 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           </TabContent>
         )}
 
-        {/* Tab Content - Insurance */}
-        {activeTab === "Insurance" && (
-          <TabContent>
-            {(patient as any).insurance &&
-            (patient as any).insurance.length > 0 ? (
-              (patient as any).insurance.map(
-                (ins: Insurance, index: number) => (
-                  <div
-                    key={index}
-                    className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"
-                  >
-                    <div className="p-4 border-b border-slate-200 dark:border-slate-800">
-                      <div className="flex items-center gap-2">
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/20 text-primary">
-                          {ins.type}
-                        </span>
-                        <h3 className="font-semibold text-slate-900 dark:text-white">
-                          {ins.provider}
-                        </h3>
-                      </div>
-                    </div>
-                    <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                          Policy Number
-                        </p>
-                        <p className="font-medium text-slate-800 dark:text-slate-100">
-                          {ins.policyNumber}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                          Group Number
-                        </p>
-                        <p className="font-medium text-slate-800 dark:text-slate-100">
-                          {ins.groupNumber}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                          Subscriber Name
-                        </p>
-                        <p className="font-medium text-slate-800 dark:text-slate-100">
-                          {ins.subscriberName}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                          Relationship
-                        </p>
-                        <p className="font-medium text-slate-800 dark:text-slate-100">
-                          {ins.relationship}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                          Effective Date
-                        </p>
-                        <p className="font-medium text-slate-800 dark:text-slate-100">
-                          {ins.effectiveDate}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                          Expiration Date
-                        </p>
-                        <p className="font-medium text-slate-800 dark:text-slate-100">
-                          {ins.expirationDate}
-                        </p>
-                      </div>
-                      <div className="col-span-full mt-2 pt-2 border-t border-slate-200 dark:border-slate-700">
-                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                          Coverage Details
-                        </p>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-                          <div>
-                            <span className="text-slate-500">Deductible:</span>{" "}
-                            <span className="font-medium">
-                              {ins.coverage.deductible}
+        {/* Tab Content - Insurance with Sub Tabs */}
+        {activeTab === TAB_TYPES.INSURANCE && (
+          <>
+            {/* Insurance Info Sub Tab */}
+            {insuranceSubTab === INSURANCE_SUB_TAB_TYPES.INSURANCE_INFO && (
+              <TabContent>
+                {(patient as any).insurance &&
+                (patient as any).insurance.length > 0 ? (
+                  (patient as any).insurance.map(
+                    (ins: Insurance, index: number) => (
+                      <div
+                        key={index}
+                        className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"
+                      >
+                        <div className="p-4 border-b border-slate-200 dark:border-slate-800">
+                          <div className="flex items-center gap-2">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/20 text-primary">
+                              {ins.type}
                             </span>
+                            <h3 className="font-semibold text-slate-900 dark:text-white">
+                              {ins.provider}
+                            </h3>
+                          </div>
+                        </div>
+                        <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                              Policy Number
+                            </p>
+                            <p className="font-medium text-slate-800 dark:text-slate-100">
+                              {ins.policyNumber}
+                            </p>
                           </div>
                           <div>
-                            <span className="text-slate-500">Met:</span>{" "}
-                            <span className="font-medium">
-                              {ins.coverage.deductibleMet}
-                            </span>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                              Group Number
+                            </p>
+                            <p className="font-medium text-slate-800 dark:text-slate-100">
+                              {ins.groupNumber}
+                            </p>
                           </div>
                           <div>
-                            <span className="text-slate-500">Max Benefit:</span>{" "}
-                            <span className="font-medium">
-                              {ins.coverage.maxBenefit}
-                            </span>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                              Subscriber Name
+                            </p>
+                            <p className="font-medium text-slate-800 dark:text-slate-100">
+                              {ins.subscriberName}
+                            </p>
                           </div>
                           <div>
-                            <span className="text-slate-500">Preventive:</span>{" "}
-                            <span className="font-medium">
-                              {ins.coverage.preventiveCoverage}
-                            </span>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                              Relationship
+                            </p>
+                            <p className="font-medium text-slate-800 dark:text-slate-100">
+                              {ins.relationship}
+                            </p>
                           </div>
                           <div>
-                            <span className="text-slate-500">Basic:</span>{" "}
-                            <span className="font-medium">
-                              {ins.coverage.basicCoverage}
-                            </span>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                              Effective Date
+                            </p>
+                            <p className="font-medium text-slate-800 dark:text-slate-100">
+                              {ins.effectiveDate}
+                            </p>
                           </div>
                           <div>
-                            <span className="text-slate-500">Major:</span>{" "}
-                            <span className="font-medium">
-                              {ins.coverage.majorCoverage}
-                            </span>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                              Expiration Date
+                            </p>
+                            <p className="font-medium text-slate-800 dark:text-slate-100">
+                              {ins.expirationDate}
+                            </p>
+                          </div>
+                          <div className="col-span-full mt-2 pt-2 border-t border-slate-200 dark:border-slate-700">
+                            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                              Coverage Summary
+                            </p>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+                              <div>
+                                <span className="text-slate-500">Deductible:</span>{" "}
+                                <span className="font-medium">
+                                  {ins.coverage.deductible}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-slate-500">Met:</span>{" "}
+                                <span className="font-medium">
+                                  {ins.coverage.deductibleMet}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-slate-500">Max Benefit:</span>{" "}
+                                <span className="font-medium">
+                                  {ins.coverage.maxBenefit}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-slate-500">Preventive:</span>{" "}
+                                <span className="font-medium">
+                                  {ins.coverage.preventiveCoverage}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-slate-500">Basic:</span>{" "}
+                                <span className="font-medium">
+                                  {ins.coverage.basicCoverage}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-slate-500">Major:</span>{" "}
+                                <span className="font-medium">
+                                  {ins.coverage.majorCoverage}
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    )
+                  )
+                ) : (
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 text-center">
+                    <p className="text-slate-500 dark:text-slate-400">
+                      No insurance information on file
+                    </p>
                   </div>
-                )
-              )
-            ) : (
-              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 text-center">
-                <p className="text-slate-500 dark:text-slate-400">
-                  No insurance information on file
-                </p>
-              </div>
+                )}
+              </TabContent>
             )}
-          </TabContent>
+
+            {/* Coverage Details Sub Tab */}
+            {insuranceSubTab === INSURANCE_SUB_TAB_TYPES.COVERAGE_DETAILS && (
+              <TabContent>
+                {(patient as any).coverage &&
+                (patient as any).coverage.procedures.length > 0 ? (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-center">
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Annual Maximum
+                        </p>
+                        <p className="text-2xl font-bold text-primary">
+                          $
+                          {(
+                            patient as any
+                          ).coverage.annual_maximum.toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-center">
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Used This Year
+                        </p>
+                        <p className="text-2xl font-bold text-status-red">
+                          ${(patient as any).coverage.annual_used.toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-center">
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Remaining Benefit
+                        </p>
+                        <p className="text-2xl font-bold text-status-green">
+                          $
+                          {(
+                            (patient as any).coverage.annual_maximum -
+                            (patient as any).coverage.annual_used
+                          ).toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-center">
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Deductible Remaining
+                        </p>
+                        <p className="text-2xl font-bold text-status-orange">
+                          $
+                          {(
+                            (patient as any).coverage.deductible -
+                            (patient as any).coverage.deductible_met
+                          ).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
+                      <div className="p-4 border-b border-slate-200 dark:border-slate-800">
+                        <h3 className="font-semibold text-slate-900 dark:text-white">
+                          Coverage by Procedure
+                        </h3>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead className="bg-slate-50 dark:bg-slate-800">
+                            <tr>
+                              <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                Code
+                              </th>
+                              <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                Procedure
+                              </th>
+                              <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                Category
+                              </th>
+                              <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                Coverage
+                              </th>
+                              <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                Est. Cost
+                              </th>
+                              <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                Patient Pays
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                            {(patient as any).coverage.procedures.map(
+                              (proc: Procedure, index: number) => (
+                                <tr
+                                  key={index}
+                                  className="hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                                >
+                                  <td className="px-4 py-3 text-sm font-mono font-semibold text-primary">
+                                    {proc.code}
+                                  </td>
+                                  <td className="px-4 py-3 text-sm text-slate-900 dark:text-white">
+                                    {proc.name}
+                                  </td>
+                                  <td className="px-4 py-3">
+                                    <span
+                                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
+                                        proc.category === "Preventive"
+                                          ? "bg-blue-500/20 text-blue-600"
+                                          : proc.category === "Basic"
+                                            ? "bg-status-orange/20 text-status-orange"
+                                            : proc.category === "Major"
+                                              ? "bg-status-red/20 text-status-red"
+                                              : "bg-slate-500/20 text-slate-600"
+                                      }`}
+                                    >
+                                      {proc.category}
+                                    </span>
+                                  </td>
+                                  <td className="px-4 py-3 text-sm font-semibold text-status-green">
+                                    {proc.coverage}
+                                  </td>
+                                  <td className="px-4 py-3 text-sm text-slate-900 dark:text-white">
+                                    {proc.estimated_cost}
+                                  </td>
+                                  <td className="px-4 py-3 text-sm font-semibold text-status-red">
+                                    {proc.patient_pays}
+                                  </td>
+                                </tr>
+                              )
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 text-center">
+                    <p className="text-slate-500 dark:text-slate-400">
+                      No coverage details available
+                    </p>
+                  </div>
+                )}
+              </TabContent>
+            )}
+
+            {/* Verification Form Sub Tab */}
+            {insuranceSubTab === INSURANCE_SUB_TAB_TYPES.VERIFICATION_FORM && (
+              <VerificationForm patient={patient} />
+            )}
+          </>
         )}
 
         {/* Tab Content - Appointments */}
-        {activeTab === "Appointments" && (
+        {activeTab === TAB_TYPES.APPOINTMENTS && (
           <TabContent className="space-y-4">
             {(patient as any).appointments &&
             (patient as any).appointments.length > 0 ? (
@@ -565,7 +791,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
         )}
 
         {/* Tab Content - Treatment History */}
-        {activeTab === "Treatment History" && (
+        {activeTab === TAB_TYPES.TREATMENT_HISTORY && (
           <TabContent className="space-y-4">
             {(patient as any).treatments &&
             (patient as any).treatments.length > 0 ? (
@@ -601,150 +827,8 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           </TabContent>
         )}
 
-        {/* Tab Content - Coverage Details */}
-        {activeTab === "Coverage Details" && (
-          <TabContent>
-            {(patient as any).coverage &&
-            (patient as any).coverage.procedures.length > 0 ? (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-center">
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Annual Maximum
-                    </p>
-                    <p className="text-2xl font-bold text-primary">
-                      $
-                      {(
-                        patient as any
-                      ).coverage.annual_maximum.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-center">
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Used This Year
-                    </p>
-                    <p className="text-2xl font-bold text-status-red">
-                      ${(patient as any).coverage.annual_used.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-center">
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Remaining Benefit
-                    </p>
-                    <p className="text-2xl font-bold text-status-green">
-                      $
-                      {(
-                        (patient as any).coverage.annual_maximum -
-                        (patient as any).coverage.annual_used
-                      ).toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-center">
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Deductible Remaining
-                    </p>
-                    <p className="text-2xl font-bold text-status-orange">
-                      $
-                      {(
-                        (patient as any).coverage.deductible -
-                        (patient as any).coverage.deductible_met
-                      ).toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
-                  <div className="p-4 border-b border-slate-200 dark:border-slate-800">
-                    <h3 className="font-semibold text-slate-900 dark:text-white">
-                      Coverage by Procedure
-                    </h3>
-                  </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-slate-50 dark:bg-slate-800">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
-                            Code
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
-                            Procedure
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
-                            Category
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
-                            Coverage
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
-                            Est. Cost
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
-                            Patient Pays
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                        {(patient as any).coverage.procedures.map(
-                          (proc: Procedure, index: number) => (
-                            <tr
-                              key={index}
-                              className="hover:bg-slate-50 dark:hover:bg-slate-800/50"
-                            >
-                              <td className="px-4 py-3 text-sm font-mono font-semibold text-primary">
-                                {proc.code}
-                              </td>
-                              <td className="px-4 py-3 text-sm text-slate-900 dark:text-white">
-                                {proc.name}
-                              </td>
-                              <td className="px-4 py-3">
-                                <span
-                                  className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
-                                    proc.category === "Preventive"
-                                      ? "bg-blue-500/20 text-blue-600"
-                                      : proc.category === "Basic"
-                                        ? "bg-status-orange/20 text-status-orange"
-                                        : proc.category === "Major"
-                                          ? "bg-status-red/20 text-status-red"
-                                          : "bg-slate-500/20 text-slate-600"
-                                  }`}
-                                >
-                                  {proc.category}
-                                </span>
-                              </td>
-                              <td className="px-4 py-3 text-sm font-semibold text-status-green">
-                                {proc.coverage}
-                              </td>
-                              <td className="px-4 py-3 text-sm text-slate-900 dark:text-white">
-                                {proc.estimated_cost}
-                              </td>
-                              <td className="px-4 py-3 text-sm font-semibold text-status-red">
-                                {proc.patient_pays}
-                              </td>
-                            </tr>
-                          )
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 text-center">
-                <p className="text-slate-500 dark:text-slate-400">
-                  No coverage details available
-                </p>
-              </div>
-            )}
-          </TabContent>
-        )}
-
-        {/* Tab Content - Verification Form */}
-        {activeTab === "Verification Form" && (
-          <VerificationForm patient={patient} />
-        )}
-
         {/* Tab Content - AI Call History */}
-        {activeTab === "AI Call History" && (
+        {activeTab === TAB_TYPES.AI_CALL_HISTORY && (
           <TabContent className="space-y-4">
             {(patient as any).aiCallHistory &&
             (patient as any).aiCallHistory.length > 0 ? (
@@ -838,6 +922,16 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           onClose={() => setShowAICenter(false)}
         />
       )}
+
+      {/* Coverage Verification Modal */}
+      <CoverageModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        data={coverageData}
+        isLoading={isLoadingSampleData}
+        error={verificationError}
+        curlCommand={curlCommand}
+      />
     </section>
   );
 };
