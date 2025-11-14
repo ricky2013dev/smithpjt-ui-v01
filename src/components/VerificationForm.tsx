@@ -134,7 +134,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
           <style>
             @page {
               size: letter;
-              margin: 0.5in;
+              margin: 0.75in 0.5in 0.5in 0.5in;
             }
 
             * {
@@ -149,72 +149,92 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               line-height: 1.3;
               color: #000;
               background: #fff;
+              padding-top: 10px;
+              overflow-x: hidden;
             }
 
             .header {
               text-align: center;
-              margin-bottom: 20px;
-              border-bottom: 3px solid #000;
-              padding-bottom: 10px;
+              margin-bottom: 25px;
+              border-bottom: 4px double #000;
+              padding-bottom: 8px;
             }
 
             .header h1 {
-              font-size: 16pt;
+              font-size: 14pt;
               font-weight: bold;
               text-transform: uppercase;
-              letter-spacing: 1px;
-              margin-bottom: 5px;
+              letter-spacing: 1.5px;
+              margin-bottom: 6px;
             }
 
             .header p {
               font-size: 9pt;
-              margin-top: 5px;
+              margin-top: 6px;
             }
 
             .section {
-              margin-bottom: 15px;
+              margin-top: 15px;
+              margin-bottom: 20px;
               page-break-inside: avoid;
+              border: 2px solid #333;
+              padding: 15px 20px 20px 20px;
+              position: relative;
             }
 
             .section-header {
-              background: #000;
-              color: #fff;
-              padding: 6px 10px;
+              position: absolute;
+              top: -12px;
+              left: 15px;
+              background: #fff;
+              padding: 0 8px;
               font-weight: bold;
               font-size: 10pt;
               text-transform: uppercase;
-              margin-bottom: 10px;
               letter-spacing: 0.5px;
+              color: #000;
             }
 
             .field-group {
-              display: grid;
-              grid-template-columns: repeat(2, 1fr);
-              gap: 15px 20px;
-              margin-bottom: 10px;
+              margin-bottom: 8px;
             }
 
             .field-group-full {
-              display: block;
-              margin-bottom: 10px;
+              margin-bottom: 8px;
             }
 
             .field {
-              margin-bottom: 8px;
+              margin-bottom: 10px;
+              display: flex;
+              align-items: baseline;
+              gap: 8px;
             }
 
             .field-label {
               font-size: 9pt;
-              font-weight: bold;
-              margin-bottom: 3px;
-              display: block;
+              font-weight: normal;
+              white-space: nowrap;
+              color: #000;
             }
 
             .field-value {
               border-bottom: 1px solid #000;
-              min-height: 20px;
-              padding: 2px 5px;
-              font-size: 10pt;
+              flex: 1;
+              min-height: 16px;
+              padding: 0 4px 1px 4px;
+              font-size: 9pt;
+            }
+
+            .field-inline {
+              display: inline-flex;
+              align-items: baseline;
+              gap: 8px;
+              margin-right: 25px;
+              margin-bottom: 10px;
+            }
+
+            .field-inline .field-value {
+              min-width: 150px;
             }
 
             .field-value.large {
@@ -224,49 +244,37 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
             }
 
             .checkbox-group {
-              display: flex;
-              gap: 20px;
+              display: inline-flex;
+              gap: 15px;
               align-items: center;
-              margin-top: 3px;
             }
 
             .checkbox-item {
-              display: flex;
+              display: inline-flex;
               align-items: center;
-              gap: 5px;
-              font-size: 10pt;
+              gap: 6px;
+              font-size: 9pt;
             }
 
             .checkbox {
-              width: 16px;
-              height: 16px;
-              border: 2px solid #000;
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
+              width: 14px;
+              height: 14px;
+              border: 1.5px solid #000;
+              display: inline-block;
               vertical-align: middle;
-              font-size: 12pt;
-              font-weight: bold;
             }
 
             .radio {
-              width: 16px;
-              height: 16px;
-              border: 2px solid #000;
+              width: 14px;
+              height: 14px;
+              border: 1.5px solid #000;
               border-radius: 50%;
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
+              display: inline-block;
               vertical-align: middle;
-              font-size: 14pt;
-              font-weight: bold;
-              line-height: 1;
             }
 
             .footer {
-              margin-top: 30px;
-              padding-top: 15px;
-              border-top: 2px solid #000;
+              margin-top: 20px;
               page-break-inside: avoid;
             }
 
@@ -303,10 +311,12 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
 
           ${generatePrintContent()}
 
-          <div class="footer">
+          <div class="section">
             <div class="section-header">Additional Notes</div>
-            <div class="field-value large">${formData.additionalNotes}</div>
+            <div class=" large">${formData.additionalNotes}</div>
+          </div>
 
+          <div class="footer">
             <div class="signature-section">
               <div>
                 <div class="signature-line"></div>
@@ -628,28 +638,20 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
   return (
     <div key={patient.id}>
       <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-        {/* Header with Title and Action Buttons - Sticky */}
+        {/* Header with Title and Print Button - Sticky */}
         <div className="sticky top-0 z-20 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 shadow-md rounded-t-xl">
-          <div className="flex flex-col gap-3">
-            {/* Top row with Verification buttons */}
-            <div className="flex flex-col gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
-              <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                <span className="material-symbols-outlined">assignment</span>
-                Verification Form
-              </h3>
-
-            </div>
-
-            {/* Bottom row with other action buttons */}
-            <div className="flex items-center justify-end gap-3">
-              <button
-                onClick={handlePrint}
-                className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 bg-white dark:bg-slate-900"
-              >
-                <span className="material-symbols-outlined text-lg">print</span>
-                Print
-              </button>
-            </div>
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+              <span className="material-symbols-outlined">assignment</span>
+              Verification Form
+            </h3>
+            <button
+              onClick={handlePrint}
+              className="px-3 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-1.5 bg-white dark:bg-slate-900 text-sm"
+            >
+              <span className="material-symbols-outlined text-base">print</span>
+              Print
+            </button>
           </div>
         </div>
 

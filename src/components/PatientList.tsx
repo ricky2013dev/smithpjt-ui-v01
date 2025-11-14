@@ -216,7 +216,7 @@ const PatientList: React.FC<PatientListProps> = ({
                   <span className="text-white text-base font-bold leading-none">
                     {getInitials(patient)}
                   </span>
-                  <span className="text-white text-[8px] font-medium leading-none mt-0.5">
+                  <span className="text-white text-[7px] font-medium leading-none mt-0.5">
                     {patient.id}
                   </span>
                 </div>
