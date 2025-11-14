@@ -16,6 +16,14 @@ interface PatientDetailProps {
   onTabChange: (tab: TabType) => void;
 }
 
+// Tab content wrapper component for consistent spacing
+const TabContent: React.FC<{ children: React.ReactNode; className?: string }> = ({
+  children,
+  className = "space-y-6"
+}) => {
+  return <div className={`animate-fadeIn ${className}`}>{children}</div>;
+};
+
 const PatientDetail: React.FC<PatientDetailProps> = ({
   patient,
   activeTab,
@@ -289,7 +297,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
 
         {/* Tab Content - Demographics */}
         {activeTab === "Demographics" && (
-          <div className="space-y-6 animate-fadeIn">
+          <TabContent>
             <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
               <div className="p-4 border-b border-slate-200 dark:border-slate-800">
                 <h3 className="font-semibold text-slate-900 dark:text-white">
@@ -381,12 +389,12 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 </div>
               </div>
             </div>
-          </div>
+          </TabContent>
         )}
 
         {/* Tab Content - Insurance */}
         {activeTab === "Insurance" && (
-          <div className="space-y-6 animate-fadeIn">
+          <TabContent>
             {(patient as any).insurance &&
             (patient as any).insurance.length > 0 ? (
               (patient as any).insurance.map(
@@ -508,12 +516,12 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 </p>
               </div>
             )}
-          </div>
+          </TabContent>
         )}
 
         {/* Tab Content - Appointments */}
         {activeTab === "Appointments" && (
-          <div className="space-y-4 animate-fadeIn">
+          <TabContent className="space-y-4">
             {(patient as any).appointments &&
             (patient as any).appointments.length > 0 ? (
               (patient as any).appointments.map(
@@ -553,12 +561,12 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 </p>
               </div>
             )}
-          </div>
+          </TabContent>
         )}
 
         {/* Tab Content - Treatment History */}
         {activeTab === "Treatment History" && (
-          <div className="space-y-4 animate-fadeIn">
+          <TabContent className="space-y-4">
             {(patient as any).treatments &&
             (patient as any).treatments.length > 0 ? (
               (patient as any).treatments.map(
@@ -590,12 +598,12 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 </p>
               </div>
             )}
-          </div>
+          </TabContent>
         )}
 
         {/* Tab Content - Coverage Details */}
         {activeTab === "Coverage Details" && (
-          <div className="space-y-6 animate-fadeIn">
+          <TabContent>
             {(patient as any).coverage &&
             (patient as any).coverage.procedures.length > 0 ? (
               <>
@@ -727,7 +735,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 </p>
               </div>
             )}
-          </div>
+          </TabContent>
         )}
 
         {/* Tab Content - Verification Form */}
@@ -737,7 +745,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
 
         {/* Tab Content - AI Call History */}
         {activeTab === "AI Call History" && (
-          <div className="space-y-4 animate-fadeIn">
+          <TabContent className="space-y-4">
             {(patient as any).aiCallHistory &&
             (patient as any).aiCallHistory.length > 0 ? (
               (patient as any).aiCallHistory.map(
@@ -819,7 +827,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 </div>
               </div>
             )}
-          </div>
+          </TabContent>
         )}
       </div>
 
