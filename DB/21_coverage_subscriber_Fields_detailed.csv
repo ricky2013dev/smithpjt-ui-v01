@@ -1,0 +1,11 @@
+Table Name: coverage.subscriber Fields (detailed)
+Field,Type,Definition
+memberId,String,The subscriber's health plan member ID number
+medicaidId,String,Medicaid member ID if applicable
+lastName/firstName/middleName/suffix,String,Subscriber name components
+birthDate,String (date-time),The subscriber's date of birth
+gender,String,The subscriber's gender
+genderCode,String,Gender code (F, M, U)
+ssn,String,The subscriber's Social Security Number
+address,Object,Subscriber address information
+caseNumber,String,The case number assigned to the subscriber

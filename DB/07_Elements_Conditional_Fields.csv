@@ -1,0 +1,11 @@
+Table Name: Elements - Conditional Fields
+Field,Type,Definition
+equalTo,String,Applies when the element value is equal
+containedIn,Array,Applies when the field value is in the list
+greaterThan,String,Applies when the field value is greater
+lessThan,String,Applies when the field value is less
+greaterEqual,String,Value comparison operators
+lessEqual,String,Value comparison operators
+maxLength,Integer,Maximum character length
+pattern,Integer,Regular expression validation
+values,?,Possible values/links

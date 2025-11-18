@@ -1,0 +1,15 @@
+Table Name: requestingProvider Object Fields
+Field,Type,Definition
+lastName/firstName,String,The requesting provider's last or business name/first name
+type,String,Describes the requesting provider type
+typeCode,String,Code for the requesting provider type
+specialtyCode,String,Code for the requesting provider's specialty
+npi,String,The requesting provider's National Provider Identifier
+taxId,String,The requesting provider's tax ID number
+payerAssignedProviderId,String,Provider ID assigned by payer
+ssn,String,The requesting provider's Social Security Number
+submitterId,String,The requesting provider's submitter ID
+placeOfService,String,Description of the place of service
+placeOfServiceCode,String,Code for the place of service
+address,Object,Information about the requesting provider's address
+pin,String,The requesting provider's personal identification number

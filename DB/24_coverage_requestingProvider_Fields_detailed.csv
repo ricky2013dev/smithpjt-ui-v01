@@ -1,0 +1,78 @@
+Table Name: coverage.requestingProvider Fields (detailed)
+Field,Type,Definition
+category,String,Category for the requesting provider
+categoryCode,String,Code for the provider's category
+type,String,Describes the requesting provider type
+typeCode,String,Code for the requesting provider type
+role,String,Provider role related to inquiry
+roleCode,String,Code for the provider's role
+name,String,Business name of the requesting provider
+lastName/firstName/middleName,String,Provider name components
+npi,String,The requesting provider's National Provider Identifier
+taxId,String,The requesting provider's tax ID number
+stateLicenseNumber,String,The requesting provider's state license number
+medicareProviderNumber,String,The requesting provider's Medicare provider number
+medicaidProviderNumber,String,The requesting provider's Medicaid provider number
+facilityId,String,The requesting provider's Facility Identification
+pin,String,Provider personal identification number
+contractNumber,String,The requesting provider's contract number
+electronicPin,String,Electronic device PIN
+providerPlanNetworkId,String,Provider Plan Network ID
+facilityNetworkId,String,Facility Network ID
+ssn,String,The requesting provider's Social Security Number
+ein,String,The requesting provider's Employer Identification Number
+etin,String,Electronic Transmitter ID
+payerId,String,The Availity-specific identifier for the patient's health plan
+pharmacyProcessorNumber,String,Pharmacy Processor Number
+planId,String,CMS Plan ID
+policyNumber,String,The health plan policy number
+memberId,String,The health plan member ID number
+familyUnitNumber,String,NCPDP family unit number
+groupNumber,String,The health plan group number
+referralNumber,String,Referral approval number/code
+alternateListId,String,Drug formulary list identification
+coverageListId,String,Drug coverage limitation list identification
+healthInsuranceClaimNumber,String,Medicare beneficiary ID number
+drugFormularyNumber,String,The drug formulary number
+priorAuthorizationNumber,String,Number that indicates the services on this claim have been authorized
+medicalAssistanceCategoryId,String,Medical Assistance Category ID
+planNetworkId,String,Plan Network Identification number
+planNetworkName,String,The Plan Network name
+medicaidRecipientId,String,The Medicaid recipient ID number
+suhi,String,Special user health identifier
+naicId,String,The requesting provider's National Association of Insurance Commissioners
+payerAssignedProviderId,String,Payer-assigned provider ID
+submitterId,String,The requesting provider's submitter ID
+payerAssignedUserId,String,Payer-assigned user ID
+specialty,String,The requesting provider's specialty
+specialtyCode,String,Code for the requesting provider's specialty
+placeOfService,String,Identifies the place of service
+placeOfServiceCode,String,Code for the place of service
+dischargeDate,String (date-time),Discharge date
+periodStartDate,String (date-time),Period start date
+periodEndDate,String (date-time),Period end date
+completionDate,String (date-time),Completion date
+coordinationOfBenefitsDate,String (date-time),COB date
+coordinationOfBenefitsBeginDate,String (date-time),COB begin date
+coordinationOfBenefitsEndDate,String (date-time),COB end date
+coverageStartDate,String (date-time),Coverage start date
+coverageEndDate,String (date-time),Coverage end date
+addedDate,String (date-time),Date added
+planStartDate,String (date-time),Plan start date
+primaryCareProviderDate,String (date-time),PCP date
+primaryCareProviderStartDate,String (date-time),PCP start date
+primaryCareProviderEndDate,String (date-time),PCP end date
+lastVisitDate,String (date-time),Last visit date
+eligibilityStartDate,String (date-time),Eligibility start date
+eligibilityEndDate,String (date-time),Eligibility end date
+benefitBeginDate,String (date-time),Benefit start date
+benefitEndDate,String (date-time),Benefit end date
+admissionDate,String (date-time),Admission date
+serviceDate,String (date-time),Service date
+lastUpdateDate,String (date-time),Last update date
+statusDate,String (date-time),Status date
+authorizationRequired,Boolean,Indicates whether the provider is required to obtain authorization
+address,Object,Provider address information
+contactInformation,Array,Provider contact information
+deliveryInformation,Array,Healthcare service delivery information
+payerNotes,Array,Payer notes about provider

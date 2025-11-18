@@ -1,0 +1,26 @@
+Table Name: Service Reviews - GET Parameters
+Parameter,Type,Definition
+payer.id,Query string (optional),The Availity-specific identifier for the patient's health plan
+requestingProvider.specialtyCode,Query string (optional),The requesting provider's specialty code
+requestingProvider.lastName,Query string (optional),The requesting provider's last or business name
+requestingProvider.firstName,Query string (optional),The requesting provider's first name
+requestingProvider.middleName,Query string (optional),The requesting provider's middle name
+requestingProvider.suffix,Query string (optional),The requesting provider's suffix
+requestingProvider.npi,Query string (optional),The requesting provider's National Provider Identifier
+requestingProvider.taxId,Query string (optional),The requesting provider's tax ID number
+requestingProvider.payerAssignedProviderId,Query string (optional),The requesting provider's payer-assigned provider ID
+requestingProvider.submitterId,Query string (optional),The requesting provider's health plan-specific submitter ID
+requestingProvider.addressLine1,Query string (optional),First line of the requesting provider's address
+requestingProvider.addressLine2,Query string (optional),Second line of the requesting provider's address
+requestingProvider.city,Query string (optional),The requesting provider's city
+requestingProvider.stateCode,Query string (optional),Two-character abbreviation for the requesting provider's state
+requestingProvider.zipCode,Query string (optional),The requesting provider's ZIP code
+requestingProvider.contactName,Query string (optional),Name for the requesting provider's contact person
+requestingProvider.phone,Query string (optional),The requesting provider's phone number/extension/fax
+requestingProvider.extension,Query string (optional),The requesting provider's phone extension
+requestingProvider.fax,Query string (optional),The requesting provider's fax number
+subscriber.memberId,Query string (optional),The health plan subscriber's member ID number
+subscriber.firstName,Query string (optional),The health plan subcriber's first name
+subscriber.lastName,Query string (optional),The health plan subcriber's last name
+subscriber.middleName,Query string (optional),The health plan subcriber's middle name
+subscriber.suffix,Query string (optional),Subscriber suffix

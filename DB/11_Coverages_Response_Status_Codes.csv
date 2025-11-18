@@ -1,0 +1,11 @@
+Table Name: Coverages Response - Status Codes
+Code,Status,Definition
+0,In Progress,Availity is in the process of retrieving the coverage
+19,Request Error,The health plan has returned one or more validationMessages
+R1,Communication Error Retrying,The health plan did not respond and Availity is retrying
+7,Communication Error,The health plan did not respond
+13,Communication Error,The health plan's response was invalid
+14,Communication Error,Health plan communication issue
+15,Communication Error,The health plan has indicated that it is down for maintenance
+4,Complete,The refresh was completed successfully
+3,Complete (Invalid Response),Successful with partial data

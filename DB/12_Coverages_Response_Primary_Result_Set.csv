@@ -1,0 +1,8 @@
+Table Name: Coverages Response - Primary Result Set
+Field,Type,Definition
+totalCount,Integer,The total number of items available
+count,Integer,The number of items returned
+offset,Integer,The zero-based starting index
+limit,Integer,The maximum number of collection items returned
+links,Object,Object containing the URL for the request
+coverages,Array,Array providing information about the coverage(s)

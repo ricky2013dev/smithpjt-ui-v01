@@ -1,0 +1,7 @@
+Table Name: Search POST/v1/coverages Parameters
+Field,Type,Definition
+status,String (optional),Filter by coverage status (In Progress, Error, Complete)
+planStatus,String (optional),Filter by plan status (Active/Inactive)
+q,String (required),Search for coverages that match free-form search terms
+sortBy,String (optional),Sort by lastUpdateDate, asOfDate, or patientLastName
+sortDirection,String (optional),Sort in ascending or descending order

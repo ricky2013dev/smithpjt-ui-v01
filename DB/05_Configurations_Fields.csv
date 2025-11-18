@@ -1,0 +1,14 @@
+Table Name: Configurations - Fields Within configurations
+Field,Type,Definition
+type,String,The type of HIPAA transaction for which you requested
+categoryId,String,Configuration category identifier
+categoryValue,String,Configuration category value
+subtypeId,String,Subtype identifier specified in request
+subtypeValue,String,Subtype value specified in request
+payerId,String,The Availity-specific payer identifier
+payerName,String,The name of the health plan
+version,String,Configuration version number
+sourceId,String,Configuration source identifier
+elements,Object,Form elements with support conditions
+requiredFieldCombinations,Array,Field combinations required by health plan
+settings,Object,Key-value setting pairs

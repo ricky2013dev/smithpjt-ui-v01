@@ -1,0 +1,15 @@
+Table Name: coverage.requestingProvider.deliveryInformation Fields
+Field,Type,Definition
+quantityQualifier,String,Describes the type of units used for the quantity
+quantityQualifierCode,String,Code for the type of units used
+quantity,String,The quantity of benefits
+amount,String,Benefit amount
+per,String,The frequency period over which the service is delivered
+perCode,String,The code for the frequency period
+timePeriod,String,The time period measurement for this service delivery
+timePeriodCode,String,The code for the time period measurement
+timePeriods,String,The number of periods involved
+pattern,String,The routine deliveries or calendar pattern
+patternCode,String,The code for the calendar pattern
+time,String,The time of day for this service delivery
+timeCode,String,The code for the time of day

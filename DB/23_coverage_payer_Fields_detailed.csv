@@ -1,0 +1,52 @@
+Table Name: coverage.payer Fields (detailed)
+Field,Type,Definition
+type,String,The payer's type
+typeCode,String,The code for the payer's type
+name,String,The payer's name
+payerId,String,The requested payer's Availity-specific identifier
+responsePayerId,String,The ID the payer responded with
+responseName,String,The name the payer responded with
+primary,Boolean,Indicates whether this is the primary payer
+secondary,Boolean,Indicates whether this is the secondary payer
+tertiary,Boolean,Indicates whether this is the tertiary payer
+thirdPartyAdministrator,String,Third-party administrator indication
+insuredLastName,String,The insured person's last name
+insuredFirstName,String,The insured person's first name
+insuredMiddleName,String,The insured person's middle name
+insuredMemberId,String,The insured person's health plan member ID
+insuredAddress,Object,Insured person address information
+groupNumber,String,The insured person's group number
+groupName,String,The insured person's group name
+policyNumber,String,The insured person's policy number
+planNumber,String,The insured person's plan number
+planName,String,The insured person's plan name
+planNetworkId,String,The insured person's plan network ID
+memberIdentificationNumber,String,Member ID number
+familyUnitNumber,String,NCPDP family unit number
+healthInsuranceClaimNumber,String,Medicare beneficiary identification number
+medicaidRecipientIdentificationNumber,String,The patient's Medicaid Recipient ID number
+dischargeDate,String (date-time),Date the patient was discharged
+periodStartDate,String (date-time),Eligibility period start date
+periodEndDate,String (date-time),Eligibility period end date
+completionDate,String (date-time),Completion date
+coordinationOfBenefitsDate,String (date-time),Coordination of benefits date
+coordinationOfBenefitsBeginDate,String (date-time),Date coordination began/will begin
+coordinationOfBenefitsEndDate,String (date-time),Date coordination ended/will end
+coverageStartDate,String (date-time),Coverage start date
+coverageEndDate,String (date-time),Coverage end date
+addedDate,String (date-time),Date entry was added
+planStartDate,String (date-time),Plan start date
+primaryCareProviderDate,String (date-time),Primary care provider date
+lastVisitDate,String (date-time),Last visit date
+eligibilityStartDate,String (date-time),Date the patient's eligibility began
+eligibilityEndDate,String (date-time),Date the patient's eligibility ended
+benefitBeginDate,String (date-time),Date benefits began/will begin
+benefitEndDate,String (date-time),Date benefits ended/will end
+admissionDate,String (date-time),Date the patient was admitted
+serviceDate,String (date-time),The date of service
+lastUpdateDate,String (date-time),Last update date
+statusDate,String (date-time),Status date
+insuredContactInformation,Array,Contact information for insured
+contactInformation,Array,The payer's contact information
+payerNotes,Array,General disclaimers/messages
+serviceTypeCode,String,Code for the payer's service type

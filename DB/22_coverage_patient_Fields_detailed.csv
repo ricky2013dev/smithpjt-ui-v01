@@ -1,0 +1,15 @@
+Table Name: coverage.patient Fields (detailed)
+Field,Type,Definition
+lastName/firstName/middleName/suffix,String,Patient name components
+patientAccountNumber,String,Number for the patient's health plan account
+memberId,String,The patient's health plan member ID
+familyUnitNumber,String,Number for NCPDP suffix requirement
+birthDate,String (date-time),The patient's date of birth
+deathDate,String (date-time),The patient's date of death
+ssn,String,The patient's Social Security Number
+gender,String,The patient's gender
+genderCode,String,Gender code (F, M, U)
+subscriberRelationship,String,Patient relationship descriptor
+subscriberRelationshipCode,String,Relationship code value
+address,Object,Patient address information
+updateYourRecords,Boolean,Indicates whether the patient's demographic or address information

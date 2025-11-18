@@ -1,0 +1,10 @@
+Table Name: Patient Object Fields
+Field,Type,Definition
+lastName/firstName/middleName/suffix,String,Patient name components
+birthDate,String (date-time),The patient's date of birth
+ssn,String,The patient's Social Security Number
+gender,String,The patient's gender
+genderCode,String,Code for patient gender (F, M, U)
+subscriberRelationship,String,Describes the patient's relationship to the subscriber
+subscriberRelationshipCode,String,Coded relationship value
+address,Object,Information about the patient's address

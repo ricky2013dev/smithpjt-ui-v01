@@ -1,0 +1,6 @@
+Table Name: plans.benefits.benefitDetail Fields
+Field,Type,Definition
+inNetwork,Array,Information about benefits that apply to in-network providers
+outOfNetwork,Array,Information about benefits that apply to out-of-network providers
+notApplicableNetwork,Array,Information about benefits that apply regardless of network
+noNetwork,Array,Information about benefits that are not specific to a network

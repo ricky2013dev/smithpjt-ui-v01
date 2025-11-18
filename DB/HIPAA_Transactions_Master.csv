@@ -1,0 +1,675 @@
+Table Name,Field,Type,Definition
+"Availity Payer List 1.0.4 - Parameters",payerId,Query string (optional),The payer's Availity-specific identifier
+"Availity Payer List 1.0.4 - Parameters",transactionType,Query array (optional),EDI/HIPAA transaction codes supported by payers
+"Availity Payer List 1.0.4 - Parameters",submissionMode,Query array (optional),The method of submission for the transaction(s)
+"Availity Payer List 1.0.4 - Parameters",availability,Query string (optional),Filters payers by contract requirements
+"Availity Payer List 1.0.4 - Parameters",enrollmentRequired,Query boolean (optional),Allows you to filter whether enrollment is required
+"Availity Payer List 1.0.4 - Parameters",Accept,Header string (optional),Specifies response format
+"Payer List Response - Primary Fields",name,String,The common name for the health plan
+"Payer List Response - Primary Fields",payerId,String,The payer's Availity-specific identifier
+"Payer List Response - Primary Fields",displayName,String,The payer's name as displayed on Availity Essentials
+"Payer List Response - Primary Fields",shortName,String,The payer's shortened name used in the file naming convention
+"Payer List Response - Primary Fields",processingRoutes,Object,Information about routes for payer communication
+"processingRoutes Object Fields",transactionDescription,String,Describes the HIPAA transaction type
+"processingRoutes Object Fields",submissionMode,String,Method of submission (Portal, Batch, RealTime, API)
+"processingRoutes Object Fields",effectiveDate,String,The date the transaction became available
+"processingRoutes Object Fields",availability,Boolean,Indicates whether the transaction is available
+"processingRoutes Object Fields",enrollmentRequired,Boolean,Indicates whether enrollment with Availity is required
+"processingRoutes Object Fields",enrollmentMode,String,Type of enrollment required with Availity
+"processingRoutes Object Fields",additionalInfo,String,Provides additional information about the transaction
+"processingRoutes Object Fields",rebateTier,String,The processing route's cost tier
+"processingRoutes Object Fields",passThroughRate,String,The processing route's pass-through rate
+"processingRoutes Object Fields",newTierNotice,String,Provides notice of an upcoming tier change
+"processingRoutes Object Fields",gateway,String,Availity gateway designation for payer/route
+"processingRoutes Object Fields",recentlyAdded,String,The date the route was added
+"Configurations API - Response Primary Fields",totalCount,Integer,Total number of assets
+"Configurations API - Response Primary Fields",count,Integer,Number of assets in the result set
+"Configurations API - Response Primary Fields",offset,Integer,Paging offset
+"Configurations API - Response Primary Fields",limit,Integer,Paging limit
+"Configurations API - Response Primary Fields",links,Object,Object containing a set of resource URIs
+"Configurations API - Response Primary Fields",configurations,Array,Configurations organized by type/payer
+"Configurations - Fields Within configurations",type,String,The type of HIPAA transaction for which you requested
+"Configurations - Fields Within configurations",categoryId,String,Configuration category identifier
+"Configurations - Fields Within configurations",categoryValue,String,Configuration category value
+"Configurations - Fields Within configurations",subtypeId,String,Subtype identifier specified in request
+"Configurations - Fields Within configurations",subtypeValue,String,Subtype value specified in request
+"Configurations - Fields Within configurations",payerId,String,The Availity-specific payer identifier
+"Configurations - Fields Within configurations",payerName,String,The name of the health plan
+"Configurations - Fields Within configurations",version,String,Configuration version number
+"Configurations - Fields Within configurations",sourceId,String,Configuration source identifier
+"Configurations - Fields Within configurations",elements,Object,Form elements with support conditions
+"Configurations - Fields Within configurations",requiredFieldCombinations,Array,Field combinations required by health plan
+"Configurations - Fields Within configurations",settings,Object,Key-value setting pairs
+"Elements Object Fields",type,String,Data type (Unsupported, Boolean, Collection, Date, etc.)
+"Elements Object Fields",label,String,The name used for display in your application's UI
+"Elements Object Fields",order,Integer,Ordering index for UI layout
+"Elements Object Fields",helpTopicId,String,Help topic reference
+"Elements Object Fields",elements,Object,Child elements
+"Elements Object Fields",errorMessage,String,An error message you can use in your application's UI
+"Elements Object Fields",maxRepeats,Integer,Maximum item repetitions
+"Elements Object Fields",allowed,Boolean,Indicates whether the element is valid to use
+"Elements Object Fields",required,Boolean,Indicates whether the element is required
+"Elements Object Fields",information,Array,List of information items
+"Elements Object Fields",groups,Array,List of groups
+"Elements Object Fields",repeats,Boolean,Indicates whether the item repeats
+"Elements Object Fields",hidden,Boolean,Indicates whether the item is hidden
+"Elements Object Fields",minRepeats,Integer,Minimum item repetitions
+"Elements Object Fields",defaultValue,String,A default value you can use for pre-populating
+"Elements Object Fields",values,String,List of acceptable values
+"Elements Object Fields",valuesWhen,Object,Conditional values
+"Elements Object Fields",min,String (date),Minimum date
+"Elements Object Fields",max,String (date),Maximum date
+"Elements Object Fields",pattern,String,A regular expression you can use to validate
+"Elements Object Fields",maxLength,Integer,Maximum character length allowed
+"Elements Object Fields",minLength,Integer,Minimum character length allowed
+"Elements Object Fields",maxLengthWhen,Object,Conditional maximum length
+"Elements Object Fields",patternWhen,Object,Conditional pattern
+"Elements Object Fields",mode,String,Drop-down list or radio button group
+"Elements Object Fields",allowedWhen,Object,Conditions for element allowance
+"Elements Object Fields",notAllowedWhen,Object,Conditions for element disallowance
+"Elements Object Fields",requiredWhen,Object,Conditions for element requirement
+"Elements Object Fields",notRequiredWhen,Object,Conditions for non-requirement
+"Elements Object Fields",objectTypes,Object,Item type prototype definitions
+"Elements - Conditional Fields",equalTo,String,Applies when the element value is equal
+"Elements - Conditional Fields",containedIn,Array,Applies when the field value is in the list
+"Elements - Conditional Fields",greaterThan,String,Applies when the field value is greater
+"Elements - Conditional Fields",lessThan,String,Applies when the field value is less
+"Elements - Conditional Fields",greaterEqual,String,Value comparison operators
+"Elements - Conditional Fields",lessEqual,String,Value comparison operators
+"Elements - Conditional Fields",maxLength,Integer,Maximum character length
+"Elements - Conditional Fields",pattern,Integer,Regular expression validation
+"Elements - Conditional Fields",values,?,Possible values/links
+"Elements.objectTypes Fields",label,String,A label for this object type
+"Elements.objectTypes Fields",minInstances,Integer,The minimum number of instances
+"Elements.objectTypes Fields",maxInstances,Integer,The maximum number of instances
+"Elements.objectTypes Fields",required,Boolean,Indicates whether the object is required
+"Elements.objectTypes Fields",allowedWhen,Object,Condition when type is allowed
+"Elements.objectTypes Fields",notAllowedWhen,Object,Condition when type is not allowed
+"Elements.objectTypes Fields",requiredWhen,Object,Condition when type is required
+"Elements.objectTypes Fields",notRequiredWhen,Object,Condition when type is not required
+"Elements.objectTypes Fields",fieldValues,Object,Object type discriminators
+"Coverages API - POST Parameters",payerId,Query string (optional),The Availity-specific identifier for the patient's health plan
+"Coverages API - POST Parameters",providerLastName,Query string (optional),The requesting provider's last name
+"Coverages API - POST Parameters",providerFirstName,Query string (optional),The requesting provider's first name
+"Coverages API - POST Parameters",providerType,Query string (optional),Professional or institutional designation
+"Coverages API - POST Parameters",providerNpi,Query string (optional),The requesting provider's National Provider Identifier
+"Coverages API - POST Parameters",providerTaxId,Query string (optional),The requesting provider's tax ID
+"Coverages API - POST Parameters",payerAssignedProviderId,Query string (optional),Payer-assigned provider identifier
+"Coverages API - POST Parameters",providerSSN,Query string (optional),The requesting provider's Social Security Number
+"Coverages API - POST Parameters",providerPIN,Query string (optional),Provider personal identification number
+"Coverages API - POST Parameters",providerCity,Query string (optional),Requesting provider's city
+"Coverages API - POST Parameters",providerState,Query string (optional),Two-character state code
+"Coverages API - POST Parameters",providerZipCode,Query string (optional),The requesting provider's ZIP code
+"Coverages API - POST Parameters",providerSpecialty,Query string (optional),Provider specialty using taxonomy code
+"Coverages API - POST Parameters",placeOfService,Query string (optional),Place of service identifier
+"Coverages API - POST Parameters",submitterId,Query string (optional),Payer-assigned submitter identifier
+"Coverages API - POST Parameters",asOfDate,Query string (optional),The date of service for which you want to check coverage
+"Coverages API - POST Parameters",toDate,Query string (optional),End date for coverage search period
+"Coverages API - POST Parameters",serviceType,Query string (optional),The type or types of service your request involves
+"Coverages API - POST Parameters",cardIssueDate,Query string (optional),The issue date of the member's health plan card
+"Coverages API - POST Parameters",procedureCode,Query string (optional),Procedure code for coverage requested
+"Coverages API - POST Parameters",memberId,Query string (optional),The patient's health plan member ID number
+"Coverages API - POST Parameters",medicaidId,Query string (optional),The patient's Medicaid ID number
+"Coverages API - POST Parameters",patientSSN,Query string (optional),The patient's Social Security Number
+"Coverages API - POST Parameters",patientLastName,Query string (optional),The patient's last name
+"Coverages API - POST Parameters",patientFirstName,Query string (optional),The patient's first name
+"Coverages API - POST Parameters",patientMiddleName,Query string (optional),The patient's middle name
+"Coverages API - POST Parameters",patientSuffix,Query string (optional),The patient's suffix
+"Coverages API - POST Parameters",patientGender,Query string (optional),The patient's gender
+"Coverages API - POST Parameters",patientBirthDate,Query string (date) (optional),The patient's date of birth
+"Coverages API - POST Parameters",patientState,Query string (optional),Two-character state abbreviation
+"Coverages API - POST Parameters",groupNumber,Query string (optional),The patient's health plan group number
+"Coverages API - POST Parameters",subscriberRelationship,Query string (optional),Patient relationship to subscriber
+"Search POST/v1/coverages Parameters",status,String (optional),Filter by coverage status (In Progress, Error, Complete)
+"Search POST/v1/coverages Parameters",planStatus,String (optional),Filter by plan status (Active/Inactive)
+"Search POST/v1/coverages Parameters",q,String (required),Search for coverages that match free-form search terms
+"Search POST/v1/coverages Parameters",sortBy,String (optional),Sort by lastUpdateDate, asOfDate, or patientLastName
+"Search POST/v1/coverages Parameters",sortDirection,String (optional),Sort in ascending or descending order
+"Coverages Response - Status Codes",0,In Progress,Availity is in the process of retrieving the coverage
+"Coverages Response - Status Codes",19,Request Error,The health plan has returned one or more validationMessages
+"Coverages Response - Status Codes",R1,Communication Error Retrying,The health plan did not respond and Availity is retrying
+"Coverages Response - Status Codes",7,Communication Error,The health plan did not respond
+"Coverages Response - Status Codes",13,Communication Error,The health plan's response was invalid
+"Coverages Response - Status Codes",14,Communication Error,Health plan communication issue
+"Coverages Response - Status Codes",15,Communication Error,The health plan has indicated that it is down for maintenance
+"Coverages Response - Status Codes",4,Complete,The refresh was completed successfully
+"Coverages Response - Status Codes",3,Complete (Invalid Response),Successful with partial data
+"Coverages Response - Primary Result Set",totalCount,Integer,The total number of items available
+"Coverages Response - Primary Result Set",count,Integer,The number of items returned
+"Coverages Response - Primary Result Set",offset,Integer,The zero-based starting index
+"Coverages Response - Primary Result Set",limit,Integer,The maximum number of collection items returned
+"Coverages Response - Primary Result Set",links,Object,Object containing the URL for the request
+"Coverages Response - Primary Result Set",coverages,Array,Array providing information about the coverage(s)
+"Coverages Response - Fields Within coverages",id,String,The unique response ID from the initial polling request
+"Coverages Response - Fields Within coverages",customerId,String,The unique number Availity uses to identify an organization
+"Coverages Response - Fields Within coverages",createdDate,String (date-time),The time and date the coverage was added
+"Coverages Response - Fields Within coverages",updatedDate,String (date-time),The time and date the coverage was last updated
+"Coverages Response - Fields Within coverages",expirationDate,String (date-time),The time and date this coverage will expire
+"Coverages Response - Fields Within coverages",controlNumber,String,An Availity-assigned tracking number
+"Coverages Response - Fields Within coverages",submitterStateCode,String,The submitting customer's configured state code
+"Coverages Response - Fields Within coverages",status,String,The current status of the coverage request
+"Coverages Response - Fields Within coverages",statusCode,String,The code for the current status
+"Coverages Response - Fields Within coverages",asOfDate,String (date-time),The date for which the patient's coverage information
+"Coverages Response - Fields Within coverages",toDate,String (date-time),The end date for the coverage information search
+"Coverages Response - Fields Within coverages",cardIssueDate,String (date-time),The patient's health plan member card issue date
+"Coverages Response - Fields Within coverages",payer,Object,Information about health plan
+"Coverages Response - Fields Within coverages",requestingProvider,Object,Identifying information about requesting provider
+"Coverages Response - Fields Within coverages",patient,Object,Demographic information about the patient
+"Coverages Response - Fields Within coverages",subscriber,Object,Demographic information about the health plan subscriber
+"Coverages Response - Fields Within coverages",plans,Array,Array listing information about all health plans
+"Coverages Response - Fields Within coverages",requestedServiceType,Array,Array listing requested service types
+"Coverages Response - Fields Within coverages",procedureCode,Array,Array listing requested procedure codes
+"Coverages Response - Fields Within coverages",validationMessages,Array,A list of validation messages from the payer
+"Payer Object Fields (within coverages)",payerId,String,The requested payer's Availity-specific identifier
+"Payer Object Fields (within coverages)",name,String,The requested payer's name
+"Payer Object Fields (within coverages)",responsePayerId,String,The ID the payer responded with
+"Payer Object Fields (within coverages)",responseName,String,The name the payer responded with
+"requestingProvider Object Fields",lastName/firstName,String,The requesting provider's last or business name/first name
+"requestingProvider Object Fields",type,String,Describes the requesting provider type
+"requestingProvider Object Fields",typeCode,String,Code for the requesting provider type
+"requestingProvider Object Fields",specialtyCode,String,Code for the requesting provider's specialty
+"requestingProvider Object Fields",npi,String,The requesting provider's National Provider Identifier
+"requestingProvider Object Fields",taxId,String,The requesting provider's tax ID number
+"requestingProvider Object Fields",payerAssignedProviderId,String,Provider ID assigned by payer
+"requestingProvider Object Fields",ssn,String,The requesting provider's Social Security Number
+"requestingProvider Object Fields",submitterId,String,The requesting provider's submitter ID
+"requestingProvider Object Fields",placeOfService,String,Description of the place of service
+"requestingProvider Object Fields",placeOfServiceCode,String,Code for the place of service
+"requestingProvider Object Fields",address,Object,Information about the requesting provider's address
+"requestingProvider Object Fields",pin,String,The requesting provider's personal identification number
+"Patient Object Fields",lastName/firstName/middleName/suffix,String,Patient name components
+"Patient Object Fields",birthDate,String (date-time),The patient's date of birth
+"Patient Object Fields",ssn,String,The patient's Social Security Number
+"Patient Object Fields",gender,String,The patient's gender
+"Patient Object Fields",genderCode,String,Code for patient gender (F, M, U)
+"Patient Object Fields",subscriberRelationship,String,Describes the patient's relationship to the subscriber
+"Patient Object Fields",subscriberRelationshipCode,String,Coded relationship value
+"Patient Object Fields",address,Object,Information about the patient's address
+"Subscriber Object Fields",memberId,String,The subscriber's health plan member ID number
+"Subscriber Object Fields",medicaidId,String,Subscriber's Medicaid member ID if applicable
+"Subscriber Object Fields",lastName/firstName/middleName/suffix,String,Subscriber name components
+"Subscriber Object Fields",birthDate,String (date-time),The subscriber's date of birth
+"Subscriber Object Fields",gender,String,The subscriber's gender
+"Subscriber Object Fields",genderCode,String,Code for subscriber gender
+"Subscriber Object Fields",caseNumber,String,The case number assigned to the subscriber
+"Plans Array Fields",status,String,The patient's coverage status
+"Plans Array Fields",statusCode,String,The code for the coverage status
+"Plans Array Fields",identityCardNumber,String,Additional identifying card number
+"Plans Array Fields",groupNumber,String,The patient's health plan group number
+"Plans Array Fields",groupName,String,The patient's health plan group name
+"Plans Array Fields",description,String,Plan description
+"Plans Array Fields",coverageSummaryAdditionalPayers,Array,Additional payer information objects
+"Plans Array Fields",eligibilityStartDate,String (date-time),Date the patient's eligibility for benefits began/will begin
+"Plans Array Fields",eligibilityEndDate,String (date-time),Date the patient's eligibility for benefits ended/will end
+"Plans Array Fields",coverageStartDate,String (date-time),The date coverage began/will begin
+"Plans Array Fields",coverageEndDate,String (date-time),The date coverage ended/will end
+"Plans Array Fields",insuranceType,String,The patient's type of insurance
+"Plans Array Fields",insuranceTypeCode,String,Code for the insurance type
+"Plans Array Fields",primaryCareProvider,Object,Primary care provider information
+"coverageSummaryAdditionalPayers Fields",name,String,The additional payer's name
+"coverageSummaryAdditionalPayers Fields",serviceTypeCode,String,Code for the additional payer's service type
+"coverageSummaryAdditionalPayers Fields",insuredMemberId,String,The insured's member ID with the additional payer
+"coverageSummaryAdditionalPayers Fields",primary,Boolean,Indicates whether this additional payer is the primary payer
+"coverageSummaryAdditionalPayers Fields",secondary,Boolean,Indicates whether this additional payer is the secondary payer
+"coverageSummaryAdditionalPayers Fields",tertiary,Boolean,Indicates whether this additional payer is the tertiary payer
+"coverageSummaryAdditionalPayers Fields",coordinationOfBenefitsBeginDate,String (date),Date coordination of benefits began/will begin
+"coverageSummaryAdditionalPayers Fields",coordinationOfBenefitsEndDate,String (date),Date coordination of benefits ended/will end
+"coverageSummaryAdditionalPayers Fields",coordinationOfBenefitsDate,String (date),Coordination of benefits date
+"validationMessages Fields",field,String,The field or parameter associated with this error
+"validationMessages Fields",code,String,The error code
+"validationMessages Fields",errorMessage,String,The message associated with this error
+"validationMessages Fields",index,Integer,The array index of the item associated with this error
+"coverage.subscriber Fields (detailed)",memberId,String,The subscriber's health plan member ID number
+"coverage.subscriber Fields (detailed)",medicaidId,String,Medicaid member ID if applicable
+"coverage.subscriber Fields (detailed)",lastName/firstName/middleName/suffix,String,Subscriber name components
+"coverage.subscriber Fields (detailed)",birthDate,String (date-time),The subscriber's date of birth
+"coverage.subscriber Fields (detailed)",gender,String,The subscriber's gender
+"coverage.subscriber Fields (detailed)",genderCode,String,Gender code (F, M, U)
+"coverage.subscriber Fields (detailed)",ssn,String,The subscriber's Social Security Number
+"coverage.subscriber Fields (detailed)",address,Object,Subscriber address information
+"coverage.subscriber Fields (detailed)",caseNumber,String,The case number assigned to the subscriber
+"coverage.patient Fields (detailed)",lastName/firstName/middleName/suffix,String,Patient name components
+"coverage.patient Fields (detailed)",patientAccountNumber,String,Number for the patient's health plan account
+"coverage.patient Fields (detailed)",memberId,String,The patient's health plan member ID
+"coverage.patient Fields (detailed)",familyUnitNumber,String,Number for NCPDP suffix requirement
+"coverage.patient Fields (detailed)",birthDate,String (date-time),The patient's date of birth
+"coverage.patient Fields (detailed)",deathDate,String (date-time),The patient's date of death
+"coverage.patient Fields (detailed)",ssn,String,The patient's Social Security Number
+"coverage.patient Fields (detailed)",gender,String,The patient's gender
+"coverage.patient Fields (detailed)",genderCode,String,Gender code (F, M, U)
+"coverage.patient Fields (detailed)",subscriberRelationship,String,Patient relationship descriptor
+"coverage.patient Fields (detailed)",subscriberRelationshipCode,String,Relationship code value
+"coverage.patient Fields (detailed)",address,Object,Patient address information
+"coverage.patient Fields (detailed)",updateYourRecords,Boolean,Indicates whether the patient's demographic or address information
+"coverage.payer Fields (detailed)",type,String,The payer's type
+"coverage.payer Fields (detailed)",typeCode,String,The code for the payer's type
+"coverage.payer Fields (detailed)",name,String,The payer's name
+"coverage.payer Fields (detailed)",payerId,String,The requested payer's Availity-specific identifier
+"coverage.payer Fields (detailed)",responsePayerId,String,The ID the payer responded with
+"coverage.payer Fields (detailed)",responseName,String,The name the payer responded with
+"coverage.payer Fields (detailed)",primary,Boolean,Indicates whether this is the primary payer
+"coverage.payer Fields (detailed)",secondary,Boolean,Indicates whether this is the secondary payer
+"coverage.payer Fields (detailed)",tertiary,Boolean,Indicates whether this is the tertiary payer
+"coverage.payer Fields (detailed)",thirdPartyAdministrator,String,Third-party administrator indication
+"coverage.payer Fields (detailed)",insuredLastName,String,The insured person's last name
+"coverage.payer Fields (detailed)",insuredFirstName,String,The insured person's first name
+"coverage.payer Fields (detailed)",insuredMiddleName,String,The insured person's middle name
+"coverage.payer Fields (detailed)",insuredMemberId,String,The insured person's health plan member ID
+"coverage.payer Fields (detailed)",insuredAddress,Object,Insured person address information
+"coverage.payer Fields (detailed)",groupNumber,String,The insured person's group number
+"coverage.payer Fields (detailed)",groupName,String,The insured person's group name
+"coverage.payer Fields (detailed)",policyNumber,String,The insured person's policy number
+"coverage.payer Fields (detailed)",planNumber,String,The insured person's plan number
+"coverage.payer Fields (detailed)",planName,String,The insured person's plan name
+"coverage.payer Fields (detailed)",planNetworkId,String,The insured person's plan network ID
+"coverage.payer Fields (detailed)",memberIdentificationNumber,String,Member ID number
+"coverage.payer Fields (detailed)",familyUnitNumber,String,NCPDP family unit number
+"coverage.payer Fields (detailed)",healthInsuranceClaimNumber,String,Medicare beneficiary identification number
+"coverage.payer Fields (detailed)",medicaidRecipientIdentificationNumber,String,The patient's Medicaid Recipient ID number
+"coverage.payer Fields (detailed)",dischargeDate,String (date-time),Date the patient was discharged
+"coverage.payer Fields (detailed)",periodStartDate,String (date-time),Eligibility period start date
+"coverage.payer Fields (detailed)",periodEndDate,String (date-time),Eligibility period end date
+"coverage.payer Fields (detailed)",completionDate,String (date-time),Completion date
+"coverage.payer Fields (detailed)",coordinationOfBenefitsDate,String (date-time),Coordination of benefits date
+"coverage.payer Fields (detailed)",coordinationOfBenefitsBeginDate,String (date-time),Date coordination began/will begin
+"coverage.payer Fields (detailed)",coordinationOfBenefitsEndDate,String (date-time),Date coordination ended/will end
+"coverage.payer Fields (detailed)",coverageStartDate,String (date-time),Coverage start date
+"coverage.payer Fields (detailed)",coverageEndDate,String (date-time),Coverage end date
+"coverage.payer Fields (detailed)",addedDate,String (date-time),Date entry was added
+"coverage.payer Fields (detailed)",planStartDate,String (date-time),Plan start date
+"coverage.payer Fields (detailed)",primaryCareProviderDate,String (date-time),Primary care provider date
+"coverage.payer Fields (detailed)",lastVisitDate,String (date-time),Last visit date
+"coverage.payer Fields (detailed)",eligibilityStartDate,String (date-time),Date the patient's eligibility began
+"coverage.payer Fields (detailed)",eligibilityEndDate,String (date-time),Date the patient's eligibility ended
+"coverage.payer Fields (detailed)",benefitBeginDate,String (date-time),Date benefits began/will begin
+"coverage.payer Fields (detailed)",benefitEndDate,String (date-time),Date benefits ended/will end
+"coverage.payer Fields (detailed)",admissionDate,String (date-time),Date the patient was admitted
+"coverage.payer Fields (detailed)",serviceDate,String (date-time),The date of service
+"coverage.payer Fields (detailed)",lastUpdateDate,String (date-time),Last update date
+"coverage.payer Fields (detailed)",statusDate,String (date-time),Status date
+"coverage.payer Fields (detailed)",insuredContactInformation,Array,Contact information for insured
+"coverage.payer Fields (detailed)",contactInformation,Array,The payer's contact information
+"coverage.payer Fields (detailed)",payerNotes,Array,General disclaimers/messages
+"coverage.payer Fields (detailed)",serviceTypeCode,String,Code for the payer's service type
+"coverage.requestingProvider Fields (detailed)",category,String,Category for the requesting provider
+"coverage.requestingProvider Fields (detailed)",categoryCode,String,Code for the provider's category
+"coverage.requestingProvider Fields (detailed)",type,String,Describes the requesting provider type
+"coverage.requestingProvider Fields (detailed)",typeCode,String,Code for the requesting provider type
+"coverage.requestingProvider Fields (detailed)",role,String,Provider role related to inquiry
+"coverage.requestingProvider Fields (detailed)",roleCode,String,Code for the provider's role
+"coverage.requestingProvider Fields (detailed)",name,String,Business name of the requesting provider
+"coverage.requestingProvider Fields (detailed)",lastName/firstName/middleName,String,Provider name components
+"coverage.requestingProvider Fields (detailed)",npi,String,The requesting provider's National Provider Identifier
+"coverage.requestingProvider Fields (detailed)",taxId,String,The requesting provider's tax ID number
+"coverage.requestingProvider Fields (detailed)",stateLicenseNumber,String,The requesting provider's state license number
+"coverage.requestingProvider Fields (detailed)",medicareProviderNumber,String,The requesting provider's Medicare provider number
+"coverage.requestingProvider Fields (detailed)",medicaidProviderNumber,String,The requesting provider's Medicaid provider number
+"coverage.requestingProvider Fields (detailed)",facilityId,String,The requesting provider's Facility Identification
+"coverage.requestingProvider Fields (detailed)",pin,String,Provider personal identification number
+"coverage.requestingProvider Fields (detailed)",contractNumber,String,The requesting provider's contract number
+"coverage.requestingProvider Fields (detailed)",electronicPin,String,Electronic device PIN
+"coverage.requestingProvider Fields (detailed)",providerPlanNetworkId,String,Provider Plan Network ID
+"coverage.requestingProvider Fields (detailed)",facilityNetworkId,String,Facility Network ID
+"coverage.requestingProvider Fields (detailed)",ssn,String,The requesting provider's Social Security Number
+"coverage.requestingProvider Fields (detailed)",ein,String,The requesting provider's Employer Identification Number
+"coverage.requestingProvider Fields (detailed)",etin,String,Electronic Transmitter ID
+"coverage.requestingProvider Fields (detailed)",payerId,String,The Availity-specific identifier for the patient's health plan
+"coverage.requestingProvider Fields (detailed)",pharmacyProcessorNumber,String,Pharmacy Processor Number
+"coverage.requestingProvider Fields (detailed)",planId,String,CMS Plan ID
+"coverage.requestingProvider Fields (detailed)",policyNumber,String,The health plan policy number
+"coverage.requestingProvider Fields (detailed)",memberId,String,The health plan member ID number
+"coverage.requestingProvider Fields (detailed)",familyUnitNumber,String,NCPDP family unit number
+"coverage.requestingProvider Fields (detailed)",groupNumber,String,The health plan group number
+"coverage.requestingProvider Fields (detailed)",referralNumber,String,Referral approval number/code
+"coverage.requestingProvider Fields (detailed)",alternateListId,String,Drug formulary list identification
+"coverage.requestingProvider Fields (detailed)",coverageListId,String,Drug coverage limitation list identification
+"coverage.requestingProvider Fields (detailed)",healthInsuranceClaimNumber,String,Medicare beneficiary ID number
+"coverage.requestingProvider Fields (detailed)",drugFormularyNumber,String,The drug formulary number
+"coverage.requestingProvider Fields (detailed)",priorAuthorizationNumber,String,Number that indicates the services on this claim have been authorized
+"coverage.requestingProvider Fields (detailed)",medicalAssistanceCategoryId,String,Medical Assistance Category ID
+"coverage.requestingProvider Fields (detailed)",planNetworkId,String,Plan Network Identification number
+"coverage.requestingProvider Fields (detailed)",planNetworkName,String,The Plan Network name
+"coverage.requestingProvider Fields (detailed)",medicaidRecipientId,String,The Medicaid recipient ID number
+"coverage.requestingProvider Fields (detailed)",suhi,String,Special user health identifier
+"coverage.requestingProvider Fields (detailed)",naicId,String,The requesting provider's National Association of Insurance Commissioners
+"coverage.requestingProvider Fields (detailed)",payerAssignedProviderId,String,Payer-assigned provider ID
+"coverage.requestingProvider Fields (detailed)",submitterId,String,The requesting provider's submitter ID
+"coverage.requestingProvider Fields (detailed)",payerAssignedUserId,String,Payer-assigned user ID
+"coverage.requestingProvider Fields (detailed)",specialty,String,The requesting provider's specialty
+"coverage.requestingProvider Fields (detailed)",specialtyCode,String,Code for the requesting provider's specialty
+"coverage.requestingProvider Fields (detailed)",placeOfService,String,Identifies the place of service
+"coverage.requestingProvider Fields (detailed)",placeOfServiceCode,String,Code for the place of service
+"coverage.requestingProvider Fields (detailed)",dischargeDate,String (date-time),Discharge date
+"coverage.requestingProvider Fields (detailed)",periodStartDate,String (date-time),Period start date
+"coverage.requestingProvider Fields (detailed)",periodEndDate,String (date-time),Period end date
+"coverage.requestingProvider Fields (detailed)",completionDate,String (date-time),Completion date
+"coverage.requestingProvider Fields (detailed)",coordinationOfBenefitsDate,String (date-time),COB date
+"coverage.requestingProvider Fields (detailed)",coordinationOfBenefitsBeginDate,String (date-time),COB begin date
+"coverage.requestingProvider Fields (detailed)",coordinationOfBenefitsEndDate,String (date-time),COB end date
+"coverage.requestingProvider Fields (detailed)",coverageStartDate,String (date-time),Coverage start date
+"coverage.requestingProvider Fields (detailed)",coverageEndDate,String (date-time),Coverage end date
+"coverage.requestingProvider Fields (detailed)",addedDate,String (date-time),Date added
+"coverage.requestingProvider Fields (detailed)",planStartDate,String (date-time),Plan start date
+"coverage.requestingProvider Fields (detailed)",primaryCareProviderDate,String (date-time),PCP date
+"coverage.requestingProvider Fields (detailed)",primaryCareProviderStartDate,String (date-time),PCP start date
+"coverage.requestingProvider Fields (detailed)",primaryCareProviderEndDate,String (date-time),PCP end date
+"coverage.requestingProvider Fields (detailed)",lastVisitDate,String (date-time),Last visit date
+"coverage.requestingProvider Fields (detailed)",eligibilityStartDate,String (date-time),Eligibility start date
+"coverage.requestingProvider Fields (detailed)",eligibilityEndDate,String (date-time),Eligibility end date
+"coverage.requestingProvider Fields (detailed)",benefitBeginDate,String (date-time),Benefit start date
+"coverage.requestingProvider Fields (detailed)",benefitEndDate,String (date-time),Benefit end date
+"coverage.requestingProvider Fields (detailed)",admissionDate,String (date-time),Admission date
+"coverage.requestingProvider Fields (detailed)",serviceDate,String (date-time),Service date
+"coverage.requestingProvider Fields (detailed)",lastUpdateDate,String (date-time),Last update date
+"coverage.requestingProvider Fields (detailed)",statusDate,String (date-time),Status date
+"coverage.requestingProvider Fields (detailed)",authorizationRequired,Boolean,Indicates whether the provider is required to obtain authorization
+"coverage.requestingProvider Fields (detailed)",address,Object,Provider address information
+"coverage.requestingProvider Fields (detailed)",contactInformation,Array,Provider contact information
+"coverage.requestingProvider Fields (detailed)",deliveryInformation,Array,Healthcare service delivery information
+"coverage.requestingProvider Fields (detailed)",payerNotes,Array,Payer notes about provider
+"coverage.requestingProvider.deliveryInformation Fields",quantityQualifier,String,Describes the type of units used for the quantity
+"coverage.requestingProvider.deliveryInformation Fields",quantityQualifierCode,String,Code for the type of units used
+"coverage.requestingProvider.deliveryInformation Fields",quantity,String,The quantity of benefits
+"coverage.requestingProvider.deliveryInformation Fields",amount,String,Benefit amount
+"coverage.requestingProvider.deliveryInformation Fields",per,String,The frequency period over which the service is delivered
+"coverage.requestingProvider.deliveryInformation Fields",perCode,String,The code for the frequency period
+"coverage.requestingProvider.deliveryInformation Fields",timePeriod,String,The time period measurement for this service delivery
+"coverage.requestingProvider.deliveryInformation Fields",timePeriodCode,String,The code for the time period measurement
+"coverage.requestingProvider.deliveryInformation Fields",timePeriods,String,The number of periods involved
+"coverage.requestingProvider.deliveryInformation Fields",pattern,String,The routine deliveries or calendar pattern
+"coverage.requestingProvider.deliveryInformation Fields",patternCode,String,The code for the calendar pattern
+"coverage.requestingProvider.deliveryInformation Fields",time,String,The time of day for this service delivery
+"coverage.requestingProvider.deliveryInformation Fields",timeCode,String,The code for the time of day
+"coverage.plans Fields (detailed)",status,String,The patient's coverage status
+"coverage.plans Fields (detailed)",statusCode,String,The code for the coverage status
+"coverage.plans Fields (detailed)",identityCardNumber,String,Additional ID card number
+"coverage.plans Fields (detailed)",groupNumber,String,The patient's health plan group number
+"coverage.plans Fields (detailed)",groupName,String,The patient's health plan group name
+"coverage.plans Fields (detailed)",policyNumber,String,The patient's health plan policy number
+"coverage.plans Fields (detailed)",planNumber,String,The patient's health plan number
+"coverage.plans Fields (detailed)",planName,String,The patient's health plan name
+"coverage.plans Fields (detailed)",planNetworkId,String,The patient's plan network ID
+"coverage.plans Fields (detailed)",planNetworkName,String,The patient's plan network name
+"coverage.plans Fields (detailed)",contractClassCode,String,Class of contract code
+"coverage.plans Fields (detailed)",contractNumber,String,The provider's contract number
+"coverage.plans Fields (detailed)",medicalRecordNumber,String,Medical record identification number
+"coverage.plans Fields (detailed)",healthInsuranceClaimNumber,String,Medicare beneficiary ID number
+"coverage.plans Fields (detailed)",identificationCardSerialNumber,String,The patient's ID card serial number
+"coverage.plans Fields (detailed)",issueNumber,String,The patient's issue number
+"coverage.plans Fields (detailed)",medicaidRecipientIdentificationNumber,String,The patient's Medicaid recipient ID number
+"coverage.plans Fields (detailed)",priorIdentificationNumber,String,The patient's prior identifier number
+"coverage.plans Fields (detailed)",agencyClaimNumber,String,Property/Casualty claim number
+"coverage.plans Fields (detailed)",admissionDate,String (date-time),The patient's admission date
+"coverage.plans Fields (detailed)",dischargeDate,String (date-time),The patient's discharge date
+"coverage.plans Fields (detailed)",issueDate,String (date-time),Issue date
+"coverage.plans Fields (detailed)",serviceDate,String (date-time),Service date
+"coverage.plans Fields (detailed)",coverageStartDate,String (date-time),Coverage start date
+"coverage.plans Fields (detailed)",coverageEndDate,String (date-time),Coverage end date
+"coverage.plans Fields (detailed)",planStartDate,String (date-time),Plan start date
+"coverage.plans Fields (detailed)",planEndDate,String (date-time),Plan end date
+"coverage.plans Fields (detailed)",planEnrollmentDate,String (date-time),Enrollment date
+"coverage.plans Fields (detailed)",certificationDate,String (date-time),Certification date
+"coverage.plans Fields (detailed)",eligibilityStartDate,String (date-time),Date the patient's eligibility for benefits began/will begin
+"coverage.plans Fields (detailed)",eligibilityEndDate,String (date-time),Date the patient's eligibility for benefits ended/will end
+"coverage.plans Fields (detailed)",policyEffectiveDate,String (date-time),Policy effective date
+"coverage.plans Fields (detailed)",policyExpirationDate,String (date-time),Policy expiration date
+"coverage.plans Fields (detailed)",effectiveChangeDate,String (date-time),Effective change date
+"coverage.plans Fields (detailed)",cobraStartDate,String (date-time),COBRA start date
+"coverage.plans Fields (detailed)",cobraEndDate,String (date-time),COBRA end date
+"coverage.plans Fields (detailed)",lastUpdateDate,String (date-time),Last update date
+"coverage.plans Fields (detailed)",addedDate,String (date-time),Date added
+"coverage.plans Fields (detailed)",premiumPaidToBeginDate,String (date-time),Premium paid start date
+"coverage.plans Fields (detailed)",premiumPaidToEndDate,String (date-time),Premium paid end date
+"coverage.plans Fields (detailed)",periodStartDate,String (date-time),Period start date
+"coverage.plans Fields (detailed)",periodEndDate,String (date-time),Period end date
+"coverage.plans Fields (detailed)",statusDate,String (date-time),Status date
+"coverage.plans Fields (detailed)",additionalPayers,Array,Additional payer information
+"coverage.plans Fields (detailed)",primaryCareProvider,Array,Primary care provider information
+"coverage.plans Fields (detailed)",contacts,Array,Contact information for patient
+"coverage.plans Fields (detailed)",benefits,Array,Array listing information about benefits
+"coverage.plans Fields (detailed)",preexistingConditions,Object,Eligibility/benefit information for preexisting conditions
+"coverage.plans Fields (detailed)",costContainment,Object,Out-of-pocket cost information
+"coverage.plans Fields (detailed)",limitations,Object,Eligibility/benefit limitations
+"coverage.plans Fields (detailed)",benefitDescriptions,Object,Benefit description
+"coverage.plans Fields (detailed)",coverageBasis,Object,Coverage basis information
+"coverage.plans Fields (detailed)",insuranceType,String,The type of insurance
+"coverage.plans Fields (detailed)",insuranceTypeCode,String,Code for the insurance type
+"coverage.plans Fields (detailed)",reserve,Object,Reserve information
+"coverage.plans Fields (detailed)",payerNotes,Array,List of general payer notes and disclaimers
+"coverage.plans.benefits Fields",name,String,The name of the benefit
+"coverage.plans.benefits Fields",type,String,Type of benefit
+"coverage.plans.benefits Fields",source,String,The source of the procedure benefit
+"coverage.plans.benefits Fields",status,String,The status of coverage for this benefit
+"coverage.plans.benefits Fields",statusCode,String,The status code of the coverage for this benefit
+"coverage.plans.benefits Fields",statusDetails,Object,Benefit detail information
+"coverage.plans.benefits Fields",amounts,Object,Information about amounts involved in this benefit
+"coverage.plans.benefits Fields",limitations,Object,Eligibility/benefit limitations
+"coverage.plans.benefits Fields",benefitDescriptions,Object,A description of benefits
+"coverage.plans.benefits Fields",nonCovered,Object,Non-covered services information
+"coverage.plans.benefits Fields",coverageBasis,Object,Coverage basis information
+"coverage.plans.benefits Fields",reserve,Object,Reserve information
+"coverage.plans.benefits Fields",preexistingConditions,Object,Preexisting condition information
+"coverage.plans.benefits Fields",costContainment,Object,Cost containment information
+"coverage.plans.benefits Fields",exclusions,Object,Exclusions information
+"coverage.plans.benefits Fields",additionalPayers,Array,Additional payer information
+"coverage.plans.benefits Fields",contacts,Array,Benefit contact information
+"coverage.plans.benefits Fields",payerNotes,Array,Payer notes/disclaimers
+"plans.benefits.benefitDetail Fields",inNetwork,Array,Information about benefits that apply to in-network providers
+"plans.benefits.benefitDetail Fields",outOfNetwork,Array,Information about benefits that apply to out-of-network providers
+"plans.benefits.benefitDetail Fields",notApplicableNetwork,Array,Information about benefits that apply regardless of network
+"plans.benefits.benefitDetail Fields",noNetwork,Array,Information about benefits that are not specific to a network
+"plans.benefits.amounts Fields",coPayment,Object,Copayment amount information
+"plans.benefits.amounts Fields",outOfPocket,Object,Out-of-pocket amount information
+"plans.benefits.amounts Fields",deductibles,Object,Deductible amount information
+"plans.benefits.amounts Fields",coInsurance,Object,Coinsurance amount information
+"plans.benefits.benefitDetail.networkBenefit Fields",status,String,Benefit status
+"plans.benefits.benefitDetail.networkBenefit Fields",statusCode,String,The code for the coverage status
+"plans.benefits.benefitDetail.networkBenefit Fields",insuranceType,String,The patient's type of insurance
+"plans.benefits.benefitDetail.networkBenefit Fields",insuranceTypeCode,String,Code for the insurance type
+"plans.benefits.benefitDetail.networkBenefit Fields",amount,String,Benefit amount
+"plans.benefits.benefitDetail.networkBenefit Fields",units,String,Benefit units
+"plans.benefits.benefitDetail.networkBenefit Fields",amountTimePeriod,String,The time period this benefit applies to
+"plans.benefits.benefitDetail.networkBenefit Fields",amountTimePeriodCode,String,Time period code
+"plans.benefits.benefitDetail.networkBenefit Fields",remaining,String,The remaining amount
+"plans.benefits.benefitDetail.networkBenefit Fields",remainingTimePeriod,String,The time period that the remaining benefit applies to
+"plans.benefits.benefitDetail.networkBenefit Fields",remainingTimePeriodCode,String,Remaining time period code
+"plans.benefits.benefitDetail.networkBenefit Fields",total,String,Total amount
+"plans.benefits.benefitDetail.networkBenefit Fields",totalTimePeriod,String,Total time period
+"plans.benefits.benefitDetail.networkBenefit Fields",totalTimePeriodCode,String,Total time period code
+"plans.benefits.benefitDetail.networkBenefit Fields",level,String,Benefit level
+"plans.benefits.benefitDetail.networkBenefit Fields",levelCode,String,Level code
+"plans.benefits.benefitDetail.networkBenefit Fields",quantity,String,Quantity
+"plans.benefits.benefitDetail.networkBenefit Fields",quantityQualifier,String,Quantity qualifier description
+"plans.benefits.benefitDetail.networkBenefit Fields",quantityQualifierCode,String,Quantity qualifier code
+"plans.benefits.benefitDetail.networkBenefit Fields",authorizationRequired,Boolean,Indicates whether the provider is required to obtain authorization
+"plans.benefits.benefitDetail.networkBenefit Fields",authorizationRequiredUnknown,Boolean,Indicates if it is unknown whether the provider is required
+"plans.benefits.benefitDetail.networkBenefit Fields",placeOfService,String,Description of the place of service
+"plans.benefits.benefitDetail.networkBenefit Fields",placeOfServiceCode,String,Code for the place of service
+"plans.benefits.benefitDetail.networkBenefit Fields",description,String,Benefit description
+"plans.benefits.benefitDetail.networkBenefit Fields",planNumber,String,The plan number
+"plans.benefits.benefitDetail.networkBenefit Fields",planName,String,The plan name
+"plans.benefits.benefitDetail.networkBenefit Fields",policyNumber,String,The plan network ID
+"plans.benefits.benefitDetail.networkBenefit Fields",memberIdentificationNumber,String,The member ID number
+"plans.benefits.benefitDetail.networkBenefit Fields",familyUnitNumber,String,NCPDP family unit number
+"plans.benefits.benefitDetail.networkBenefit Fields",groupNumber,String,The patient's health plan group number
+"plans.benefits.benefitDetail.networkBenefit Fields",groupName,String,The patient's health plan group name
+"plans.benefits.benefitDetail.networkBenefit Fields",referralNumber,String,Referral approval number/code
+"plans.benefits.benefitDetail.networkBenefit Fields",healthInsuranceClaimNumber,String,Medicare beneficiary ID number
+"plans.benefits.benefitDetail.networkBenefit Fields",priorAuthorizationNumber,String,Number that indicates the services on this claim have been authorized
+"plans.benefits.benefitDetail.networkBenefit Fields",insurancePolicyNumber,String,The health insurance policy number
+"plans.benefits.benefitDetail.networkBenefit Fields",planNetworkId,String,The insured person's plan network ID
+"plans.benefits.benefitDetail.networkBenefit Fields",planNetworkName,String,The insured person's member ID number
+"plans.benefits.benefitDetail.networkBenefit Fields",medicaidRecipientIdentificationNumber,String,The patient's Medicaid Recipient ID number
+"plans.benefits.benefitDetail.networkBenefit Fields",dischargeDate,String,Discharge date
+"plans.benefits.benefitDetail.networkBenefit Fields",periodStartDate,String,Period start date
+"plans.benefits.benefitDetail.networkBenefit Fields",periodEndDate,String,Period end date
+"plans.benefits.benefitDetail.networkBenefit Fields",completionDate,String,Completion date
+"plans.benefits.benefitDetail.networkBenefit Fields",coordinationOfBenefitsDate,String,COB date
+"plans.benefits.benefitDetail.networkBenefit Fields",coordinationOfBenefitsBeginDate,String,COB begin date
+"plans.benefits.benefitDetail.networkBenefit Fields",coordinationOfBenefitsEndDate,String,COB end date
+"plans.benefits.benefitDetail.networkBenefit Fields",coverageStartDate,String,Coverage start date
+"plans.benefits.benefitDetail.networkBenefit Fields",coverageEndDate,String,Coverage end date
+"plans.benefits.benefitDetail.networkBenefit Fields",addedDate,String,Date added
+"plans.benefits.benefitDetail.networkBenefit Fields",planStartDate,String,Plan start date
+"plans.benefits.benefitDetail.networkBenefit Fields",primaryCareProviderDate,String,PCP date
+"plans.benefits.benefitDetail.networkBenefit Fields",lastVisitDate,String,Last visit date
+"plans.benefits.benefitDetail.networkBenefit Fields",eligibilityStartDate,String,Eligibility start date
+"plans.benefits.benefitDetail.networkBenefit Fields",eligibilityEndDate,String,Eligibility end date
+"plans.benefits.benefitDetail.networkBenefit Fields",benefitBeginDate,String,Benefit start date
+"plans.benefits.benefitDetail.networkBenefit Fields",benefitEndDate,String,Benefit end date
+"plans.benefits.benefitDetail.networkBenefit Fields",admissionDate,String,Admission date
+"plans.benefits.benefitDetail.networkBenefit Fields",serviceDate,String,Service date
+"plans.benefits.benefitDetail.networkBenefit Fields",lastUpdateDate,String,Last update date
+"plans.benefits.benefitDetail.networkBenefit Fields",statusDate,String,Status date
+"plans.benefits.benefitDetail.networkBenefit Fields",contacts,Array,Benefit contact information
+"plans.benefits.benefitDetail.networkBenefit Fields",payerNotes,Array,General disclaimers and messages from the health plan
+"plans.benefits.benefitDetail.networkBenefit Fields",deliveryInformation,Array,Service delivery information
+"coverage.supplementalInformation Fields",professionalPatientCostEstimator,Boolean,Indicates whether the Professional Patient Cost Estimator is available
+"coverage.supplementalInformation Fields",institutionalPatientCostEstimator,Boolean,Indicates whether the Institutional Patient Cost Estimator is available
+"coverage.supplementalInformation Fields",patientCareSummary,Boolean,Indicates whether the patient care summary is available
+"coverage.supplementalInformation Fields",patientCareSummaryReason,String,Reason for patient care summary availability
+"coverage.supplementalInformation Fields",patientCareSummaryReasonCode,String,Code for patient care summary reason
+"coverage.supplementalInformation Fields",assessmentCarePlan,Boolean,Indicates whether an assessment and care plan are available
+"coverage.supplementalInformation Fields",thirdPartySystemId,String,Third party system ID
+"coverage.supplementalInformation Fields",routingCode,String,Routing code
+"coverage.supplementalInformation Fields",outOfArea,Boolean,Flag used by certain payers to indicate out of area
+"coverage.supplementalInformation Fields",clickToTalkPhoneNumber,String,Click-to-talk phone number
+"coverage.supplementalInformation Fields",clickToTalkKey,String,Click-to-talk key
+"coverage.supplementalInformation Fields",localMemberId,String,Local member ID for third-party exchanges
+"coverage.supplementalInformation Fields",pceMemberLocatorKey,String,Local member key for patient cost estimator
+"coverage.supplementalInformation Fields",pceHostIndicator,Boolean,Host plan indicator for patient cost estimator
+"coverage.supplementalInformation Fields",referralShortFormIndicator,Boolean,Referral short form indicator
+"coverage.supplementalInformation Fields",viewReferralAuthIndicator,Boolean,View all authorizations/referrals indicator
+"coverage.supplementalInformation Fields",csnpIndicator,Boolean,Indicates whether a C-SNP form is available
+"coverage.supplementalInformation Fields",requestLtssccAmount,Boolean,Indicates whether to initiate a request to LTSSCC
+"coverage.supplementalInformation Fields",pregnant,Boolean,Indicates whether the Patient Assessment (Maternity) form exists
+"coverage.supplementalInformation Fields",pharmacyRestrictions,Object,Pharmacy restrictions information
+"coverage.supplementalInformation Fields",erReferralCompleted,Boolean,Indicates whether the ER Referral Questionnaire was completed
+"coverage.reminders Fields",titles,Object,Object containing clinical message titles
+"coverage.reminders Fields",messages,Array,Array listing objects containing clinical message content
+"coverage.reminders Fields",inference,String,Clinical inference
+"payerNotes Fields",type,String,Describes the type of note
+"payerNotes Fields",typeCode,String,Code for the type of note
+"payerNotes Fields",message,String,The content of the note from the payer
+"Service Reviews - Endpoints",POST /v2/service-reviews,Create service reviews,Create service reviews (i.e., submit authorizations/referrals) asynchronously
+"Service Reviews - Endpoints",GET /v2/service-reviews,Search service reviews,Search for service reviews in the health plan's system
+"Service Reviews - Endpoints",GET /v2/service-reviews/{id},Retrieve service review,Retrieve a specific service review
+"Service Reviews - Endpoints",PUT /v2/service-reviews,Update service reviews,Update service reviews asynchronously
+"Service Reviews - Endpoints",DELETE /v2/service-reviews/{id},Delete service review,Void an existing service review asynchronously
+"Service Reviews - Demo Scenarios",SR-CreateRequestAccepted-i,POST,202,Availity is in the process of sending the member's service review information
+"Service Reviews - Demo Scenarios",SR-DeleteRequestAccepted-i,DELETE,202,Availity is processing your delete request
+"Service Reviews - Demo Scenarios",SR-CreateRequestError-i,POST,400,Your request failed Availity's input validation rules
+"Service Reviews - Demo Scenarios",SR-DeleteRequestError-i,DELETE,400,Your request failed Availity's delete validation rules
+"Service Reviews - Demo Scenarios",SR-GetComplete-i,GET (id: 12345678),200,Availity has successfully retrieved the member's service review information
+"Service Reviews - Demo Scenarios",SR-GetInProgress-i,GET (id: 12345678),202,Availity is processing your request
+"Service Reviews - Demo Scenarios",SR-GetPayerDown-i,GET (id: 12345678),504,Availity did not receive a response from the health plan
+"Service Reviews - Demo Scenarios",SR-UpdateRequestAccepted-i,PUT,202,Availity is currently processing your request
+"Service Reviews - Demo Scenarios",SR-UpdateRequestError-i,PUT,400,Your request failed Availity's input validation rules
+"Service Reviews - Demo Scenarios",SR-GetPayerError-i,GET,400,The health plan indicated an error in the request
+"Service Reviews - Demo Scenarios",SR-GetRetrying-i,GET (id: 12345678),202,The health plan did not respond and Availity is retrying
+"Service Reviews - Demo Scenarios",SRI-GetAccepted-i,GET,202,Availity is processing your request
+"Service Reviews - Demo Scenarios",SRI-GetComplete-i,GET,200,Availity has successfully retrieved the member's service review information
+"Service Reviews - Demo Scenarios",SRI-GetInProgress-i,GET,202,Availity is processing your request
+"Service Reviews - Demo Scenarios",SRI-GetPayerError-i,GET,400,The health plan indicated an error in the request
+"Service Reviews - Demo Scenarios",SRI-GetPayerDown-i,GET,504,Availity did not receive a response from the health plan
+"Service Reviews - Demo Scenarios",SRI-GetRetrying-i,GET (id: 12345678),202,The health plan did not respond and Availity is retrying
+"Service Reviews - Demo Scenarios",SRI-GetRequestError-i,GET,400,The health plan indicated an error in the request
+"Service Reviews - POST Request Body (Primary Fields)",id,String,Service review unique identifier
+"Service Reviews - POST Request Body (Primary Fields)",customerId,String,Customer identifier
+"Service Reviews - POST Request Body (Primary Fields)",controlNumber,String,Availity-assigned tracking number
+"Service Reviews - POST Request Body (Primary Fields)",userId,String,User identifier
+"Service Reviews - POST Request Body (Primary Fields)",shortFormIndicator,Boolean,Indicates if short form is used
+"Service Reviews - POST Request Body (Primary Fields)",updatable,Boolean,Indicates if review can be updated
+"Service Reviews - POST Request Body (Primary Fields)",deletable,Boolean,Indicates if review can be voided
+"Service Reviews - POST Request Body (Primary Fields)",updatableFields,Array,Fields allowed for update by payer
+"Service Reviews - POST Request Body (Primary Fields)",status,String,Current service review status
+"Service Reviews - POST Request Body (Primary Fields)",statusCode,String,Status code for service review
+"Service Reviews - POST Request Body (Primary Fields)",statusReasons,Array,Reasons for current status
+"Service Reviews - POST Request Body (Primary Fields)",createdDate,String,Creation timestamp
+"Service Reviews - POST Request Body (Primary Fields)",updatedDate,String,Last update timestamp
+"Service Reviews - POST Request Body (Primary Fields)",expirationDate,String,Review expiration date
+"Service Reviews - POST Request Body (Primary Fields)",validationMessages,Array,Validation error messages
+"Service Reviews - POST Request Body (Primary Fields)",providerNotes,Array,Notes from requesting provider
+"Service Reviews - POST Request Body (Primary Fields)",payerNotes,Array,Notes from the payer
+"Service Reviews - POST Request Body (Primary Fields)",payer,Object,Health plan information
+"Service Reviews - POST Request Body (Primary Fields)",requestingProvider,Object,Requesting provider information
+"Service Reviews - POST Request Body (Primary Fields)",subscriber,Object,Health plan subscriber information
+"Service Reviews - POST Request Body (Primary Fields)",patient,Object,Patient demographic information
+"Service Reviews - POST Request Body (Primary Fields)",diagnoses,Array,Diagnosis codes and descriptions
+"Service Reviews - POST Request Body (Primary Fields)",certificationIssueDate,String,Certification issue date
+"Service Reviews - POST Request Body (Primary Fields)",certificationEffectiveDate,String,Certification effective date
+"Service Reviews - POST Request Body (Primary Fields)",certificationExpirationDate,String,Certification expiration date
+"Service Reviews - POST Request Body (Primary Fields)",certificationNumber,String,Certification identifier
+"Service Reviews - POST Request Body (Primary Fields)",referenceNumber,String,Reference identifier
+"Service Reviews - POST Request Body (Primary Fields)",traceNumbers,Array,Trace number identifiers
+"Service Reviews - POST Request Body (Primary Fields)",requestType,String,Type of service review request
+"Service Reviews - POST Request Body (Primary Fields)",requestTypeCode,String,Code for request type
+"Service Reviews - POST Request Body (Primary Fields)",serviceType,String,Type of service being reviewed
+"Service Reviews - POST Request Body (Primary Fields)",serviceTypeCode,String,Code for service type
+"Service Reviews - POST Request Body (Primary Fields)",additionalServiceTypes,Array,Additional service types
+"Service Reviews - POST Request Body (Primary Fields)",placeOfService,String,Service location description
+"Service Reviews - POST Request Body (Primary Fields)",placeOfServiceCode,String,Code for service location
+"Service Reviews - POST Request Body (Primary Fields)",serviceLevel,String,Level of service
+"Service Reviews - POST Request Body (Primary Fields)",serviceLevelCode,String,Code for service level
+"Service Reviews - POST Request Body (Primary Fields)",fromDate,String (date),Service start date
+"Service Reviews - POST Request Body (Primary Fields)",toDate,String (date),Service end date
+"Service Reviews - POST Request Body (Primary Fields)",quantity,String,Quantity of services
+"Service Reviews - POST Request Body (Primary Fields)",quantityType,String,Type of quantity measure
+"Service Reviews - POST Request Body (Primary Fields)",quantityTypeCode,String,Code for quantity type
+"Service Reviews - POST Request Body (Primary Fields)",admissionType,String,Type of admission (inpatient)
+"Service Reviews - POST Request Body (Primary Fields)",admissionTypeCode,String,Code for admission type
+"Service Reviews - POST Request Body (Primary Fields)",admissionSource,String,Source of admission
+"Service Reviews - POST Request Body (Primary Fields)",admissionSourceCode,String,Code for admission source
+"Service Reviews - POST Request Body (Primary Fields)",nursingHomeResidentialStatus,String,Nursing home residency status
+"Service Reviews - POST Request Body (Primary Fields)",nursingHomeResidentialStatusCode,String,Code for residency status
+"Service Reviews - POST Request Body (Primary Fields)",homeHealthStartDate,String,Home health service start date
+"Service Reviews - POST Request Body (Primary Fields)",homeHealthCertificationPeriodStartDate,String,Certification period start
+"Service Reviews - POST Request Body (Primary Fields)",homeHealthCertificationPeriodEndDate,String,Certification period end
+"Service Reviews - POST Request Body (Primary Fields)",transportType,String,Type of transport service
+"Service Reviews - POST Request Body (Primary Fields)",transportTypeCode,String,Code for transport type
+"Service Reviews - POST Request Body (Primary Fields)",transportDistance,String,Distance of transport
+"Service Reviews - POST Request Body (Primary Fields)",transportPurpose,String,Purpose of transport
+"Service Reviews - POST Request Body (Primary Fields)",chiropracticTreatmentCount,String,Number of chiropractic treatments
+"Service Reviews - POST Request Body (Primary Fields)",beginningSubluxationLevel,String,Starting subluxation level
+"Service Reviews - POST Request Body (Primary Fields)",beginningSubluxationLevelCode,String,Code for starting level
+"Service Reviews - POST Request Body (Primary Fields)",endingSubluxationLevel,String,Ending subluxation level
+"Service Reviews - POST Request Body (Primary Fields)",endingSubluxationLevelCode,String,Code for ending level
+"Service Reviews - POST Request Body (Primary Fields)",spinalCondition,String,Spinal condition description
+"Service Reviews - POST Request Body (Primary Fields)",spinalConditionCode,String,Code for spinal condition
+"Service Reviews - POST Request Body (Primary Fields)",spinalConditionDescription,String,Detailed spinal condition
+"Service Reviews - POST Request Body (Primary Fields)",oxygenEquipmentType,String,Type of oxygen equipment
+"Service Reviews - POST Request Body (Primary Fields)",oxygenEquipmentTypeCode,String,Code for equipment type
+"Service Reviews - POST Request Body (Primary Fields)",oxygenFlowRate,String,Oxygen flow rate specification
+"Service Reviews - POST Request Body (Primary Fields)",oxygenDailyUseCount,String,Daily oxygen use frequency
+"Service Reviews - POST Request Body (Primary Fields)",oxygenUsePeriodHourCount,String,Hourly oxygen use period
+"Service Reviews - POST Request Body (Primary Fields)",oxygenOrderText,String,Oxygen order documentation
+"Service Reviews - POST Request Body (Primary Fields)",oxygenDeliverySystemType,String,Oxygen delivery system type
+"Service Reviews - POST Request Body (Primary Fields)",oxygenDeliverySystemTypeCode,String,Code for delivery system
+"Service Reviews - POST Request Body (Primary Fields)",transportLocations,Array,Transport location details
+"Service Reviews - POST Request Body (Primary Fields)",procedures,Array,Procedure codes/descriptions
+"Service Reviews - POST Request Body (Primary Fields)",renderingProviders,Array,Service rendering provider information
+"Service Reviews - POST Request Body (Primary Fields)",supplementalInformation,Object,Additional service review information
+"Service Reviews - GET Parameters",payer.id,Query string (optional),The Availity-specific identifier for the patient's health plan
+"Service Reviews - GET Parameters",requestingProvider.specialtyCode,Query string (optional),The requesting provider's specialty code
+"Service Reviews - GET Parameters",requestingProvider.lastName,Query string (optional),The requesting provider's last or business name
+"Service Reviews - GET Parameters",requestingProvider.firstName,Query string (optional),The requesting provider's first name
+"Service Reviews - GET Parameters",requestingProvider.middleName,Query string (optional),The requesting provider's middle name
+"Service Reviews - GET Parameters",requestingProvider.suffix,Query string (optional),The requesting provider's suffix
+"Service Reviews - GET Parameters",requestingProvider.npi,Query string (optional),The requesting provider's National Provider Identifier
+"Service Reviews - GET Parameters",requestingProvider.taxId,Query string (optional),The requesting provider's tax ID number
+"Service Reviews - GET Parameters",requestingProvider.payerAssignedProviderId,Query string (optional),The requesting provider's payer-assigned provider ID
+"Service Reviews - GET Parameters",requestingProvider.submitterId,Query string (optional),The requesting provider's health plan-specific submitter ID
+"Service Reviews - GET Parameters",requestingProvider.addressLine1,Query string (optional),First line of the requesting provider's address
+"Service Reviews - GET Parameters",requestingProvider.addressLine2,Query string (optional),Second line of the requesting provider's address
+"Service Reviews - GET Parameters",requestingProvider.city,Query string (optional),The requesting provider's city
+"Service Reviews - GET Parameters",requestingProvider.stateCode,Query string (optional),Two-character abbreviation for the requesting provider's state
+"Service Reviews - GET Parameters",requestingProvider.zipCode,Query string (optional),The requesting provider's ZIP code
+"Service Reviews - GET Parameters",requestingProvider.contactName,Query string (optional),Name for the requesting provider's contact person
+"Service Reviews - GET Parameters",requestingProvider.phone,Query string (optional),The requesting provider's phone number/extension/fax
+"Service Reviews - GET Parameters",requestingProvider.extension,Query string (optional),The requesting provider's phone extension
+"Service Reviews - GET Parameters",requestingProvider.fax,Query string (optional),The requesting provider's fax number
+"Service Reviews - GET Parameters",subscriber.memberId,Query string (optional),The health plan subscriber's member ID number
+"Service Reviews - GET Parameters",subscriber.firstName,Query string (optional),The health plan subcriber's first name
+"Service Reviews - GET Parameters",subscriber.lastName,Query string (optional),The health plan subcriber's last name
+"Service Reviews - GET Parameters",subscriber.middleName,Query string (optional),The health plan subcriber's middle name
+"Service Reviews - GET Parameters",subscriber.suffix,Query string (optional),Subscriber suffix

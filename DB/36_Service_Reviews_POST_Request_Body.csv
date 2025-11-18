@@ -1,0 +1,77 @@
+Table Name: Service Reviews - POST Request Body (Primary Fields)
+Field,Type,Definition
+id,String,Service review unique identifier
+customerId,String,Customer identifier
+controlNumber,String,Availity-assigned tracking number
+userId,String,User identifier
+shortFormIndicator,Boolean,Indicates if short form is used
+updatable,Boolean,Indicates if review can be updated
+deletable,Boolean,Indicates if review can be voided
+updatableFields,Array,Fields allowed for update by payer
+status,String,Current service review status
+statusCode,String,Status code for service review
+statusReasons,Array,Reasons for current status
+createdDate,String,Creation timestamp
+updatedDate,String,Last update timestamp
+expirationDate,String,Review expiration date
+validationMessages,Array,Validation error messages
+providerNotes,Array,Notes from requesting provider
+payerNotes,Array,Notes from the payer
+payer,Object,Health plan information
+requestingProvider,Object,Requesting provider information
+subscriber,Object,Health plan subscriber information
+patient,Object,Patient demographic information
+diagnoses,Array,Diagnosis codes and descriptions
+certificationIssueDate,String,Certification issue date
+certificationEffectiveDate,String,Certification effective date
+certificationExpirationDate,String,Certification expiration date
+certificationNumber,String,Certification identifier
+referenceNumber,String,Reference identifier
+traceNumbers,Array,Trace number identifiers
+requestType,String,Type of service review request
+requestTypeCode,String,Code for request type
+serviceType,String,Type of service being reviewed
+serviceTypeCode,String,Code for service type
+additionalServiceTypes,Array,Additional service types
+placeOfService,String,Service location description
+placeOfServiceCode,String,Code for service location
+serviceLevel,String,Level of service
+serviceLevelCode,String,Code for service level
+fromDate,String (date),Service start date
+toDate,String (date),Service end date
+quantity,String,Quantity of services
+quantityType,String,Type of quantity measure
+quantityTypeCode,String,Code for quantity type
+admissionType,String,Type of admission (inpatient)
+admissionTypeCode,String,Code for admission type
+admissionSource,String,Source of admission
+admissionSourceCode,String,Code for admission source
+nursingHomeResidentialStatus,String,Nursing home residency status
+nursingHomeResidentialStatusCode,String,Code for residency status
+homeHealthStartDate,String,Home health service start date
+homeHealthCertificationPeriodStartDate,String,Certification period start
+homeHealthCertificationPeriodEndDate,String,Certification period end
+transportType,String,Type of transport service
+transportTypeCode,String,Code for transport type
+transportDistance,String,Distance of transport
+transportPurpose,String,Purpose of transport
+chiropracticTreatmentCount,String,Number of chiropractic treatments
+beginningSubluxationLevel,String,Starting subluxation level
+beginningSubluxationLevelCode,String,Code for starting level
+endingSubluxationLevel,String,Ending subluxation level
+endingSubluxationLevelCode,String,Code for ending level
+spinalCondition,String,Spinal condition description
+spinalConditionCode,String,Code for spinal condition
+spinalConditionDescription,String,Detailed spinal condition
+oxygenEquipmentType,String,Type of oxygen equipment
+oxygenEquipmentTypeCode,String,Code for equipment type
+oxygenFlowRate,String,Oxygen flow rate specification
+oxygenDailyUseCount,String,Daily oxygen use frequency
+oxygenUsePeriodHourCount,String,Hourly oxygen use period
+oxygenOrderText,String,Oxygen order documentation
+oxygenDeliverySystemType,String,Oxygen delivery system type
+oxygenDeliverySystemTypeCode,String,Code for delivery system
+transportLocations,Array,Transport location details
+procedures,Array,Procedure codes/descriptions
+renderingProviders,Array,Service rendering provider information
+supplementalInformation,Object,Additional service review information

@@ -1,0 +1,58 @@
+Table Name: coverage.plans Fields (detailed)
+Field,Type,Definition
+status,String,The patient's coverage status
+statusCode,String,The code for the coverage status
+identityCardNumber,String,Additional ID card number
+groupNumber,String,The patient's health plan group number
+groupName,String,The patient's health plan group name
+policyNumber,String,The patient's health plan policy number
+planNumber,String,The patient's health plan number
+planName,String,The patient's health plan name
+planNetworkId,String,The patient's plan network ID
+planNetworkName,String,The patient's plan network name
+contractClassCode,String,Class of contract code
+contractNumber,String,The provider's contract number
+medicalRecordNumber,String,Medical record identification number
+healthInsuranceClaimNumber,String,Medicare beneficiary ID number
+identificationCardSerialNumber,String,The patient's ID card serial number
+issueNumber,String,The patient's issue number
+medicaidRecipientIdentificationNumber,String,The patient's Medicaid recipient ID number
+priorIdentificationNumber,String,The patient's prior identifier number
+agencyClaimNumber,String,Property/Casualty claim number
+admissionDate,String (date-time),The patient's admission date
+dischargeDate,String (date-time),The patient's discharge date
+issueDate,String (date-time),Issue date
+serviceDate,String (date-time),Service date
+coverageStartDate,String (date-time),Coverage start date
+coverageEndDate,String (date-time),Coverage end date
+planStartDate,String (date-time),Plan start date
+planEndDate,String (date-time),Plan end date
+planEnrollmentDate,String (date-time),Enrollment date
+certificationDate,String (date-time),Certification date
+eligibilityStartDate,String (date-time),Date the patient's eligibility for benefits began/will begin
+eligibilityEndDate,String (date-time),Date the patient's eligibility for benefits ended/will end
+policyEffectiveDate,String (date-time),Policy effective date
+policyExpirationDate,String (date-time),Policy expiration date
+effectiveChangeDate,String (date-time),Effective change date
+cobraStartDate,String (date-time),COBRA start date
+cobraEndDate,String (date-time),COBRA end date
+lastUpdateDate,String (date-time),Last update date
+addedDate,String (date-time),Date added
+premiumPaidToBeginDate,String (date-time),Premium paid start date
+premiumPaidToEndDate,String (date-time),Premium paid end date
+periodStartDate,String (date-time),Period start date
+periodEndDate,String (date-time),Period end date
+statusDate,String (date-time),Status date
+additionalPayers,Array,Additional payer information
+primaryCareProvider,Array,Primary care provider information
+contacts,Array,Contact information for patient
+benefits,Array,Array listing information about benefits
+preexistingConditions,Object,Eligibility/benefit information for preexisting conditions
+costContainment,Object,Out-of-pocket cost information
+limitations,Object,Eligibility/benefit limitations
+benefitDescriptions,Object,Benefit description
+coverageBasis,Object,Coverage basis information
+insuranceType,String,The type of insurance
+insuranceTypeCode,String,Code for the insurance type
+reserve,Object,Reserve information
+payerNotes,Array,List of general payer notes and disclaimers

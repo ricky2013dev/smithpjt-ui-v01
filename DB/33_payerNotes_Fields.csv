@@ -1,0 +1,5 @@
+Table Name: payerNotes Fields
+Field,Type,Definition
+type,String,Describes the type of note
+typeCode,String,Code for the type of note
+message,String,The content of the note from the payer

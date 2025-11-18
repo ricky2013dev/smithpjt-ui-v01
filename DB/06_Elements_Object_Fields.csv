@@ -1,0 +1,32 @@
+Table Name: Elements Object Fields
+Field,Type,Definition
+type,String,Data type (Unsupported, Boolean, Collection, Date, etc.)
+label,String,The name used for display in your application's UI
+order,Integer,Ordering index for UI layout
+helpTopicId,String,Help topic reference
+elements,Object,Child elements
+errorMessage,String,An error message you can use in your application's UI
+maxRepeats,Integer,Maximum item repetitions
+allowed,Boolean,Indicates whether the element is valid to use
+required,Boolean,Indicates whether the element is required
+information,Array,List of information items
+groups,Array,List of groups
+repeats,Boolean,Indicates whether the item repeats
+hidden,Boolean,Indicates whether the item is hidden
+minRepeats,Integer,Minimum item repetitions
+defaultValue,String,A default value you can use for pre-populating
+values,String,List of acceptable values
+valuesWhen,Object,Conditional values
+min,String (date),Minimum date
+max,String (date),Maximum date
+pattern,String,A regular expression you can use to validate
+maxLength,Integer,Maximum character length allowed
+minLength,Integer,Minimum character length allowed
+maxLengthWhen,Object,Conditional maximum length
+patternWhen,Object,Conditional pattern
+mode,String,Drop-down list or radio button group
+allowedWhen,Object,Conditions for element allowance
+notAllowedWhen,Object,Conditions for element disallowance
+requiredWhen,Object,Conditions for element requirement
+notRequiredWhen,Object,Conditions for non-requirement
+objectTypes,Object,Item type prototype definitions
