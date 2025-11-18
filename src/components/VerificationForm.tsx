@@ -341,6 +341,145 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
     printWindow.document.close();
   };
 
+  const handleExportCSV = () => {
+    const csvRows: string[] = [];
+
+    // Add CSV header
+    csvRows.push('Category,Field Name,Value');
+
+    // Helper function to escape CSV values
+    const escapeCSV = (value: string | number | boolean): string => {
+      if (value === null || value === undefined) return '';
+      const stringValue = String(value);
+      // Escape double quotes and wrap in quotes if contains comma, newline, or quote
+      if (stringValue.includes(',') || stringValue.includes('\n') || stringValue.includes('"')) {
+        return `"${stringValue.replace(/"/g, '""')}"`;
+      }
+      return stringValue;
+    };
+
+    // Patient Information
+    csvRows.push(`Patient Information,Patient Name,${escapeCSV(getFullName())}`);
+    csvRows.push(`Patient Information,Patient SSN,${escapeCSV(formData.patientSSN)}`);
+    csvRows.push(`Patient Information,Patient Date of Birth,${escapeCSV(patient.birthDate)}`);
+    csvRows.push(`Patient Information,Relationship to Subscriber,${escapeCSV(formData.relationshipToSubscriber)}`);
+
+    // Subscriber Information
+    csvRows.push(`Subscriber Information,Subscriber Name,${escapeCSV(formData.subscriberName)}`);
+    csvRows.push(`Subscriber Information,Subscriber SSN,${escapeCSV(formData.subscriberSSN)}`);
+    csvRows.push(`Subscriber Information,Subscriber Date of Birth,${escapeCSV(formData.subscriberDOB)}`);
+    csvRows.push(`Subscriber Information,Subscriber ID Number,${escapeCSV(formData.subscriberID)}`);
+
+    // Insurance Information
+    csvRows.push(`Insurance Information,Insurance Company,${escapeCSV(formData.insuranceCompany)}`);
+    csvRows.push(`Insurance Information,Insurer Type - Primary,${escapeCSV(formData.insurerType.primary ? 'Yes' : 'No')}`);
+    csvRows.push(`Insurance Information,Insurer Type - Secondary,${escapeCSV(formData.insurerType.secondary ? 'Yes' : 'No')}`);
+    csvRows.push(`Insurance Information,Insurance Address,${escapeCSV(formData.insuranceAddress)}`);
+    csvRows.push(`Insurance Information,Insurance Phone,${escapeCSV(formData.insurancePhone)}`);
+    csvRows.push(`Insurance Information,Employer,${escapeCSV(formData.employer)}`);
+    csvRows.push(`Insurance Information,Group Number,${escapeCSV(formData.groupNumber)}`);
+    csvRows.push(`Insurance Information,Effective Date,${escapeCSV(formData.effectiveDate)}`);
+    csvRows.push(`Insurance Information,Renewal Month,${escapeCSV(formData.renewalMonth)}`);
+    csvRows.push(`Insurance Information,Yearly Maximum,${escapeCSV(formData.yearlyMax)}`);
+    csvRows.push(`Insurance Information,Deductible Per Individual,${escapeCSV(formData.deductiblePerIndividual)}`);
+    csvRows.push(`Insurance Information,Deductible Per Family,${escapeCSV(formData.deductiblePerFamily)}`);
+    csvRows.push(`Insurance Information,Deductible Applies To - Preventative,${escapeCSV(formData.deductibleAppliesTo.preventative ? 'Yes' : 'No')}`);
+    csvRows.push(`Insurance Information,Deductible Applies To - Basic,${escapeCSV(formData.deductibleAppliesTo.basic ? 'Yes' : 'No')}`);
+    csvRows.push(`Insurance Information,Deductible Applies To - Major,${escapeCSV(formData.deductibleAppliesTo.major ? 'Yes' : 'No')}`);
+
+    // Preventative Coverage
+    csvRows.push(`Preventative Coverage,Preventative Covered At (%),${escapeCSV(formData.preventativeCoveredAt)}`);
+    csvRows.push(`Preventative Coverage,Preventative Waiting Period,${escapeCSV(formData.preventativeWaitingPeriod ? 'Yes' : 'No')}`);
+    csvRows.push(`Preventative Coverage,Preventative Effective Date,${escapeCSV(formData.preventativeEffectiveDate)}`);
+    csvRows.push(`Preventative Coverage,Bitewing Frequency,${escapeCSV(formData.bitewingFrequency)}`);
+    csvRows.push(`Preventative Coverage,Prophylaxis/Exam Frequency,${escapeCSV(formData.prophylaxisExamFrequency)}`);
+    csvRows.push(`Preventative Coverage,Last FMS,${escapeCSV(formData.lastFMS)}`);
+    csvRows.push(`Preventative Coverage,Eligible for FMS Now,${escapeCSV(formData.eligibleForFMSNow ? 'Yes' : 'No')}`);
+    csvRows.push(`Preventative Coverage,Eligible for FMS Every (Years),${escapeCSV(formData.eligibleForFMSEvery)}`);
+    csvRows.push(`Preventative Coverage,Fluoride Varnish Frequency,${escapeCSV(formData.fluorideVarnishFrequency)}`);
+    csvRows.push(`Preventative Coverage,Fluoride Age Limit Exists,${escapeCSV(formData.fluorideAgeLimitExists ? 'Yes' : 'No')}`);
+    csvRows.push(`Preventative Coverage,Fluoride Age Limit,${escapeCSV(formData.fluorideAgeLimit)}`);
+    csvRows.push(`Preventative Coverage,Sealant Coverage,${escapeCSV(formData.sealantCoverage ? 'Yes' : 'No')}`);
+    csvRows.push(`Preventative Coverage,Sealant Teeth Covered - Molars,${escapeCSV(formData.sealantTeethCovered.molars ? 'Yes' : 'No')}`);
+    csvRows.push(`Preventative Coverage,Sealant Teeth Covered - Premolars,${escapeCSV(formData.sealantTeethCovered.premolars ? 'Yes' : 'No')}`);
+    csvRows.push(`Preventative Coverage,Sealant Age Limit Exists,${escapeCSV(formData.sealantAgeLimitExists ? 'Yes' : 'No')}`);
+    csvRows.push(`Preventative Coverage,Sealant Age Limit,${escapeCSV(formData.sealantAgeLimit)}`);
+    csvRows.push(`Preventative Coverage,Sealant Replacement,${escapeCSV(formData.sealantReplacement)}`);
+
+    // Basic Coverage
+    csvRows.push(`Basic Coverage,Basic Covered At (%),${escapeCSV(formData.basicCoveredAt)}`);
+    csvRows.push(`Basic Coverage,Basic Waiting Period,${escapeCSV(formData.basicWaitingPeriod ? 'Yes' : 'No')}`);
+    csvRows.push(`Basic Coverage,Basic Effective Date,${escapeCSV(formData.basicEffectiveDate)}`);
+    csvRows.push(`Basic Coverage,Basic Includes,${escapeCSV(formData.basicIncludes)}`);
+
+    // Major Coverage
+    csvRows.push(`Major Coverage,Major Covered At (%),${escapeCSV(formData.majorCoveredAt)}`);
+    csvRows.push(`Major Coverage,Major Waiting Period,${escapeCSV(formData.majorWaitingPeriod ? 'Yes' : 'No')}`);
+    csvRows.push(`Major Coverage,Major Effective Date,${escapeCSV(formData.majorEffectiveDate)}`);
+    csvRows.push(`Major Coverage,Major Includes,${escapeCSV(formData.majorIncludes)}`);
+
+    // Periodontal Coverage
+    csvRows.push(`Periodontal Coverage,SRP History,${escapeCSV(formData.srpHistory ? 'Yes' : 'No')}`);
+    csvRows.push(`Periodontal Coverage,SRP History Date,${escapeCSV(formData.srpHistoryDate)}`);
+    csvRows.push(`Periodontal Coverage,SRP Covered,${escapeCSV(formData.srpCovered ? 'Yes' : 'No')}`);
+    csvRows.push(`Periodontal Coverage,SRP Frequency,${escapeCSV(formData.srpFrequency)}`);
+    csvRows.push(`Periodontal Coverage,SRP All Quadrants Same Visit,${escapeCSV(formData.srpAllQuadrantsSameVisit ? 'Yes' : 'No')}`);
+    csvRows.push(`Periodontal Coverage,SRP Waiting Period,${escapeCSV(formData.srpWaitingPeriod)}`);
+    csvRows.push(`Periodontal Coverage,Adult Prophylaxis with SRP,${escapeCSV(formData.adultProphylaxisWithSRP ? 'Yes' : 'No')}`);
+    csvRows.push(`Periodontal Coverage,Adult Prophylaxis Waiting Period,${escapeCSV(formData.adultProphylaxisWaitingPeriod)}`);
+    csvRows.push(`Periodontal Coverage,Periodontal Maintenance Covered,${escapeCSV(formData.periodontalMaintenanceCovered ? 'Yes' : 'No')}`);
+    csvRows.push(`Periodontal Coverage,Periodontal Maintenance Frequency,${escapeCSV(formData.periodontalMaintenanceFrequency)}`);
+
+    // Implant Coverage
+    csvRows.push(`Implant Coverage,Endosteal Implants Covered,${escapeCSV(formData.endostealImplantsCovered ? 'Yes' : 'No')}`);
+    csvRows.push(`Implant Coverage,Endosteal Implants Covered At (%),${escapeCSV(formData.endostealImplantsCoveredAt)}`);
+    csvRows.push(`Implant Coverage,Bone Replacement Grafts Covered,${escapeCSV(formData.boneReplacementGraftsCovered ? 'Yes' : 'No')}`);
+    csvRows.push(`Implant Coverage,Bone Replacement Grafts Covered At (%),${escapeCSV(formData.boneReplacementGraftsCoveredAt)}`);
+    csvRows.push(`Implant Coverage,Guided Tissue Regeneration Covered,${escapeCSV(formData.guidedTissueRegenerationCovered ? 'Yes' : 'No')}`);
+    csvRows.push(`Implant Coverage,Guided Tissue Regeneration Covered At (%),${escapeCSV(formData.guidedTissueRegenerationCoveredAt)}`);
+    csvRows.push(`Implant Coverage,Implant Abutments Covered,${escapeCSV(formData.implantAbutmentsCovered ? 'Yes' : 'No')}`);
+    csvRows.push(`Implant Coverage,Implant Abutments Covered At (%),${escapeCSV(formData.implantAbutmentsCoveredAt)}`);
+    csvRows.push(`Implant Coverage,Implant Crowns Covered,${escapeCSV(formData.implantCrownsCovered ? 'Yes' : 'No')}`);
+    csvRows.push(`Implant Coverage,Implant Crowns Covered At (%),${escapeCSV(formData.implantCrownsCoveredAt)}`);
+    csvRows.push(`Implant Coverage,Implant Pre-determination Required,${escapeCSV(formData.implantPreDeterminationRequired ? 'Yes' : 'No')}`);
+
+    // Orthodontic Coverage
+    csvRows.push(`Orthodontic Coverage,Orthodontics Covered,${escapeCSV(formData.orthodonticsCovered ? 'Yes' : 'No')}`);
+    csvRows.push(`Orthodontic Coverage,Orthodontics Covered At (%),${escapeCSV(formData.orthodonticsCoveredAt)}`);
+    csvRows.push(`Orthodontic Coverage,Orthodontics Age Limit Exists,${escapeCSV(formData.orthodonticsAgeLimitExists ? 'Yes' : 'No')}`);
+    csvRows.push(`Orthodontic Coverage,Orthodontics Age Limit,${escapeCSV(formData.orthodonticsAgeLimit)}`);
+    csvRows.push(`Orthodontic Coverage,Orthodontics Lifetime Max Exists,${escapeCSV(formData.orthodonticsLifetimeMaxExists ? 'Yes' : 'No')}`);
+    csvRows.push(`Orthodontic Coverage,Orthodontics Lifetime Max,${escapeCSV(formData.orthodonticsLifetimeMax)}`);
+
+    // Miscellaneous
+    csvRows.push(`Miscellaneous,Nightguards Covered,${escapeCSV(formData.nightguardsCovered ? 'Yes' : 'No')}`);
+    csvRows.push(`Miscellaneous,Nightguards Covered At (%),${escapeCSV(formData.nightguardsCoveredAt)}`);
+    csvRows.push(`Miscellaneous,Nitrous Oxide Covered,${escapeCSV(formData.nitrousOxideCovered ? 'Yes' : 'No')}`);
+    csvRows.push(`Miscellaneous,Nitrous Oxide Covered At (%),${escapeCSV(formData.nitrousOxideCoveredAt)}`);
+    csvRows.push(`Miscellaneous,Crowns and Bridges Replacement (Years),${escapeCSV(formData.crownsAndBridgesReplacement)}`);
+    csvRows.push(`Miscellaneous,Dentures Replacement (Years),${escapeCSV(formData.denturesReplacement)}`);
+    csvRows.push(`Miscellaneous,Missing Tooth Clause Covered,${escapeCSV(formData.missingToothClauseCovered ? 'Yes' : 'No')}`);
+
+    // Additional Notes
+    csvRows.push(`Additional Notes,Additional Notes,${escapeCSV(formData.additionalNotes)}`);
+
+    // Create CSV content
+    const csvContent = csvRows.join('\n');
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', `verification-form-${getFullName().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const generatePrintContent = (): string => {
     return `
       <div class="section">
@@ -645,13 +784,22 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               <span className="material-symbols-outlined">assignment</span>
               Verification Form
             </h3>
-            <button
-              onClick={handlePrint}
-              className="px-3 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-1.5 bg-white dark:bg-slate-900 text-sm"
-            >
-              <span className="material-symbols-outlined text-base">print</span>
-              Print
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={handleExportCSV}
+                className="px-3 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-1.5 bg-white dark:bg-slate-900 text-sm"
+              >
+                <span className="material-symbols-outlined text-base">download</span>
+                Export CSV
+              </button>
+              <button
+                onClick={handlePrint}
+                className="px-3 py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-1.5 bg-white dark:bg-slate-900 text-sm"
+              >
+                <span className="material-symbols-outlined text-base">print</span>
+                Print
+              </button>
+            </div>
           </div>
         </div>
 
