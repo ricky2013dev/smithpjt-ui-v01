@@ -9,7 +9,92 @@ interface VerificationFormProps {
 
 const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
   const formRef = useRef<HTMLDivElement>(null);
-  const [formData] = useState(verificationData);
+
+  // Use empty form data for new patients, otherwise use sample data
+  const isNewPatient = patient.id.startsWith('new-');
+  const emptyFormData = {
+    patientName: '',
+    patientSSN: '',
+    patientDOB: '',
+    relationshipToSubscriber: '',
+    subscriberName: '',
+    subscriberSSN: '',
+    subscriberDOB: '',
+    subscriberID: '',
+    insuranceCompany: '',
+    insurerType: 'Primary' as const,
+    insuranceAddress: '',
+    insurancePhone: '',
+    employer: '',
+    groupNumber: '',
+    effectiveDate: '',
+    renewalMonth: '',
+    yearlyMax: '',
+    deductiblePerIndividual: '',
+    deductiblePerFamily: '',
+    deductibleAppliesTo: { preventative: false, basic: false, major: false },
+    preventativeCoveredAt: '',
+    preventativeWaitingPeriod: false,
+    preventativeEffectiveDate: '',
+    bitewingFrequency: '',
+    prophylaxisExamFrequency: '',
+    lastFMS: '',
+    eligibleForFMSNow: false,
+    eligibleForFMSEvery: '',
+    fluorideVarnishFrequency: '',
+    fluorideAgeLimitExists: false,
+    fluorideAgeLimit: '',
+    sealantCoverage: false,
+    sealantTeethCovered: { molars: false, premolars: false },
+    sealantAgeLimitExists: false,
+    sealantAgeLimit: '',
+    sealantReplacement: '',
+    basicCoveredAt: '',
+    basicWaitingPeriod: false,
+    basicEffectiveDate: '',
+    basicIncludes: '',
+    majorCoveredAt: '',
+    majorWaitingPeriod: false,
+    majorEffectiveDate: '',
+    majorIncludes: '',
+    srpHistory: false,
+    srpHistoryDate: '',
+    srpCovered: false,
+    srpFrequency: '',
+    srpAllQuadrantsSameVisit: false,
+    srpWaitingPeriod: '',
+    adultProphylaxisWithSRP: false,
+    adultProphylaxisWaitingPeriod: '',
+    periodontalMaintenanceCovered: false,
+    periodontalMaintenanceFrequency: '',
+    endostealImplantsCovered: false,
+    endostealImplantsCoveredAt: '',
+    boneReplacementGraftsCovered: false,
+    boneReplacementGraftsCoveredAt: '',
+    guidedTissueRegenerationCovered: false,
+    guidedTissueRegenerationCoveredAt: '',
+    implantAbutmentsCovered: false,
+    implantAbutmentsCoveredAt: '',
+    implantCrownsCovered: false,
+    implantCrownsCoveredAt: '',
+    implantPreDeterminationRequired: false,
+    orthodonticsCovered: false,
+    orthodonticsCoveredAt: '',
+    orthodonticsAgeLimitExists: false,
+    orthodonticsAgeLimit: '',
+    orthodonticsLifetimeMaxExists: false,
+    orthodonticsLifetimeMax: '',
+    nightguardsCovered: false,
+    nightguardsCoveredAt: '',
+    nitrousOxideCovered: false,
+    nitrousOxideCoveredAt: '',
+    crownsAndBridgesReplacement: '',
+    denturesReplacement: '',
+    missingToothClauseCovered: false,
+    additionalNotes: ''
+  };
+
+  const [formData] = useState(isNewPatient ? emptyFormData : verificationData);
   const [showPatientSSN, setShowPatientSSN] = useState(false);
   const [showSubscriberSSN, setShowSubscriberSSN] = useState(false);
   const [collapsedSections, setCollapsedSections] = useState<{[key: string]: boolean}>({
@@ -28,7 +113,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
 
   // Edit mode state
   const [isEditing, setIsEditing] = useState(false);
-  const [editedFormData, setEditedFormData] = useState(verificationData);
+  const [editedFormData, setEditedFormData] = useState(isNewPatient ? emptyFormData : verificationData);
 
   // Initialize editedFormData with patient data
   React.useEffect(() => {

@@ -8,11 +8,13 @@ interface PatientGuideProps {
     pending: number;
     notStarted: number;
   };
+  onAddNewPatient?: () => void;
 }
 
 const PatientGuide: React.FC<PatientGuideProps> = ({
   totalPatients = 0,
-  verificationStats = { verified: 0, inProgress: 0, pending: 0, notStarted: 0 }
+  verificationStats = { verified: 0, inProgress: 0, pending: 0, notStarted: 0 },
+  onAddNewPatient
 }) => {
   return (
     <section className="hidden w-0 flex-1 flex-col bg-background-light dark:bg-background-dark lg:flex lg:w-[75%] overflow-y-auto">
@@ -22,9 +24,18 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
           <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
             Insurance Verification Overview
           </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Select a patient from the list to view detailed information
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Select a patient from the list to review their insurance verification status and coverage details, or add a new patient to begin the verification process.
+            </p>
+            <button
+              onClick={onAddNewPatient}
+              className="px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-xs font-medium shrink-0"
+            >
+              <span className="material-symbols-outlined text-base">add</span>
+              Add New Patient
+            </button>
+          </div>
         </div>
 
         {/* Stats Grid */}
@@ -154,46 +165,7 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
-          <h3 className="text-sm font-medium text-slate-900 dark:text-white mb-4">
-            Quick Actions
-          </h3>
-          <div className="grid grid-cols-2 gap-3">
-            <button className="flex flex-col items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-5 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
-              <span className="material-symbols-outlined text-2xl text-slate-600 dark:text-slate-400">
-                task_alt
-              </span>
-              <span className="text-xs font-medium text-slate-700 dark:text-slate-300 text-center">
-                Verify Insurance
-              </span>
-            </button>
-            <button className="flex flex-col items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-5 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
-              <span className="material-symbols-outlined text-2xl text-slate-600 dark:text-slate-400">
-                receipt_long
-              </span>
-              <span className="text-xs font-medium text-slate-700 dark:text-slate-300 text-center">
-                Check Coverage
-              </span>
-            </button>
-            <button className="flex flex-col items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-5 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
-              <span className="material-symbols-outlined text-2xl text-slate-600 dark:text-slate-400">
-                request_quote
-              </span>
-              <span className="text-xs font-medium text-slate-700 dark:text-slate-300 text-center">
-                Submit Claim
-              </span>
-            </button>
-            <button className="flex flex-col items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-5 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
-              <span className="material-symbols-outlined text-2xl text-slate-600 dark:text-slate-400">
-                assessment
-              </span>
-              <span className="text-xs font-medium text-slate-700 dark:text-slate-300 text-center">
-                Coverage Report
-              </span>
-            </button>
-          </div>
-        </div>
+
       </div>
     </section>
   );

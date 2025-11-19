@@ -141,6 +141,60 @@ const PatientsManagement: React.FC = () => {
     setSelectedPatientId(null);
   };
 
+  const handleAddNewPatient = () => {
+    // Create a new patient ID
+    const newPatientId = `new-${Date.now()}`;
+
+    // Create a temporary new patient object
+    const newPatient: Patient = {
+      id: newPatientId,
+      active: true,
+      name: {
+        given: ['New'],
+        family: 'Patient'
+      },
+      gender: '',
+      birthDate: '',
+      telecom: [
+        { system: 'phone', value: '' },
+        { system: 'email', value: '' }
+      ],
+      address: [{
+        line: [''],
+        city: '',
+        state: '',
+        postalCode: ''
+      }],
+      insurance: [],
+      appointments: [],
+      treatments: [],
+      coverage: {
+        annual_maximum: 0,
+        annual_used: 0,
+        deductible: 0,
+        deductible_met: 0,
+        procedures: []
+      }
+    };
+
+    // Add the new patient to the patients array temporarily
+    patients.push(newPatient);
+
+    // Select the new patient and switch to Patient Basic tab
+    setSelectedPatientId(newPatientId);
+    setActiveTab(TAB_TYPES.PATIENT_BASIC_INFO);
+  };
+
+  const handleCancelNewPatient = () => {
+    // Remove new patient from patients array if it exists
+    const index = patients.findIndex(p => p.id.startsWith('new-'));
+    if (index !== -1) {
+      patients.splice(index, 1);
+    }
+    // Clear selected patient to return to PatientGuide
+    setSelectedPatientId(null);
+  };
+
   return (
     <div className="flex h-screen w-full flex-col">
       {/* Smith AI Center Header */}
@@ -176,11 +230,13 @@ const PatientsManagement: React.FC = () => {
                 activeTab={activeTab}
                 onTabChange={setActiveTab}
                 isAdmin={isAdmin}
+                onCancel={selectedPatient.id.startsWith('new-') ? handleCancelNewPatient : undefined}
               />
             ) : (
               <PatientGuide
                 totalPatients={patients.length}
                 verificationStats={verificationStats}
+                onAddNewPatient={handleAddNewPatient}
               />
             )}
           </div>

@@ -23,6 +23,7 @@ interface PatientDetailProps {
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
   isAdmin?: boolean;
+  onCancel?: () => void;
 }
 
 // Tab content wrapper component for consistent spacing
@@ -38,6 +39,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   activeTab,
   onTabChange,
   isAdmin = false,
+  onCancel,
 }) => {
   const [showAICenter, setShowAICenter] = useState(false);
   const [insuranceSubTab, setInsuranceSubTab] = useState<InsuranceSubTabType>(INSURANCE_SUB_TAB_TYPES.VERIFICATION_FORM);
@@ -247,10 +249,10 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             </p>
           </div>
 
-          <div className="flex-1 flex justify-center gap-2">
+          <div className={`flex-1 flex justify-center gap-2 ${patient.id.startsWith('new-') ? 'invisible' : ''}`}>
             <button
               onClick={handleLoadSampleData}
-              disabled={isLoadingSampleData}
+              disabled={isLoadingSampleData || patient.id.startsWith('new-')}
               className="px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm disabled:opacity-50"
             >
               {isLoadingSampleData ? (
@@ -267,7 +269,8 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             </button>
             <button
               onClick={() => setShowAICenter(true)}
-              className="px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm"
+              disabled={patient.id.startsWith('new-')}
+              className="px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm disabled:opacity-50"
             >
               <span className="material-symbols-outlined text-base">smart_toy</span>
               Start AI Call
@@ -1186,6 +1189,33 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           </TabContent>
         )}
       </div>
+
+      {/* Save Button for New Patients */}
+      {patient.id.startsWith('new-') && (
+        <div className="border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4">
+          <div className="flex justify-end gap-3">
+            <button
+              onClick={() => {
+                if (onCancel) {
+                  onCancel();
+                }
+              }}
+              className="px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-sm font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                // Handle save - would save the new patient data
+                console.log('Save new patient:', patient);
+              }}
+              className="px-4 py-2 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 text-sm font-medium"
+            >
+              Save Patient
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Smith AI Center Modal */}
       {showAICenter && (
