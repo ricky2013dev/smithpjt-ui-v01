@@ -15,7 +15,6 @@ import {
 import SmithAICenter from "./SmithAICenter";
 import VerificationForm from "./VerificationForm";
 import CoverageModal from "./CoverageModal";
-import PaymentModal from "./PaymentModal";
 import sampleCoverageData from "../data/sampleCoverageData.json";
 import { PRIMARY_BUTTON } from "../styles/buttonStyles";
 
@@ -41,7 +40,6 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   isAdmin = false,
 }) => {
   const [showAICenter, setShowAICenter] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [insuranceSubTab, setInsuranceSubTab] = useState<InsuranceSubTabType>(INSURANCE_SUB_TAB_TYPES.INSURANCE_INFO);
 
   // Run Validity API states
@@ -883,13 +881,6 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
         isLoading={isLoadingSampleData}
         error={verificationError}
         curlCommand={curlCommand}
-      />
-
-      {/* Payment Modal */}
-      <PaymentModal
-        isOpen={showPaymentModal}
-        onClose={() => setShowPaymentModal(false)}
-        patient={patient}
       />
     </section>
   );
