@@ -110,16 +110,16 @@ const PatientList: React.FC<PatientListProps> = ({
   };
 
   return (
-    <aside className="flex w-full flex-col border-r border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/50 lg:w-[25%] lg:shrink-0">
+    <aside className="flex w-full flex-col border-r border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 lg:w-[25%] lg:shrink-0">
       {/* Search and Filters */}
-      <div className="p-4 border-b border-slate-200 dark:border-slate-800">
-        <label className="flex flex-col min-w-40 h-11 w-full">
-          <div className="flex w-full flex-1 items-stretch rounded-lg h-full">
-            <div className="text-slate-400 flex border border-r-0 border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 items-center justify-center pl-3 rounded-l-lg">
-              <span className="material-symbols-outlined text-xl">search</span>
+      <div className="p-4 border-b border-slate-200 dark:border-slate-700">
+        <label className="flex flex-col min-w-40 h-10 w-full">
+          <div className="flex w-full flex-1 items-stretch rounded-md h-full">
+            <div className="text-slate-400 flex border border-r-0 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 items-center justify-center pl-3 rounded-l-md">
+              <span className="material-symbols-outlined text-lg">search</span>
             </div>
             <input
-              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 h-full placeholder:text-slate-400 px-4 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal"
+              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-md text-slate-900 dark:text-white focus:outline-0 focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 h-full placeholder:text-slate-400 px-4 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal"
               placeholder="Search by name, email..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
@@ -133,44 +133,44 @@ const PatientList: React.FC<PatientListProps> = ({
             {/* Active/Inactive Filters */}
             <button
               onClick={() => toggleFilter('Active')}
-              className={`flex h-8 shrink-0 items-center justify-center px-3 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex h-7 shrink-0 items-center justify-center px-3 rounded-md text-xs font-medium transition-colors ${
                 activeFilters.includes('Active')
-                  ? 'bg-status-green text-white'
-                  : 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
+                  ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                  : 'border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               Active
             </button>
             <button
               onClick={() => toggleFilter('Inactive')}
-              className={`flex h-8 shrink-0 items-center justify-center px-3 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex h-7 shrink-0 items-center justify-center px-3 rounded-md text-xs font-medium transition-colors ${
                 activeFilters.includes('Inactive')
-                  ? 'bg-status-red text-white'
-                  : 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
+                  ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                  : 'border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               Inactive
             </button>
 
-            <div className="w-px h-6 bg-slate-300 dark:bg-slate-600 self-center mx-1"></div>
+            <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 self-center mx-1"></div>
 
             {/* Verification Step Filters */}
             <button
               onClick={() => toggleFilter('Eligibility')}
-              className={`flex h-8 shrink-0 items-center justify-center px-3 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex h-7 shrink-0 items-center justify-center px-3 rounded-md text-xs font-medium transition-colors ${
                 activeFilters.includes('Eligibility')
-                  ? 'bg-primary text-white'
-                  : 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
+                  ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                  : 'border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               Eligibility
             </button>
             <button
               onClick={() => toggleFilter('Verification')}
-              className={`flex h-8 shrink-0 items-center justify-center px-3 rounded-lg text-sm font-medium transition-colors ${
+              className={`flex h-7 shrink-0 items-center justify-center px-3 rounded-md text-xs font-medium transition-colors ${
                 activeFilters.includes('Verification')
-                  ? 'bg-primary text-white'
-                  : 'border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700'
+                  ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                  : 'border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
               }`}
             >
               Verification
@@ -181,11 +181,11 @@ const PatientList: React.FC<PatientListProps> = ({
       </div>
 
       {/* Column Headers */}
-      <div className="grid grid-cols-[1fr,200px] gap-4 px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-        <div className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
+      <div className="grid grid-cols-[1fr,200px] gap-4 px-4 py-3 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+        <div className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
           Patient Information
         </div>
-        <div className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider text-center">
+        <div className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide text-center">
           Verification Status
         </div>
       </div>
@@ -204,24 +204,21 @@ const PatientList: React.FC<PatientListProps> = ({
             <div
               key={patient.id}
               onClick={() => onSelectPatient(patient.id)}
-              className={`grid grid-cols-[1fr,200px] cursor-pointer items-center gap-4 px-4 py-3 ${
+              className={`grid grid-cols-[1fr,200px] cursor-pointer items-center gap-4 px-4 py-3 border-b border-slate-100 dark:border-slate-800 ${
                 isSelected
-                  ? 'bg-primary/10 dark:bg-primary/20 border-r-4 border-primary'
+                  ? 'bg-slate-50 dark:bg-slate-800'
                   : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
               }`}
             >
               {/* Column 1: Patient Info */}
               <div className="flex items-center gap-3 min-w-0">
-                <div className={`rounded-lg h-12 w-12 ${patient.active ? 'bg-status-green' : 'bg-status-red'} flex flex-col items-center justify-center shrink-0`}>
-                  <span className="text-white text-base font-bold leading-none">
+                <div className={`rounded-full h-10 w-10 bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0`}>
+                  <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">
                     {getInitials(patient)}
-                  </span>
-                  <span className="text-white text-[7px] font-medium leading-none mt-0.5">
-                    {patient.id}
                   </span>
                 </div>
                 <div className="flex flex-col justify-center flex-1 min-w-0">
-                  <p className="text-slate-900 dark:text-white text-sm font-semibold leading-normal line-clamp-1">
+                  <p className="text-slate-900 dark:text-white text-sm font-medium leading-normal line-clamp-1">
                     {fullName}
                   </p>
                   {phone && (
@@ -244,16 +241,16 @@ const PatientList: React.FC<PatientListProps> = ({
               </div>
 
               {/* Column 2: Verification Status */}
-              <div className="flex flex-col items-center justify-center gap-1.5">
-                <div className="flex items-center gap-2">
+              <div className="flex flex-col items-center justify-center gap-2">
+                <div className="flex items-center gap-1.5">
                   {stepDots.map((dotColor, index) => (
                     <div
                       key={index}
-                      className={`w-3 h-3 rounded-full ${dotColor}`}
+                      className={`w-2 h-2 rounded-full ${dotColor}`}
                     />
                   ))}
                 </div>
-                <span className={`text-lg font-bold ${verificationStatus.color} text-center whitespace-nowrap`}>
+                <span className={`text-sm font-medium ${verificationStatus.color} text-center whitespace-nowrap`}>
                   {verificationStatus.percentage}%
                 </span>
               </div>

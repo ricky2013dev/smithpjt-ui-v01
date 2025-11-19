@@ -1,9 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const Stripe = require('stripe');
 
 // Load environment variables
 dotenv.config();
+
+// Initialize Stripe
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 3001;
@@ -179,6 +183,82 @@ app.post('/api/coverages', async (req, res) => {
   }
 });
 
+/**
+ * POST /api/payment/create-intent
+ * Create a Stripe payment intent
+ */
+app.post('/api/payment/create-intent', async (req, res) => {
+  try {
+    const { amount, patientId, patientName } = req.body;
+
+    // Validate input
+    if (!amount || amount < 50) {
+      return res.status(400).json({ error: 'Amount must be at least $0.50 (50 cents)' });
+    }
+
+    if (!patientId) {
+      return res.status(400).json({ error: 'Patient ID is required' });
+    }
+
+    console.log(`[POST /api/payment/create-intent] Creating payment intent for patient: ${patientId}, amount: $${amount / 100}`);
+
+    // Create payment intent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(amount), // Amount in cents
+      currency: 'usd',
+      automatic_payment_methods: {
+        enabled: true,
+      },
+      metadata: {
+        patientId: patientId,
+        patientName: patientName || 'N/A',
+      },
+      description: `Payment for patient ${patientName || patientId}`,
+    });
+
+    console.log(`[POST /api/payment/create-intent] Payment intent created: ${paymentIntent.id}`);
+
+    res.json({
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id,
+    });
+  } catch (error) {
+    console.error('Error creating payment intent:', error);
+    res.status(500).json({
+      error: error.message || 'Failed to create payment intent',
+      details: error.type
+    });
+  }
+});
+
+/**
+ * GET /api/payment/status/:paymentIntentId
+ * Get payment intent status
+ */
+app.get('/api/payment/status/:paymentIntentId', async (req, res) => {
+  try {
+    const { paymentIntentId } = req.params;
+
+    console.log(`[GET /api/payment/status/${paymentIntentId}] Retrieving payment intent status...`);
+
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+    console.log(`[GET /api/payment/status/${paymentIntentId}] Status: ${paymentIntent.status}`);
+
+    res.json({
+      status: paymentIntent.status,
+      amount: paymentIntent.amount,
+      currency: paymentIntent.currency,
+      metadata: paymentIntent.metadata,
+    });
+  } catch (error) {
+    console.error('Error retrieving payment status:', error);
+    res.status(500).json({
+      error: error.message || 'Failed to retrieve payment status'
+    });
+  }
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
@@ -187,4 +267,5 @@ app.get('/health', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Backend server running on http://localhost:${PORT}`);
   console.log(`CORS enabled for all origins`);
+  console.log(`Stripe integration ${process.env.STRIPE_SECRET_KEY ? 'enabled' : 'disabled (no API key)'}`);
 });

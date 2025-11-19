@@ -15,6 +15,7 @@ import {
 import SmithAICenter from "./SmithAICenter";
 import VerificationForm from "./VerificationForm";
 import CoverageModal from "./CoverageModal";
+import PaymentModal from "./PaymentModal";
 import sampleCoverageData from "../data/sampleCoverageData.json";
 import { PRIMARY_BUTTON } from "../styles/buttonStyles";
 
@@ -40,6 +41,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   isAdmin = false,
 }) => {
   const [showAICenter, setShowAICenter] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [insuranceSubTab, setInsuranceSubTab] = useState<InsuranceSubTabType>(INSURANCE_SUB_TAB_TYPES.INSURANCE_INFO);
 
   // Run Validity API states
@@ -172,21 +174,21 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   return (
     <section key={patient.id} className="hidden w-0 flex-1 flex-col bg-background-light dark:bg-background-dark lg:flex lg:w-[75%] animate-fadeIn">
       {/* Profile Header */}
-      <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 animate-slideDown">
-        <div className="flex items-center gap-3">
-          <div className="rounded-full h-20 w-20 overflow-hidden shrink-0 ring-4 ring-slate-100 dark:ring-slate-800 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800">
+      <div className="p-8 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+        <div className="flex items-center gap-4">
+          <div className="rounded-full h-16 w-16 overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800">
             <img
-              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&size=150&background=3b82f6&color=ffffff&bold=true&format=svg`}
+              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&size=150&background=e2e8f0&color=475569&bold=false&format=svg`}
               alt={fullName}
               className="w-full h-full object-cover"
             />
           </div>
           <div className="min-w-0">
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
               {fullName}
             </h2>
-            <p className="text-slate-500 dark:text-slate-400">
-              Patient ID: {patient.id}
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              ID: {patient.id}
             </p>
           </div>
 
@@ -215,98 +217,68 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               <span className="material-symbols-outlined">smart_toy</span>
               Start AI Call
             </button>
+
           </div>
 
-          {/* Verification Steps Progress - Compact */}
-          <div className="p-3 flex-1 max-w-2xl">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                
-              </h3>
-              <span className="text-xs text-slate-500 dark:text-slate-400">
+          {/* Verification Steps Progress - Minimal */}
+          <div className="flex-1 max-w-xl">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                Progress
+              </span>
+              <span className="text-xs font-medium text-slate-600 dark:text-slate-400">
                 Step {getVerificationStep()} of 4
               </span>
             </div>
-            {/* Progress Line with Steps - Combined with status labels */}
+            {/* Simplified Progress Line */}
             <div className="relative">
-              <div className="flex items-center mb-1 justify-between">
+              <div className="flex items-center gap-2">
                 {/* Step 1 */}
-                <div className="group/step1 flex flex-col items-center">
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${getStepConfig('eligibilityCheck').bgColor} ${getStepConfig('eligibilityCheck').textColor} shrink-0 z-10 cursor-pointer`}>
-                    <span className="material-symbols-outlined text-base">{getStepConfig('eligibilityCheck').icon}</span>
+                <div className="flex flex-col items-center flex-1">
+                  <div className={`flex items-center justify-center w-7 h-7 rounded-full ${getStepConfig('eligibilityCheck').bgColor} ${getStepConfig('eligibilityCheck').textColor} shrink-0`}>
+                    <span className="material-symbols-outlined text-sm">{getStepConfig('eligibilityCheck').icon}</span>
                   </div>
-                </div>
-
-                {/* Connector Line 1 */}
-                <div className={`h-0.5 flex-1 ${getConnectorColor('eligibilityCheck')}`}></div>
-
-                {/* Step 2 */}
-                <div className="group/step2 flex flex-col items-center">
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${getStepConfig('benefitsVerification').bgColor} ${getStepConfig('benefitsVerification').textColor} shrink-0 z-10 cursor-pointer`}>
-                    <span className="material-symbols-outlined text-base">{getStepConfig('benefitsVerification').icon}</span>
-                  </div>
-                </div>
-
-                {/* Connector Line 2 */}
-                <div className={`h-0.5 flex-1 ${getConnectorColor('benefitsVerification')}`}></div>
-
-                {/* Step 3 */}
-                <div className="group/step3 flex flex-col items-center">
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${getStepConfig('aiCallVerification').bgColor} ${getStepConfig('aiCallVerification').textColor} shrink-0 z-10 cursor-pointer`}>
-                    <span className="material-symbols-outlined text-base">{getStepConfig('aiCallVerification').icon}</span>
-                  </div>
-                </div>
-
-                {/* Connector Line 3 */}
-                <div className={`h-0.5 flex-1 ${getConnectorColor('aiCallVerification')}`}></div>
-
-                {/* Step 4 */}
-                <div className="group/step4 flex flex-col items-center">
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full ${getStepConfig('sendToPMS').bgColor} ${getStepConfig('sendToPMS').textColor} shrink-0 z-10 cursor-pointer`}>
-                    <span className="material-symbols-outlined text-base">{getStepConfig('sendToPMS').icon}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Step Status Labels */}
-              <div className="flex items-start mt-2">
-                {/* Step 1 Label */}
-                <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
-                  <p className="text-[10px] font-semibold text-slate-700 dark:text-slate-300 leading-tight mb-0.5">
+                  <p className="text-[10px] text-slate-600 dark:text-slate-400 mt-1.5 text-center leading-tight">
                     {getStepConfig('eligibilityCheck').label}
                   </p>
-                  <p className={`text-xs font-medium ${getStepConfig('eligibilityCheck').statusColor}`}>
-                    {getStepConfig('eligibilityCheck').statusText}
-                  </p>
                 </div>
 
-                {/* Step 2 Label */}
-                <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
-                  <p className="text-[10px] font-semibold text-slate-700 dark:text-slate-300 leading-tight mb-0.5">
+                {/* Connector 1 */}
+                <div className={`h-px flex-1 ${getConnectorColor('eligibilityCheck')} -mt-5`}></div>
+
+                {/* Step 2 */}
+                <div className="flex flex-col items-center flex-1">
+                  <div className={`flex items-center justify-center w-7 h-7 rounded-full ${getStepConfig('benefitsVerification').bgColor} ${getStepConfig('benefitsVerification').textColor} shrink-0`}>
+                    <span className="material-symbols-outlined text-sm">{getStepConfig('benefitsVerification').icon}</span>
+                  </div>
+                  <p className="text-[10px] text-slate-600 dark:text-slate-400 mt-1.5 text-center leading-tight">
                     {getStepConfig('benefitsVerification').label}
                   </p>
-                  <p className={`text-xs font-medium ${getStepConfig('benefitsVerification').statusColor}`}>
-                    {getStepConfig('benefitsVerification').statusText}
-                  </p>
                 </div>
 
-                {/* Step 3 Label */}
-                <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
-                  <p className="text-[10px] font-semibold text-slate-700 dark:text-slate-300 leading-tight mb-0.5">
+                {/* Connector 2 */}
+                <div className={`h-px flex-1 ${getConnectorColor('benefitsVerification')} -mt-5`}></div>
+
+                {/* Step 3 */}
+                <div className="flex flex-col items-center flex-1">
+                  <div className={`flex items-center justify-center w-7 h-7 rounded-full ${getStepConfig('aiCallVerification').bgColor} ${getStepConfig('aiCallVerification').textColor} shrink-0`}>
+                    <span className="material-symbols-outlined text-sm">{getStepConfig('aiCallVerification').icon}</span>
+                  </div>
+                  <p className="text-[10px] text-slate-600 dark:text-slate-400 mt-1.5 text-center leading-tight">
                     {getStepConfig('aiCallVerification').label}
                   </p>
-                  <p className={`text-xs font-medium ${getStepConfig('aiCallVerification').statusColor}`}>
-                    {getStepConfig('aiCallVerification').statusText}
-                  </p>
                 </div>
 
-                {/* Step 4 Label */}
-                <div className="flex-1 text-center" style={{ maxWidth: '25%' }}>
-                  <p className="text-[10px] font-semibold text-slate-700 dark:text-slate-300 leading-tight mb-0.5">
+                {/* Connector 3 */}
+                <div className={`h-px flex-1 ${getConnectorColor('aiCallVerification')} -mt-5`}></div>
+
+                {/* Step 4 */}
+                <div className="flex flex-col items-center flex-1">
+                  <div className={`flex items-center justify-center w-7 h-7 rounded-full ${getStepConfig('sendToPMS').bgColor} ${getStepConfig('sendToPMS').textColor} shrink-0`}>
+                    <span className="material-symbols-outlined text-sm">{getStepConfig('sendToPMS').icon}</span>
+                  </div>
+                  <p className="text-[10px] text-slate-600 dark:text-slate-400 mt-1.5 text-center leading-tight">
                     {getStepConfig('sendToPMS').label}
-                  </p>
-                  <p className={`text-xs font-medium ${getStepConfig('sendToPMS').statusColor}`}>
-                    {getStepConfig('sendToPMS').statusText}
                   </p>
                 </div>
               </div>
@@ -315,9 +287,9 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
         </div>
       </div>
 
-      {/* Tab Navigation - Fixed */}
-      <div className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-6 sticky top-0 z-10">
-        <nav aria-label="Tabs" className="flex -mb-px gap-6 overflow-x-auto">
+      {/* Tab Navigation - Clean minimal style */}
+      <div className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-8 sticky top-0 z-10">
+        <nav aria-label="Tabs" className="flex -mb-px gap-1 overflow-x-auto">
           {Object.values(TAB_TYPES)
             .filter(tab => {
               // Hide Appointments and Treatment History tabs for non-admin users
@@ -330,17 +302,12 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               <button
                 key={tab}
                 onClick={() => onTabChange(tab)}
-                className={`shrink-0 border-b-2 px-1 pb-3 text-sm font-semibold whitespace-nowrap flex items-center gap-2 ${
+                className={`shrink-0 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
                   activeTab === tab
-                    ? tab === TAB_TYPES.AI_CALL_HISTORY
-                      ? "border-cyan-500 text-cyan-600 dark:text-cyan-400"
-                      : "border-primary text-primary"
-                    : "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-300"
+                    ? "text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
                 }`}
               >
-                {tab === TAB_TYPES.AI_CALL_HISTORY && (
-                  <span className="material-symbols-outlined text-lg">smart_toy</span>
-                )}
                 {TAB_LABELS[tab]}
               </button>
             ))}
@@ -349,21 +316,18 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
 
       {/* Sub-Tab Navigation - Only visible when Insurance tab is active */}
       {activeTab === TAB_TYPES.INSURANCE && (
-        <div className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 px-6 py-2">
-          <nav aria-label="Insurance Sub Tabs" className="flex gap-4">
+        <div className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-8 py-2">
+          <nav aria-label="Insurance Sub Tabs" className="flex gap-1">
             {Object.values(INSURANCE_SUB_TAB_TYPES).map((subTab) => (
               <button
                 key={subTab}
                 onClick={() => setInsuranceSubTab(subTab)}
-                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
                   insuranceSubTab === subTab
-                    ? "bg-primary text-white"
-                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
+                    ? "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white"
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50"
                 }`}
               >
-                {subTab === INSURANCE_SUB_TAB_TYPES.VERIFICATION_FORM && (
-                  <span className="material-symbols-outlined text-base mr-1 align-middle">assignment</span>
-                )}
                 {INSURANCE_SUB_TAB_LABELS[subTab]}
               </button>
             ))}
@@ -372,18 +336,18 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
       )}
 
       {/* Tab Content - Scrollable */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-8">
 
         {/* Tab Content - Patient Basic Info */}
         {activeTab === TAB_TYPES.PATIENT_BASIC_INFO && (
           <TabContent>
-            <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-              <div className="p-4 border-b border-slate-200 dark:border-slate-800">
-                <h3 className="font-semibold text-slate-900 dark:text-white">
+            <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+              <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+                <h3 className="text-sm font-medium text-slate-900 dark:text-white">
                   Patient Basic Info
                 </h3>
               </div>
-              <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <p className="text-sm text-slate-500 dark:text-slate-400">
                     Patient ID
@@ -435,13 +399,13 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               </div>
             </div>
 
-            <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-              <div className="p-4 border-b border-slate-200 dark:border-slate-800">
-                <h3 className="font-semibold text-slate-900 dark:text-white">
+            <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+              <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+                <h3 className="text-sm font-medium text-slate-900 dark:text-white">
                   Contact Information
                 </h3>
               </div>
-              <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <p className="text-sm text-slate-500 dark:text-slate-400">
                     Phone
@@ -483,19 +447,19 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                     (ins: Insurance, index: number) => (
                       <div
                         key={index}
-                        className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"
+                        className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
                       >
-                        <div className="p-4 border-b border-slate-200 dark:border-slate-800">
-                          <div className="flex items-center gap-2">
-                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/20 text-primary">
+                        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+                          <div className="flex items-center gap-3">
+                            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
                               {ins.type}
                             </span>
-                            <h3 className="font-semibold text-slate-900 dark:text-white">
+                            <h3 className="text-sm font-medium text-slate-900 dark:text-white">
                               {ins.provider}
                             </h3>
                           </div>
                         </div>
-                        <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div>
                             <p className="text-sm text-slate-500 dark:text-slate-400">
                               Policy Number
@@ -592,8 +556,8 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                     )
                   )
                 ) : (
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 text-center">
-                    <p className="text-slate-500 dark:text-slate-400">
+                  <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-12 text-center">
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
                       No insurance information on file
                     </p>
                   </div>
@@ -607,31 +571,31 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 {(patient as any).coverage &&
                 (patient as any).coverage.procedures.length > 0 ? (
                   <>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-center">
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                      <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
                           Annual Maximum
                         </p>
-                        <p className="text-2xl font-bold text-primary">
+                        <p className="text-2xl font-semibold text-slate-900 dark:text-white">
                           $
                           {(
                             patient as any
                           ).coverage.annual_maximum.toLocaleString()}
                         </p>
                       </div>
-                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-center">
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                      <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
                           Used This Year
                         </p>
-                        <p className="text-2xl font-bold text-status-red">
+                        <p className="text-2xl font-semibold text-slate-900 dark:text-white">
                           ${(patient as any).coverage.annual_used.toLocaleString()}
                         </p>
                       </div>
-                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-center">
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                      <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
                           Remaining Benefit
                         </p>
-                        <p className="text-2xl font-bold text-status-green">
+                        <p className="text-2xl font-semibold text-status-green">
                           $
                           {(
                             (patient as any).coverage.annual_maximum -
@@ -639,11 +603,11 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                           ).toLocaleString()}
                         </p>
                       </div>
-                      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-center">
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                      <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
                           Deductible Remaining
                         </p>
-                        <p className="text-2xl font-bold text-status-orange">
+                        <p className="text-2xl font-semibold text-slate-900 dark:text-white">
                           $
                           {(
                             (patient as any).coverage.deductible -
@@ -653,9 +617,9 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                       </div>
                     </div>
 
-                    <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
-                      <div className="p-4 border-b border-slate-200 dark:border-slate-800">
-                        <h3 className="font-semibold text-slate-900 dark:text-white">
+                    <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden">
+                      <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+                        <h3 className="text-sm font-medium text-slate-900 dark:text-white">
                           Coverage by Procedure
                         </h3>
                       </div>
@@ -729,8 +693,8 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                     </div>
                   </>
                 ) : (
-                  <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 text-center">
-                    <p className="text-slate-500 dark:text-slate-400">
+                  <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-12 text-center">
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
                       No coverage details available
                     </p>
                   </div>
@@ -754,7 +718,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 (appt: Appointment, index: number) => (
                   <div
                     key={index}
-                    className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4"
+                    className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
@@ -781,8 +745,8 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 )
               )
             ) : (
-              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 text-center">
-                <p className="text-slate-500 dark:text-slate-400">
+              <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-12 text-center">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   No appointments scheduled
                 </p>
               </div>
@@ -799,7 +763,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 (treatment: Treatment, index: number) => (
                   <div
                     key={index}
-                    className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4"
+                    className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
@@ -818,8 +782,8 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 )
               )
             ) : (
-              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 text-center">
-                <p className="text-slate-500 dark:text-slate-400">
+              <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-12 text-center">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   No treatment history available
                 </p>
               </div>
@@ -836,49 +800,40 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 (call: any, index: number) => (
                   <div
                     key={index}
-                    className="rounded-xl border border-cyan-200 dark:border-cyan-800/50 bg-gradient-to-br from-cyan-50/50 via-blue-50/30 to-white dark:from-cyan-900/10 dark:via-blue-900/10 dark:to-slate-900 p-4 hover:shadow-lg hover:shadow-cyan-500/10 transition-all duration-200"
+                    className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 p-3 shrink-0 shadow-lg shadow-cyan-500/30">
-                        <span className="material-symbols-outlined text-white text-xl">
+                      <div className="rounded-full bg-slate-100 dark:bg-slate-800 p-3 shrink-0">
+                        <span className="material-symbols-outlined text-slate-600 dark:text-slate-400 text-lg">
                           smart_toy
                         </span>
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
-                          <p className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-                            <span className="material-symbols-outlined text-cyan-600 dark:text-cyan-400 text-lg">
-                              call
-                            </span>
+                          <p className="font-medium text-slate-900 dark:text-white">
                             {call.topic || "AI Consultation"}
                           </p>
                           <span className="text-xs text-slate-500 dark:text-slate-400">
                             {call.date} at {call.time}
                           </span>
                         </div>
-                        <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
                           {call.summary || "AI-assisted consultation"}
                         </p>
                         <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
-                          <div className="flex items-center gap-1">
-                            <span className="material-symbols-outlined text-sm text-cyan-600 dark:text-cyan-400">
-                              schedule
-                            </span>
-                            <span>Duration: {call.duration || "N/A"}</span>
+                          <div>
+                            Duration: {call.duration || "N/A"}
                           </div>
-                          <div className="flex items-center gap-1">
-                            <span className="material-symbols-outlined text-sm text-cyan-600 dark:text-cyan-400">
-                              person
-                            </span>
-                            <span>Agent: {call.agent || "Smith AI"}</span>
+                          <div>
+                            Agent: {call.agent || "Smith AI"}
                           </div>
                           <span
-                            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
+                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                               call.status === "completed"
-                                ? "bg-status-green/20 text-status-green"
+                                ? "bg-status-green/10 text-status-green"
                                 : call.status === "in_progress"
-                                  ? "bg-cyan-500/20 text-cyan-600 dark:text-cyan-400"
-                                  : "bg-status-orange/20 text-status-orange"
+                                  ? "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
+                                  : "bg-status-orange/10 text-status-orange"
                             }`}
                           >
                             {call.status?.toUpperCase() || "COMPLETED"}
@@ -890,21 +845,18 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 )
               )
             ) : (
-              <div className="rounded-xl border border-cyan-200 dark:border-cyan-800/50 bg-gradient-to-br from-cyan-50/30 via-blue-50/20 to-white dark:from-cyan-900/10 dark:via-blue-900/10 dark:to-slate-900 p-8 text-center">
+              <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-12 text-center">
                 <div className="flex flex-col items-center justify-center gap-4">
-                  <div className="rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 p-6 shadow-lg shadow-cyan-500/30">
-                    <span className="material-symbols-outlined text-white text-5xl">
+                  <div className="rounded-full bg-slate-100 dark:bg-slate-800 p-8">
+                    <span className="material-symbols-outlined text-slate-400 dark:text-slate-600 text-5xl">
                       smart_toy
                     </span>
                   </div>
                   <div>
-                    <p className="text-slate-900 dark:text-white font-semibold mb-1 flex items-center justify-center gap-2">
-                      <span className="material-symbols-outlined text-cyan-600 dark:text-cyan-400">
-                        history
-                      </span>
+                    <p className="text-slate-900 dark:text-white font-medium mb-1">
                       No AI Call History
                     </p>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
                       Start a call with Smith AI Center to see call history here
                     </p>
                   </div>
@@ -931,6 +883,13 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
         isLoading={isLoadingSampleData}
         error={verificationError}
         curlCommand={curlCommand}
+      />
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        patient={patient}
       />
     </section>
   );
