@@ -37,21 +37,6 @@ const PatientList: React.FC<PatientListProps> = ({
     return `${given} ${patient.name.family}`.trim();
   };
 
-  const getPhone = (patient: Patient) => {
-    return patient.telecom.find(t => t.system === 'phone')?.value || '';
-  };
-
-  const calculateAge = (birthDate: string) => {
-    const today = new Date();
-    const birth = new Date(birthDate);
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      age--;
-    }
-    return age;
-  };
-
   const getInitials = (patient: Patient) => {
     const given = patient.name.given[0] || '';
     const family = patient.name.family || '';
@@ -93,24 +78,8 @@ const PatientList: React.FC<PatientListProps> = ({
     return { text: 'Not Started', color: 'text-slate-400', step: 0, percentage: 0 };
   };
 
-  const getStepDots = (currentStep: number, percentage: number) => {
-    return [1, 2, 3, 4].map((step) => {
-      // If 100% complete, all dots should be green
-      if (percentage === 100) {
-        return 'bg-status-green';
-      }
-      if (step < currentStep) {
-        return 'bg-status-green';
-      } else if (step === currentStep) {
-        return 'bg-primary';
-      } else {
-        return 'bg-slate-300 dark:bg-slate-600';
-      }
-    });
-  };
-
   return (
-    <aside className="flex w-full flex-col border-r border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 lg:w-[25%] lg:shrink-0">
+    <aside className="flex w-full flex-col border-r border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 lg:w-[15%] lg:shrink-0">
       {/* Search and Filters */}
       <div className="p-4 border-b border-slate-200 dark:border-slate-700">
         <label className="flex flex-col min-w-40 h-10 w-full">
@@ -120,7 +89,7 @@ const PatientList: React.FC<PatientListProps> = ({
             </div>
             <input
               className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-md text-slate-900 dark:text-white focus:outline-0 focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 h-full placeholder:text-slate-400 px-4 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal"
-              placeholder="Search by name, email..."
+              placeholder="Search by name"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
             />
@@ -181,12 +150,9 @@ const PatientList: React.FC<PatientListProps> = ({
       </div>
 
       {/* Column Headers */}
-      <div className="grid grid-cols-[1fr,200px] gap-4 px-4 py-3 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-        <div className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-          Patient Information
-        </div>
-        <div className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide text-center">
-          Verification Status
+      <div className="px-4 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+        <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+          Patients
         </div>
       </div>
 
@@ -194,65 +160,59 @@ const PatientList: React.FC<PatientListProps> = ({
       <div className="flex-1 overflow-y-auto">
         {patients.map((patient) => {
           const fullName = getFullName(patient);
-          const phone = getPhone(patient);
-          const age = calculateAge(patient.birthDate);
           const verificationStatus = getVerificationStatus(patient);
-          const stepDots = getStepDots(verificationStatus.step, verificationStatus.percentage);
           const isSelected = selectedPatientId === patient.id;
 
           return (
             <div
               key={patient.id}
               onClick={() => onSelectPatient(patient.id)}
-              className={`grid grid-cols-[1fr,200px] cursor-pointer items-center gap-4 px-4 py-3 border-b border-slate-100 dark:border-slate-800 ${
+              className={`cursor-pointer px-3 py-3 border-b border-slate-100 dark:border-slate-800 ${
                 isSelected
-                  ? 'bg-slate-50 dark:bg-slate-800'
+                  ? 'bg-slate-100 dark:bg-slate-800 border-l-2 border-l-slate-900 dark:border-l-white'
                   : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
               }`}
             >
-              {/* Column 1: Patient Info */}
-              <div className="flex items-center gap-3 min-w-0">
-                <div className={`rounded-full h-10 w-10 bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0`}>
-                  <span className="text-slate-700 dark:text-slate-300 text-sm font-medium">
+              {/* Patient Info */}
+              <div className="flex items-center gap-2">
+                <div className={`rounded-full h-8 w-8 flex items-center justify-center shrink-0 ${
+                  verificationStatus.percentage === 100
+                    ? 'bg-status-green/20'
+                    : verificationStatus.percentage >= 50
+                      ? 'bg-status-orange/20'
+                      : 'bg-slate-100 dark:bg-slate-800'
+                }`}>
+                  <span className={`text-xs font-medium ${
+                    verificationStatus.percentage === 100
+                      ? 'text-status-green'
+                      : verificationStatus.percentage >= 50
+                        ? 'text-status-orange'
+                        : 'text-slate-700 dark:text-slate-300'
+                  }`}>
                     {getInitials(patient)}
                   </span>
                 </div>
-                <div className="flex flex-col justify-center flex-1 min-w-0">
-                  <p className="text-slate-900 dark:text-white text-sm font-medium leading-normal line-clamp-1">
+                <div className="flex-1 min-w-0">
+                  <p className="text-slate-900 dark:text-white text-xs font-medium truncate mb-1">
                     {fullName}
                   </p>
-                  {phone && (
-                    <p className="text-slate-500 dark:text-slate-400 text-xs font-normal leading-normal line-clamp-1">
-                      <span className="material-symbols-outlined text-[10px] align-middle mr-1">phone</span>
-                      {phone}
-                    </p>
-                  )}
-                  <div className="flex items-center gap-2 mt-1 text-[10px] text-slate-500 dark:text-slate-400">
-                    <span className="capitalize">
-                      <span className="material-symbols-outlined text-[10px] align-middle mr-0.5">person</span>
-                      {patient.gender}
-                    </span>
-                    <span>
-                      <span className="material-symbols-outlined text-[10px] align-middle mr-0.5">cake</span>
-                      {age} years
+                  {/* Verification Progress Bar */}
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 h-1 bg-slate-200 dark:bg-slate-700">
+                      <div
+                        className={`h-1 transition-all ${
+                          verificationStatus.percentage > 0
+                            ? 'bg-slate-400 dark:bg-slate-500'
+                            : 'bg-slate-300 dark:bg-slate-600'
+                        }`}
+                        style={{ width: `${verificationStatus.percentage}%` }}
+                      />
+                    </div>
+                    <span className="text-[10px] font-semibold text-slate-900 dark:text-white shrink-0">
+                      {verificationStatus.percentage}%
                     </span>
                   </div>
                 </div>
-              </div>
-
-              {/* Column 2: Verification Status */}
-              <div className="flex flex-col items-center justify-center gap-2">
-                <div className="flex items-center gap-1.5">
-                  {stepDots.map((dotColor, index) => (
-                    <div
-                      key={index}
-                      className={`w-2 h-2 rounded-full ${dotColor}`}
-                    />
-                  ))}
-                </div>
-                <span className={`text-sm font-medium ${verificationStatus.color} text-center whitespace-nowrap`}>
-                  {verificationStatus.percentage}%
-                </span>
               </div>
             </div>
           );

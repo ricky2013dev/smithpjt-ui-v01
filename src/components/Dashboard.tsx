@@ -121,19 +121,19 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
           {/* Active Insurance Policies */}
           <button
             onClick={onItemClick}
-            className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer text-left"
+            className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 hover:border-slate-300 dark:hover:border-slate-600 transition-colors cursor-pointer text-left"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Active Policies
                 </p>
-                <p className="text-3xl font-bold text-slate-900 dark:text-white mt-2">
+                <p className="text-2xl font-semibold text-slate-900 dark:text-white mt-2">
                   {totalPolicies}
                 </p>
               </div>
-              <div className="rounded-full bg-primary/10 p-3">
-                <span className="material-symbols-outlined text-3xl text-primary">
+              <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+                <span className="material-symbols-outlined text-xl text-slate-600 dark:text-slate-400">
                   policy
                 </span>
               </div>
@@ -143,19 +143,19 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
           {/* Patients with Insurance */}
           <button
             onClick={onItemClick}
-            className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer text-left"
+            className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 hover:border-slate-300 dark:hover:border-slate-600 transition-colors cursor-pointer text-left"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Insured Patients
                 </p>
-                <p className="text-3xl font-bold text-status-green mt-2">
+                <p className="text-2xl font-semibold text-status-green mt-2">
                   {patientsWithInsurance}
                 </p>
               </div>
-              <div className="rounded-full bg-status-green/10 p-3">
-                <span className="material-symbols-outlined text-3xl text-status-green">
+              <div className="w-10 h-10 bg-status-green/10 rounded-lg flex items-center justify-center">
+                <span className="material-symbols-outlined text-xl text-status-green">
                   verified
                 </span>
               </div>
@@ -165,19 +165,19 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
           {/* Expiring Policies */}
           <button
             onClick={onItemClick}
-            className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer text-left"
+            className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 hover:border-slate-300 dark:hover:border-slate-600 transition-colors cursor-pointer text-left"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Expiring Soon
                 </p>
-                <p className="text-3xl font-bold text-status-orange mt-2">
+                <p className="text-2xl font-semibold text-status-orange mt-2">
                   {expiringPolicies.length}
                 </p>
               </div>
-              <div className="rounded-full bg-status-orange/10 p-3">
-                <span className="material-symbols-outlined text-3xl text-status-orange">
+              <div className="w-10 h-10 bg-status-orange/10 rounded-lg flex items-center justify-center">
+                <span className="material-symbols-outlined text-xl text-status-orange">
                   schedule
                 </span>
               </div>
@@ -187,19 +187,19 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
           {/* Pending Verifications */}
           <button
             onClick={onItemClick}
-            className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer text-left"
+            className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 hover:border-slate-300 dark:hover:border-slate-600 transition-colors cursor-pointer text-left"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Need Verification
                 </p>
-                <p className="text-3xl font-bold text-status-red mt-2">
+                <p className="text-2xl font-semibold text-status-red mt-2">
                   {pendingVerifications.length}
                 </p>
               </div>
-              <div className="rounded-full bg-status-red/10 p-3">
-                <span className="material-symbols-outlined text-3xl text-status-red">
+              <div className="w-10 h-10 bg-status-red/10 rounded-lg flex items-center justify-center">
+                <span className="material-symbols-outlined text-xl text-status-red">
                   error
                 </span>
               </div>
@@ -210,41 +210,41 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
         {/* Two Column Grid for Verification and Utilization */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Pending Verifications */}
-          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-              <h3 className="font-semibold text-slate-900 dark:text-white">
+          <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <h3 className="text-sm font-medium text-slate-900 dark:text-white">
                 Policies Requiring Verification
               </h3>
-              <span className="material-symbols-outlined text-primary">
+              <span className="material-symbols-outlined text-lg text-slate-600 dark:text-slate-400">
                 priority_high
               </span>
             </div>
-            <div className="divide-y divide-slate-200 dark:divide-slate-700">
+            <div className="divide-y divide-slate-100 dark:divide-slate-800">
               {pendingVerifications.length > 0 ? (
                 pendingVerifications.map((item, index) => (
                   <button
                     key={index}
                     onClick={onItemClick}
-                    className="w-full p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
+                    className="w-full px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <p className="font-semibold text-slate-900 dark:text-white">
+                        <p className="font-medium text-slate-900 dark:text-white">
                           {getPatientName(item.patient)}
                         </p>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
                           {item.insurance.provider} - {item.insurance.policyNumber}
                         </p>
                       </div>
                       <div className="text-right">
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                           item.reason === 'Policy Expired'
-                            ? 'bg-status-red/20 text-status-red'
-                            : 'bg-status-orange/20 text-status-orange'
+                            ? 'bg-status-red/10 text-status-red'
+                            : 'bg-status-orange/10 text-status-orange'
                         }`}>
                           {item.reason}
                         </span>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                           Exp: {item.insurance.expirationDate}
                         </p>
                       </div>
@@ -252,11 +252,11 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
                   </button>
                 ))
               ) : (
-                <div className="p-8 text-center">
-                  <span className="material-symbols-outlined text-5xl text-status-green mb-2">
+                <div className="p-12 text-center">
+                  <span className="material-symbols-outlined text-4xl text-status-green mb-2">
                     check_circle
                   </span>
-                  <p className="text-slate-500 dark:text-slate-400">
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
                     All policies verified and up to date
                   </p>
                 </div>
@@ -265,34 +265,34 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
           </div>
 
           {/* Coverage Utilization */}
-          <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-              <h3 className="font-semibold text-slate-900 dark:text-white">
+          <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+            <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <h3 className="text-sm font-medium text-slate-900 dark:text-white">
                 Annual Benefit Utilization
               </h3>
-              <span className="material-symbols-outlined text-primary">
+              <span className="material-symbols-outlined text-lg text-slate-600 dark:text-slate-400">
                 analytics
               </span>
             </div>
-            <div className="divide-y divide-slate-200 dark:divide-slate-700">
+            <div className="divide-y divide-slate-100 dark:divide-slate-800">
               {coverageUtilization.length > 0 ? (
                 coverageUtilization.map((item, index) => (
                   <button
                     key={index}
                     onClick={onItemClick}
-                    className="w-full p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
+                    className="w-full px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left"
                   >
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex-1">
-                        <p className="font-semibold text-slate-900 dark:text-white">
+                        <p className="font-medium text-slate-900 dark:text-white">
                           {getPatientName(item.patient)}
                         </p>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
                           ${item.coverage.annual_used.toLocaleString()} / ${item.coverage.annual_maximum.toLocaleString()}
                         </p>
                       </div>
-                      <div className="text-right min-w-[100px]">
-                        <p className={`text-2xl font-bold ${
+                      <div className="text-right min-w-[80px]">
+                        <p className={`text-xl font-semibold ${
                           item.utilizationPercent >= 80
                             ? 'text-status-red'
                             : item.utilizationPercent >= 50
@@ -301,15 +301,15 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
                         }`}>
                           {item.utilizationPercent}%
                         </p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">
                           utilized
                         </p>
                       </div>
                     </div>
                     {/* Progress Bar */}
-                    <div className="mt-2 w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                    <div className="mt-2 w-full bg-slate-100 dark:bg-slate-800 h-1.5">
                       <div
-                        className={`h-2 rounded-full ${
+                        className={`h-1.5 ${
                           item.utilizationPercent >= 80
                             ? 'bg-status-red'
                             : item.utilizationPercent >= 50
@@ -322,8 +322,8 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
                   </button>
                 ))
               ) : (
-                <div className="p-8 text-center">
-                  <p className="text-slate-500 dark:text-slate-400">
+                <div className="p-12 text-center">
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
                     No coverage data available
                   </p>
                 </div>

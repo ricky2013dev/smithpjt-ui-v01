@@ -40,7 +40,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   isAdmin = false,
 }) => {
   const [showAICenter, setShowAICenter] = useState(false);
-  const [insuranceSubTab, setInsuranceSubTab] = useState<InsuranceSubTabType>(INSURANCE_SUB_TAB_TYPES.INSURANCE_INFO);
+  const [insuranceSubTab, setInsuranceSubTab] = useState<InsuranceSubTabType>(INSURANCE_SUB_TAB_TYPES.VERIFICATION_FORM);
 
   // Run Validity API states
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -170,7 +170,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   const fullName = getFullName();
 
   return (
-    <section key={patient.id} className="hidden w-0 flex-1 flex-col bg-background-light dark:bg-background-dark lg:flex lg:w-[75%] animate-fadeIn">
+    <section key={patient.id} className="hidden w-0 flex-1 flex-col bg-background-light dark:bg-background-dark lg:flex lg:w-[85%] animate-fadeIn">
       {/* Profile Header */}
       <div className="p-8 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
         <div className="flex items-center gap-4">
@@ -433,136 +433,136 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           </TabContent>
         )}
 
-        {/* Tab Content - Insurance with Sub Tabs */}
-        {activeTab === TAB_TYPES.INSURANCE && (
-          <>
-            {/* Insurance Info Sub Tab */}
-            {insuranceSubTab === INSURANCE_SUB_TAB_TYPES.INSURANCE_INFO && (
-              <TabContent>
-                {(patient as any).insurance &&
-                (patient as any).insurance.length > 0 ? (
-                  (patient as any).insurance.map(
-                    (ins: Insurance, index: number) => (
-                      <div
-                        key={index}
-                        className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
-                      >
-                        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
-                          <div className="flex items-center gap-3">
-                            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                              {ins.type}
+        {/* Tab Content - Insurance Info */}
+        {activeTab === TAB_TYPES.INSURANCE_INFO && (
+          <TabContent>
+            {(patient as any).insurance &&
+            (patient as any).insurance.length > 0 ? (
+              (patient as any).insurance.map(
+                (ins: Insurance, index: number) => (
+                  <div
+                    key={index}
+                    className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
+                  >
+                    <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                          {ins.type}
+                        </span>
+                        <h3 className="text-sm font-medium text-slate-900 dark:text-white">
+                          {ins.provider}
+                        </h3>
+                      </div>
+                    </div>
+                    <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Policy Number
+                        </p>
+                        <p className="font-medium text-slate-800 dark:text-slate-100">
+                          {ins.policyNumber}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Group Number
+                        </p>
+                        <p className="font-medium text-slate-800 dark:text-slate-100">
+                          {ins.groupNumber}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Subscriber Name
+                        </p>
+                        <p className="font-medium text-slate-800 dark:text-slate-100">
+                          {ins.subscriberName}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Relationship
+                        </p>
+                        <p className="font-medium text-slate-800 dark:text-slate-100">
+                          {ins.relationship}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Effective Date
+                        </p>
+                        <p className="font-medium text-slate-800 dark:text-slate-100">
+                          {ins.effectiveDate}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                          Expiration Date
+                        </p>
+                        <p className="font-medium text-slate-800 dark:text-slate-100">
+                          {ins.expirationDate}
+                        </p>
+                      </div>
+                      <div className="col-span-full mt-2 pt-2 border-t border-slate-200 dark:border-slate-700">
+                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                          Coverage Summary
+                        </p>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+                          <div>
+                            <span className="text-slate-500">Deductible:</span>{" "}
+                            <span className="font-medium">
+                              {ins.coverage.deductible}
                             </span>
-                            <h3 className="text-sm font-medium text-slate-900 dark:text-white">
-                              {ins.provider}
-                            </h3>
-                          </div>
-                        </div>
-                        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">
-                              Policy Number
-                            </p>
-                            <p className="font-medium text-slate-800 dark:text-slate-100">
-                              {ins.policyNumber}
-                            </p>
                           </div>
                           <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">
-                              Group Number
-                            </p>
-                            <p className="font-medium text-slate-800 dark:text-slate-100">
-                              {ins.groupNumber}
-                            </p>
+                            <span className="text-slate-500">Met:</span>{" "}
+                            <span className="font-medium">
+                              {ins.coverage.deductibleMet}
+                            </span>
                           </div>
                           <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">
-                              Subscriber Name
-                            </p>
-                            <p className="font-medium text-slate-800 dark:text-slate-100">
-                              {ins.subscriberName}
-                            </p>
+                            <span className="text-slate-500">Max Benefit:</span>{" "}
+                            <span className="font-medium">
+                              {ins.coverage.maxBenefit}
+                            </span>
                           </div>
                           <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">
-                              Relationship
-                            </p>
-                            <p className="font-medium text-slate-800 dark:text-slate-100">
-                              {ins.relationship}
-                            </p>
+                            <span className="text-slate-500">Preventive:</span>{" "}
+                            <span className="font-medium">
+                              {ins.coverage.preventiveCoverage}
+                            </span>
                           </div>
                           <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">
-                              Effective Date
-                            </p>
-                            <p className="font-medium text-slate-800 dark:text-slate-100">
-                              {ins.effectiveDate}
-                            </p>
+                            <span className="text-slate-500">Basic:</span>{" "}
+                            <span className="font-medium">
+                              {ins.coverage.basicCoverage}
+                            </span>
                           </div>
                           <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">
-                              Expiration Date
-                            </p>
-                            <p className="font-medium text-slate-800 dark:text-slate-100">
-                              {ins.expirationDate}
-                            </p>
-                          </div>
-                          <div className="col-span-full mt-2 pt-2 border-t border-slate-200 dark:border-slate-700">
-                            <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                              Coverage Summary
-                            </p>
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-                              <div>
-                                <span className="text-slate-500">Deductible:</span>{" "}
-                                <span className="font-medium">
-                                  {ins.coverage.deductible}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="text-slate-500">Met:</span>{" "}
-                                <span className="font-medium">
-                                  {ins.coverage.deductibleMet}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="text-slate-500">Max Benefit:</span>{" "}
-                                <span className="font-medium">
-                                  {ins.coverage.maxBenefit}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="text-slate-500">Preventive:</span>{" "}
-                                <span className="font-medium">
-                                  {ins.coverage.preventiveCoverage}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="text-slate-500">Basic:</span>{" "}
-                                <span className="font-medium">
-                                  {ins.coverage.basicCoverage}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="text-slate-500">Major:</span>{" "}
-                                <span className="font-medium">
-                                  {ins.coverage.majorCoverage}
-                                </span>
-                              </div>
-                            </div>
+                            <span className="text-slate-500">Major:</span>{" "}
+                            <span className="font-medium">
+                              {ins.coverage.majorCoverage}
+                            </span>
                           </div>
                         </div>
                       </div>
-                    )
-                  )
-                ) : (
-                  <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-12 text-center">
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      No insurance information on file
-                    </p>
+                    </div>
                   </div>
-                )}
-              </TabContent>
+                )
+              )
+            ) : (
+              <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-12 text-center">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  No insurance information on file
+                </p>
+              </div>
             )}
+          </TabContent>
+        )}
 
+        {/* Tab Content - AI Insurance Verification with Sub Tabs */}
+        {activeTab === TAB_TYPES.INSURANCE && (
+          <>
             {/* Coverage Details Sub Tab */}
             {insuranceSubTab === INSURANCE_SUB_TAB_TYPES.COVERAGE_DETAILS && (
               <TabContent>
@@ -623,63 +623,63 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                       </div>
                       <div className="overflow-x-auto">
                         <table className="w-full">
-                          <thead className="bg-slate-50 dark:bg-slate-800">
+                          <thead className="bg-slate-50 dark:bg-slate-800/50">
                             <tr>
-                              <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
+                              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                                 Code
                               </th>
-                              <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
+                              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                                 Procedure
                               </th>
-                              <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
+                              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                                 Category
                               </th>
-                              <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
+                              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                                 Coverage
                               </th>
-                              <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
+                              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                                 Est. Cost
                               </th>
-                              <th className="px-4 py-3 text-left text-xs font-semibold text-slate-700 dark:text-slate-300">
+                              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
                                 Patient Pays
                               </th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                             {(patient as any).coverage.procedures.map(
                               (proc: Procedure, index: number) => (
                                 <tr
                                   key={index}
-                                  className="hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                                  className="hover:bg-slate-50 dark:hover:bg-slate-800"
                                 >
-                                  <td className="px-4 py-3 text-sm font-mono font-semibold text-primary">
+                                  <td className="px-6 py-4 text-sm font-mono font-medium text-slate-900 dark:text-white">
                                     {proc.code}
                                   </td>
-                                  <td className="px-4 py-3 text-sm text-slate-900 dark:text-white">
+                                  <td className="px-6 py-4 text-sm text-slate-900 dark:text-white">
                                     {proc.name}
                                   </td>
-                                  <td className="px-4 py-3">
+                                  <td className="px-6 py-4">
                                     <span
-                                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
+                                      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                                         proc.category === "Preventive"
-                                          ? "bg-blue-500/20 text-blue-600"
+                                          ? "bg-blue-500/10 text-blue-600 dark:text-blue-500"
                                           : proc.category === "Basic"
-                                            ? "bg-status-orange/20 text-status-orange"
+                                            ? "bg-status-orange/10 text-status-orange"
                                             : proc.category === "Major"
-                                              ? "bg-status-red/20 text-status-red"
-                                              : "bg-slate-500/20 text-slate-600"
+                                              ? "bg-status-red/10 text-status-red"
+                                              : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
                                       }`}
                                     >
                                       {proc.category}
                                     </span>
                                   </td>
-                                  <td className="px-4 py-3 text-sm font-semibold text-status-green">
+                                  <td className="px-6 py-4 text-sm font-medium text-status-green">
                                     {proc.coverage}
                                   </td>
-                                  <td className="px-4 py-3 text-sm text-slate-900 dark:text-white">
+                                  <td className="px-6 py-4 text-sm text-slate-900 dark:text-white">
                                     {proc.estimated_cost}
                                   </td>
-                                  <td className="px-4 py-3 text-sm font-semibold text-status-red">
+                                  <td className="px-6 py-4 text-sm font-medium text-status-red">
                                     {proc.patient_pays}
                                   </td>
                                 </tr>
@@ -702,7 +702,9 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
 
             {/* Verification Form Sub Tab */}
             {insuranceSubTab === INSURANCE_SUB_TAB_TYPES.VERIFICATION_FORM && (
-              <VerificationForm patient={patient} />
+              <TabContent>
+                <VerificationForm patient={patient} />
+              </TabContent>
             )}
           </>
         )}

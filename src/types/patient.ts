@@ -208,6 +208,7 @@ export type FilterType =
 // Tab type constants
 export const TAB_TYPES = {
   PATIENT_BASIC_INFO: 'PATIENT_BASIC_INFO',
+  INSURANCE_INFO: 'INSURANCE_INFO',
   INSURANCE: 'INSURANCE',
   AI_CALL_HISTORY: 'AI_CALL_HISTORY',
   APPOINTMENTS: 'APPOINTMENTS',
@@ -218,8 +219,9 @@ export type TabType = typeof TAB_TYPES[keyof typeof TAB_TYPES];
 
 // Tab labels for display
 export const TAB_LABELS: Record<TabType, string> = {
-  [TAB_TYPES.PATIENT_BASIC_INFO]: 'Patient Basic Info',
-  [TAB_TYPES.INSURANCE]: 'AI Insurance Verification',
+  [TAB_TYPES.PATIENT_BASIC_INFO]: 'Patient Basic',
+  [TAB_TYPES.INSURANCE_INFO]: 'Insurance - Basic',
+  [TAB_TYPES.INSURANCE]: 'Insurance - Coverage',
   [TAB_TYPES.AI_CALL_HISTORY]: 'AI Call History',
   [TAB_TYPES.APPOINTMENTS]: 'Appointments',
   [TAB_TYPES.TREATMENT_HISTORY]: 'Treatment History',
@@ -227,16 +229,14 @@ export const TAB_LABELS: Record<TabType, string> = {
 
 // Insurance sub-tab type constants
 export const INSURANCE_SUB_TAB_TYPES = {
-  INSURANCE_INFO: 'INSURANCE_INFO',
-  COVERAGE_DETAILS: 'COVERAGE_DETAILS',
   VERIFICATION_FORM: 'VERIFICATION_FORM',
+  COVERAGE_DETAILS: 'COVERAGE_DETAILS',
 } as const;
 
 export type InsuranceSubTabType = typeof INSURANCE_SUB_TAB_TYPES[keyof typeof INSURANCE_SUB_TAB_TYPES];
 
 // Insurance sub-tab labels for display
 export const INSURANCE_SUB_TAB_LABELS: Record<InsuranceSubTabType, string> = {
-  [INSURANCE_SUB_TAB_TYPES.INSURANCE_INFO]: 'Insurance Info',
-  [INSURANCE_SUB_TAB_TYPES.COVERAGE_DETAILS]: 'Coverage Details',
-  [INSURANCE_SUB_TAB_TYPES.VERIFICATION_FORM]: 'Verification Form',
+  [INSURANCE_SUB_TAB_TYPES.VERIFICATION_FORM]: 'Coverage By Form View',
+  [INSURANCE_SUB_TAB_TYPES.COVERAGE_DETAILS]: 'Coverage By Code View',
 };
