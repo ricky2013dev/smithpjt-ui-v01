@@ -79,57 +79,45 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
   ];
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 w-full max-w-5xl h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-cyan-500 to-blue-500 p-6 text-white">
+        <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <span className="material-symbols-outlined text-3xl">smart_toy</span>
+              <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
+                <span className="material-symbols-outlined text-2xl text-slate-700 dark:text-slate-300">smart_toy</span>
               </div>
               <div>
-                <h2 className="text-2xl font-bold">Smith AI Center</h2>
-                <p className="text-cyan-100 text-sm">Interactive Insurance Assistant</p>
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Smith AI Center</h2>
+                <p className="text-slate-500 dark:text-slate-400 text-xs">Interactive Insurance Assistant</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+              className="w-8 h-8 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors text-slate-600 dark:text-slate-400"
             >
-              <span className="material-symbols-outlined">close</span>
+              <span className="material-symbols-outlined text-lg">close</span>
             </button>
           </div>
         </div>
 
         {/* Patient Info Card - Separate Section */}
-        <div className="bg-white dark:bg-slate-900 px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+        <div className="bg-slate-50 dark:bg-slate-800 px-6 py-4 border-b border-slate-200 dark:border-slate-700">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-cyan-100 to-blue-100 dark:from-cyan-900 dark:to-blue-900 rounded-full flex items-center justify-center">
-              <span className="material-symbols-outlined text-4xl text-cyan-600 dark:text-cyan-400">person</span>
+            <div className="w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center">
+              <span className="material-symbols-outlined text-2xl text-slate-600 dark:text-slate-400">person</span>
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{getFullName()}</h3>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-1 mt-1 text-sm text-slate-600 dark:text-slate-400">
-                <div>
-                  <span className="material-symbols-outlined text-xs align-middle mr-1">badge</span>
-                  ID: {patient.id}
-                </div>
-                <div>
-                  <span className="material-symbols-outlined text-xs align-middle mr-1">cake</span>
-                  {calculateAge(patient.birthDate)} years
-                </div>
-                <div>
-                  <span className="material-symbols-outlined text-xs align-middle mr-1">phone</span>
-                  {getPhone()}
-                </div>
-                <div>
-                  <span className="material-symbols-outlined text-xs align-middle mr-1">email</span>
-                  {getEmail()}
-                </div>
+              <h3 className="text-sm font-medium text-slate-900 dark:text-white">{getFullName()}</h3>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-1 mt-1 text-xs text-slate-600 dark:text-slate-400">
+                <div>ID: {patient.id}</div>
+                <div>{calculateAge(patient.birthDate)} years</div>
+                <div>{getPhone()}</div>
+                <div>{getEmail()}</div>
               </div>
             </div>
-            <div className={`px-4 py-2 rounded-lg font-semibold ${patient.active ? 'bg-green-500' : 'bg-red-500'} text-white`}>
+            <div className={`px-3 py-1 rounded-md text-xs font-medium ${patient.active ? 'bg-status-green/10 text-status-green' : 'bg-status-red/10 text-status-red'}`}>
               {patient.active ? 'Active' : 'Inactive'}
             </div>
           </div>
@@ -140,41 +128,38 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
           {/* Left Panel - AI Chat */}
           <div className="flex-1 flex flex-col border-r border-slate-200 dark:border-slate-700">
             {/* Call Status */}
-            <div className="p-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+            <div className="p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {isCallActive ? (
                     <>
-                      <div className="relative">
-                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                        <div className="absolute inset-0 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
-                      </div>
+                      <div className="w-2 h-2 bg-status-green rounded-full animate-pulse"></div>
                       <div>
-                        <p className="text-sm font-semibold text-slate-900 dark:text-white">Call Active</p>
+                        <p className="text-sm font-medium text-slate-900 dark:text-white">Call Active</p>
                         <p className="text-xs text-slate-500 dark:text-slate-400">{formatDuration(callDuration)}</p>
                       </div>
                     </>
                   ) : (
                     <>
-                      <div className="w-3 h-3 bg-slate-400 rounded-full"></div>
-                      <p className="text-sm font-semibold text-slate-900 dark:text-white">Ready to Connect</p>
+                      <div className="w-2 h-2 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+                      <p className="text-sm font-medium text-slate-900 dark:text-white">Ready to Connect</p>
                     </>
                   )}
                 </div>
                 {!isCallActive ? (
                   <button
                     onClick={startCall}
-                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold transition-colors"
+                    className="bg-slate-900 dark:bg-white hover:bg-slate-700 dark:hover:bg-slate-100 text-white dark:text-slate-900 px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-colors"
                   >
-                    <span className="material-symbols-outlined text-lg">call</span>
+                    <span className="material-symbols-outlined text-base">call</span>
                     Start Call
                   </button>
                 ) : (
                   <button
                     onClick={endCall}
-                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold transition-colors"
+                    className="bg-status-red hover:bg-status-red/90 text-white px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-colors"
                   >
-                    <span className="material-symbols-outlined text-lg">call_end</span>
+                    <span className="material-symbols-outlined text-base">call_end</span>
                     End Call
                   </button>
                 )}
@@ -182,12 +167,12 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
             </div>
 
             {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
               {messages.map((message, index) => (
                 <div key={index} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[70%] ${message.sender === 'ai' ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white'} rounded-2xl px-4 py-3`}>
+                  <div className={`max-w-[70%] ${message.sender === 'ai' ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white' : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'} rounded-lg px-4 py-3`}>
                     <p className="text-sm">{message.text}</p>
-                    <p className={`text-xs mt-1 ${message.sender === 'ai' ? 'text-cyan-100' : 'text-slate-500 dark:text-slate-400'}`}>
+                    <p className={`text-xs mt-1 ${message.sender === 'ai' ? 'text-slate-500 dark:text-slate-400' : 'text-white/70 dark:text-slate-900/70'}`}>
                       {message.time}
                     </p>
                   </div>
@@ -196,15 +181,15 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
             </div>
 
             {/* Message Input */}
-            <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+            <div className="p-4 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
               <div className="flex gap-2">
                 <input
                   type="text"
                   placeholder="Type your message..."
-                  className="flex-1 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="flex-1 rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-600"
                 />
-                <button className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold transition-all">
-                  <span className="material-symbols-outlined text-lg">send</span>
+                <button className="bg-slate-900 dark:bg-white hover:bg-slate-700 dark:hover:bg-slate-100 text-white dark:text-slate-900 px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-colors">
+                  <span className="material-symbols-outlined text-base">send</span>
                   Send
                 </button>
               </div>
@@ -213,59 +198,59 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
 
           {/* Right Panel - Quick Actions & Info */}
           <div className="w-80 p-4 bg-slate-50 dark:bg-slate-800 overflow-y-auto">
-            <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 uppercase tracking-wider">
+            <h3 className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wide">
               Quick Actions
             </h3>
-            <div className="grid grid-cols-2 gap-3 mb-6">
+            <div className="grid grid-cols-2 gap-2 mb-6">
               {quickActions.map((action, index) => (
                 <button
                   key={index}
-                  className="flex flex-col items-center gap-2 p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all"
+                  className="flex flex-col items-center gap-2 p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
                 >
-                  <div className={`w-12 h-12 ${action.color} rounded-full flex items-center justify-center text-white`}>
-                    <span className="material-symbols-outlined text-2xl">{action.icon}</span>
+                  <div className="w-8 h-8 bg-slate-100 dark:bg-slate-800 rounded-md flex items-center justify-center">
+                    <span className="material-symbols-outlined text-lg text-slate-600 dark:text-slate-400">{action.icon}</span>
                   </div>
-                  <span className="text-xs font-medium text-slate-700 dark:text-slate-200 text-center">
+                  <span className="text-xs font-medium text-slate-700 dark:text-slate-300 text-center">
                     {action.label}
                   </span>
                 </button>
               ))}
             </div>
 
-            <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 uppercase tracking-wider">
+            <h3 className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wide">
               Verification Status
             </h3>
             <div className="space-y-2">
               {patient.verificationStatus && (
                 <>
-                  <div className="bg-white dark:bg-slate-900 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                  <div className="bg-white dark:bg-slate-900 p-3 border border-slate-200 dark:border-slate-700">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Eligibility</span>
-                      <span className={`text-xs font-semibold ${patient.verificationStatus.eligibilityCheck === 'completed' ? 'text-green-500' : patient.verificationStatus.eligibilityCheck === 'in_progress' ? 'text-blue-500' : 'text-slate-400'}`}>
+                      <span className={`text-xs font-medium ${patient.verificationStatus.eligibilityCheck === 'completed' ? 'text-status-green' : patient.verificationStatus.eligibilityCheck === 'in_progress' ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>
                         {patient.verificationStatus.eligibilityCheck === 'completed' ? 'Completed' : patient.verificationStatus.eligibilityCheck === 'in_progress' ? 'In Progress' : 'Pending'}
                       </span>
                     </div>
                   </div>
-                  <div className="bg-white dark:bg-slate-900 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                  <div className="bg-white dark:bg-slate-900 p-3 border border-slate-200 dark:border-slate-700">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Benefits</span>
-                      <span className={`text-xs font-semibold ${patient.verificationStatus.benefitsVerification === 'completed' ? 'text-green-500' : patient.verificationStatus.benefitsVerification === 'in_progress' ? 'text-blue-500' : 'text-slate-400'}`}>
+                      <span className={`text-xs font-medium ${patient.verificationStatus.benefitsVerification === 'completed' ? 'text-status-green' : patient.verificationStatus.benefitsVerification === 'in_progress' ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>
                         {patient.verificationStatus.benefitsVerification === 'completed' ? 'Completed' : patient.verificationStatus.benefitsVerification === 'in_progress' ? 'In Progress' : 'Pending'}
                       </span>
                     </div>
                   </div>
-                  <div className="bg-white dark:bg-slate-900 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                  <div className="bg-white dark:bg-slate-900 p-3 border border-slate-200 dark:border-slate-700">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-medium text-slate-600 dark:text-slate-400">AI Call Verification</span>
-                      <span className={`text-xs font-semibold ${patient.verificationStatus.aiCallVerification === 'completed' ? 'text-green-500' : patient.verificationStatus.aiCallVerification === 'in_progress' ? 'text-blue-500' : 'text-slate-400'}`}>
+                      <span className={`text-xs font-medium ${patient.verificationStatus.aiCallVerification === 'completed' ? 'text-status-green' : patient.verificationStatus.aiCallVerification === 'in_progress' ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>
                         {patient.verificationStatus.aiCallVerification === 'completed' ? 'Completed' : patient.verificationStatus.aiCallVerification === 'in_progress' ? 'In Progress' : 'Pending'}
                       </span>
                     </div>
                   </div>
-                  <div className="bg-white dark:bg-slate-900 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
+                  <div className="bg-white dark:bg-slate-900 p-3 border border-slate-200 dark:border-slate-700">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Send To PMS</span>
-                      <span className={`text-xs font-semibold ${patient.verificationStatus.sendToPMS === 'completed' ? 'text-green-500' : patient.verificationStatus.sendToPMS === 'in_progress' ? 'text-blue-500' : 'text-slate-400'}`}>
+                      <span className={`text-xs font-medium ${patient.verificationStatus.sendToPMS === 'completed' ? 'text-status-green' : patient.verificationStatus.sendToPMS === 'in_progress' ? 'text-slate-900 dark:text-white' : 'text-slate-400'}`}>
                         {patient.verificationStatus.sendToPMS === 'completed' ? 'Completed' : patient.verificationStatus.sendToPMS === 'in_progress' ? 'In Progress' : 'Pending'}
                       </span>
                     </div>
@@ -274,20 +259,16 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
               )}
             </div>
 
-            <div className="mt-6 relative overflow-hidden bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 dark:from-cyan-900/20 dark:via-blue-900/20 dark:to-indigo-900/20 border border-cyan-200 dark:border-cyan-800 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-              {/* Decorative gradient orbs */}
-              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-cyan-400/20 to-blue-400/20 rounded-full blur-2xl"></div>
-              <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-blue-400/20 to-indigo-400/20 rounded-full blur-xl"></div>
-
-              <div className="relative p-4 flex items-start gap-3">
-                <div className="flex-shrink-0 w-9 h-9 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center shadow-sm">
-                  <span className="material-symbols-outlined text-white text-lg">lightbulb</span>
+            <div className="mt-6 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-4">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-slate-200 dark:bg-slate-800 rounded-md flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-slate-600 dark:text-slate-400 text-base">lightbulb</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-400 mb-1">
+                  <h4 className="text-xs font-medium text-slate-900 dark:text-white mb-1">
                     AI Assistant Tip
                   </h4>
-                  <p className="text-xs leading-relaxed text-slate-700 dark:text-slate-300">
+                  <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
                     I can help verify insurance, check benefits, and process authorizations in real-time.
                   </p>
                 </div>
