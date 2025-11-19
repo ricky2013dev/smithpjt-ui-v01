@@ -204,7 +204,7 @@ const CoverageModal: React.FC<CoverageModalProps> = ({
                       {data.patient && (
                         <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4">
                           <h4 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-blue-600">person</span>
+                            <span className="material-symbols-outlined text-slate-900 dark:text-white">person</span>
                             Patient Information
                           </h4>
                           <div className="space-y-2 text-sm">
@@ -246,7 +246,7 @@ const CoverageModal: React.FC<CoverageModalProps> = ({
                       {data.subscriber && (
                         <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4">
                           <h4 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-purple-600">badge</span>
+                            <span className="material-symbols-outlined text-slate-900 dark:text-white">badge</span>
                             Subscriber Information
                           </h4>
                           <div className="space-y-2 text-sm">
@@ -282,7 +282,7 @@ const CoverageModal: React.FC<CoverageModalProps> = ({
                   {data.payer && (
                     <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4">
                       <h4 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                        <span className="material-symbols-outlined text-green-600">business</span>
+                        <span className="material-symbols-outlined text-slate-900 dark:text-white">business</span>
                         Insurance Payer
                       </h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -391,10 +391,10 @@ const CoverageModal: React.FC<CoverageModalProps> = ({
                               <h6 className="font-medium text-slate-900 dark:text-white text-sm">Coverage Levels</h6>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {plan.benefits.preventiveCare && (
-                                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
+                                  <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3">
                                     <div className="flex items-center justify-between mb-2">
                                       <span className="font-medium text-slate-900 dark:text-white text-sm">Preventive Care</span>
-                                      <span className="text-lg font-bold text-green-600 dark:text-green-400">
+                                      <span className="text-lg font-bold text-slate-900 dark:text-white">
                                         {plan.benefits.preventiveCare.coverage}%
                                       </span>
                                     </div>
@@ -405,10 +405,10 @@ const CoverageModal: React.FC<CoverageModalProps> = ({
                                 )}
 
                                 {plan.benefits.basicServices && (
-                                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                                  <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3">
                                     <div className="flex items-center justify-between mb-2">
                                       <span className="font-medium text-slate-900 dark:text-white text-sm">Basic Services</span>
-                                      <span className="text-lg font-bold text-blue-600 dark:text-blue-400">
+                                      <span className="text-lg font-bold text-slate-900 dark:text-white">
                                         {plan.benefits.basicServices.coverage}%
                                       </span>
                                     </div>
@@ -419,10 +419,10 @@ const CoverageModal: React.FC<CoverageModalProps> = ({
                                 )}
 
                                 {plan.benefits.majorServices && (
-                                  <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-3">
+                                  <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3">
                                     <div className="flex items-center justify-between mb-2">
                                       <span className="font-medium text-slate-900 dark:text-white text-sm">Major Services</span>
-                                      <span className="text-lg font-bold text-orange-600 dark:text-orange-400">
+                                      <span className="text-lg font-bold text-slate-900 dark:text-white">
                                         {plan.benefits.majorServices.coverage}%
                                       </span>
                                     </div>
@@ -433,10 +433,10 @@ const CoverageModal: React.FC<CoverageModalProps> = ({
                                 )}
 
                                 {plan.benefits.orthodontics && (
-                                  <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-3">
+                                  <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3">
                                     <div className="flex items-center justify-between mb-2">
                                       <span className="font-medium text-slate-900 dark:text-white text-sm">Orthodontics</span>
-                                      <span className="text-lg font-bold text-purple-600 dark:text-purple-400">
+                                      <span className="text-lg font-bold text-slate-900 dark:text-white">
                                         {plan.benefits.orthodontics.coverage}%
                                       </span>
                                     </div>
@@ -453,11 +453,11 @@ const CoverageModal: React.FC<CoverageModalProps> = ({
                           {plan.limitations && plan.limitations.length > 0 && (
                             <div>
                               <h6 className="font-medium text-slate-900 dark:text-white text-sm mb-2">Service Limitations</h6>
-                              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+                              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3">
                                 <ul className="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
                                   {plan.limitations.map((limitation: any, idx: number) => (
                                     <li key={idx} className="flex items-start gap-2">
-                                      <span className="text-yellow-600 dark:text-yellow-500 mt-0.5">•</span>
+                                      <span className="text-slate-600 dark:text-slate-400 mt-0.5">•</span>
                                       <span>
                                         <strong>{limitation.service}</strong> ({limitation.code}): {limitation.frequency}
                                         {limitation.lastService && (
@@ -477,11 +477,11 @@ const CoverageModal: React.FC<CoverageModalProps> = ({
                           {plan.exclusions && plan.exclusions.length > 0 && (
                             <div>
                               <h6 className="font-medium text-slate-900 dark:text-white text-sm mb-2">Exclusions</h6>
-                              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                              <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3">
                                 <ul className="space-y-1 text-xs text-slate-700 dark:text-slate-300">
                                   {plan.exclusions.map((exclusion: string, idx: number) => (
                                     <li key={idx} className="flex items-start gap-2">
-                                      <span className="text-red-600 dark:text-red-500 mt-0.5">✕</span>
+                                      <span className="text-slate-600 dark:text-slate-400 mt-0.5">✕</span>
                                       <span>{exclusion}</span>
                                     </li>
                                   ))}
@@ -498,7 +498,7 @@ const CoverageModal: React.FC<CoverageModalProps> = ({
                   {data.additionalInformation && (
                     <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4">
                       <h4 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                        <span className="material-symbols-outlined text-blue-600">info</span>
+                        <span className="material-symbols-outlined text-slate-900 dark:text-white">info</span>
                         Additional Information
                       </h4>
                       <div className="space-y-2 text-sm">

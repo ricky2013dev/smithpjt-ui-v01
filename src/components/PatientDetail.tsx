@@ -263,7 +263,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               ) : (
                 <>
                   <span className="material-symbols-outlined text-base">description</span>
-                  Run Vaility API
+                  Run  API Interface
                 </>
               )}
             </button>
@@ -273,7 +273,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               className="px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm disabled:opacity-50"
             >
               <span className="material-symbols-outlined text-base">smart_toy</span>
-              Start AI Call
+              Start AI Call Center
             </button>
           </div>
 

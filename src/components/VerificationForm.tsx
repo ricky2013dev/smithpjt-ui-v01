@@ -959,7 +959,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.patient ? 'expand_more' : 'expand_less'}
               </span>
-              <span className="material-symbols-outlined text-primary">account_circle</span>
+              <span className="material-symbols-outlined text-slate-900 dark:text-white">account_circle</span>
               <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
                 PATIENT & SUBSCRIBER INFORMATION
               </h4>
@@ -1129,7 +1129,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.insurance ? 'expand_more' : 'expand_less'}
               </span>
-              <span className="material-symbols-outlined text-primary">health_and_safety</span>
+              <span className="material-symbols-outlined text-slate-900 dark:text-white">health_and_safety</span>
               <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
                 INSURANCE INFORMATION
               </h4>

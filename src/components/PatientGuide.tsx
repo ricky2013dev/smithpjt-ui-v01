@@ -26,7 +26,7 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
           </h2>
           <div className="flex items-center gap-3">
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Select a patient from the list to review their insurance verification status and coverage details, or add a new patient to begin the verification process.
+              Select a patient from the list to review their insurance verification status, or add a new patient to begin the verification process.
             </p>
             <button
               onClick={onAddNewPatient}

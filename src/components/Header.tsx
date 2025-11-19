@@ -31,7 +31,8 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, isAdmin = false, onToggleA
           {/* Title and Subtitle */}
           <div>
             <h1 className="flex items-baseline gap-1">
-              <span className="text-base font-bold text-orange-600 dark:text-orange-500 tracking-tight">Smith</span>
+
+              <span className="font-handwriting  tracking-wide rotate-[-0deg] font-bold text-orange-600 dark:text-orange-500 tracking-tight">Smith</span>
               <span className="text-sm font-medium text-slate-900 dark:text-white">AI Center</span>
             </h1>
             <p className="text-slate-500 dark:text-slate-400 text-xs font-normal mt-0.5">
