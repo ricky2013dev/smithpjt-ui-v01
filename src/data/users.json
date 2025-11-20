@@ -1,8 +1,8 @@
 [
   {
     "id": "1",
-    "username": "coziAdmin",
-    "password": "coziAdmin",
+    "username": "admin",
+    "password": "admin",
     "name": "Cozi Dental Admin",
     "email": "admin@smithai.com",
     "role": "admin",

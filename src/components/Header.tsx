@@ -48,29 +48,29 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onL
         </div>
 
         {/* User Info and Logout */}
-        {currentUser ? (
+        {onLogout ? (
           <div className="flex items-center gap-4">
             {/* User Info */}
-            <div className="text-right">
-              <div className="flex items-center">
-                <span className="material-symbols-outlined text-md">person</span>
-                <span className="text-xs ml-1">{currentUser.name}</span>
+            {currentUser && (
+              <div className="text-right">
+                <div className="flex items-center">
+                  <span className="material-symbols-outlined text-md">person</span>
+                  <span className="text-xs ml-1">{currentUser.name}</span>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Logout Button */}
-            {onLogout && (
-              <button
-                onClick={onLogout}
-                className="px-2 text-xs py-1  rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm font-medium transition-colors"
-                title="Logout"
-              >
-                <span className="material-symbols-outlined text-sm">logout</span>
-                Logout
-              </button>
-            )}
+            <button
+              onClick={onLogout}
+              className="px-2 text-xs py-1 rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm font-medium transition-colors"
+              title="Logout"
+            >
+              <span className="material-symbols-outlined text-sm">logout</span>
+              Logout
+            </button>
           </div>
-        ) : (
+        ) : onLoginClick ? (
           /* Login Button for Home Page */
           <button
             onClick={onLoginClick}
@@ -79,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onL
             <span>Login</span>
             <span className="material-symbols-outlined text-sm">arrow_forward</span>
           </button>
-        )}
+        ) : null}
       </div>
     </header>
   );

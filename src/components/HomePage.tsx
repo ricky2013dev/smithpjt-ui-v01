@@ -1,12 +1,16 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import Header from './Header';
+import LoginModal from './LoginModal';
 
 const HomePage: React.FC = () => {
-    const navigate = useNavigate();
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
     const handleLoginClick = () => {
-        navigate('/login');
+        setIsLoginModalOpen(true);
+    };
+
+    const handleCloseLoginModal = () => {
+        setIsLoginModalOpen(false);
     };
 
     return (
@@ -83,6 +87,8 @@ const HomePage: React.FC = () => {
             <footer className="py-6 text-center text-slate-400 dark:text-slate-600 text-sm">
                 © {new Date().getFullYear()} Smith AI Center. All rights reserved.
             </footer>
+
+            <LoginModal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} />
         </div>
     );
 };
