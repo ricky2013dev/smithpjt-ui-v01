@@ -1,9 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import LoginModal from './LoginModal';
+import mermaid from 'mermaid';
 
 const HomePage: React.FC = () => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+    useEffect(() => {
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+        });
+        mermaid.contentLoaded();
+    }, []);
 
     const handleLoginClick = () => {
         setIsLoginModalOpen(true);
@@ -56,6 +66,27 @@ const HomePage: React.FC = () => {
                             </p>
                         </div>
                     </div>
+
+                    {/* Mermaid Diagram */}
+                    {/* <div className="relative group">
+                        <div className="relative bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 p-8 md:p-12 rounded-xl shadow-sm">
+                            <pre className="mermaid">
+{`graph LR
+T[The challenge of repetitive yet complex business tasks] 
+
+    A[Documents] --> C[Multimodal intelligence]
+    B[Voice AI] --> C
+    C --> D[Analysis & Automation]
+    D --> E[Complete Solution]
+
+    style A fill:#f97316,stroke:#ea580c,stroke-width:2px,color:#fff
+    style B fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#fff
+    style C fill:#ea580c,stroke:#c2410c,stroke-width:2px,color:#fff
+    style D fill:#ea580c,stroke:#c2410c,stroke-width:2px,color:#fff
+    style E fill:#f97316,stroke:#ea580c,stroke-width:3px,color:#fff`}
+                            </pre>
+                        </div>
+                    </div> */}
 
                     {/* CTA / Visual Indicator */}
                     <div className="pt-8 flex justify-center gap-6">

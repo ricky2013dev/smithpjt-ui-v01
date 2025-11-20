@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface LoginModalProps {
@@ -8,12 +8,18 @@ interface LoginModalProps {
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        // Mock login - navigate to dashboard and close modal
-        navigate('/dashboard');
-        onClose();
+        setIsLoading(true);
+
+        // Simulate authentication delay (800ms)
+        setTimeout(() => {
+            navigate('/dashboard');
+            onClose();
+            setIsLoading(false);
+        }, 800);
     };
 
     if (!isOpen) return null;
@@ -47,9 +53,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                         <input
                             id="email"
                             type="email"
-                            value="smithai.dev@gmail.com"
+                            value="smithai.demo.user@gmail.com"
                             required
-                            className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                            disabled={isLoading}
+                            className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             placeholder="you@example.com"
                         />
                     </div>
@@ -61,18 +68,27 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                         <input
                             id="password"
                             type="password"
-                            value="SmithAI@123"
+                            value="SmithAIDemo@123"
                             required
-                            className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                            disabled={isLoading}
+                            className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             placeholder="••••••••"
                         />
                     </div>
 
                     <button
                         type="submit"
-                        className="w-full py-2.5 px-4 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg shadow-md shadow-orange-500/20 transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                        disabled={isLoading}
+                        className="w-full py-2.5 px-4 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg shadow-md shadow-orange-500/20 transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                        Sign In
+                        {isLoading ? (
+                            <>
+                                <span className="material-symbols-outlined animate-spin text-xl">progress_activity</span>
+                                <span>Signing In...</span>
+                            </>
+                        ) : (
+                            'Sign In'
+                        )}
                     </button>
                 </form>
             </div>
