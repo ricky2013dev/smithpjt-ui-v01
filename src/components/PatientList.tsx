@@ -175,6 +175,17 @@ const PatientList: React.FC<PatientListProps> = ({
             >
               {/* Patient Info */}
               <div className="flex items-center gap-2">
+                {/* Checkbox indicator */}
+                <div className={`flex items-center justify-center shrink-0 w-3 h-3 rounded border transition-all ${
+                  isSelected
+                    ? 'bg-slate-900 border-slate-900 dark:bg-white dark:border-white'
+                    : 'border-slate-300 dark:border-slate-600'
+                }`}>
+                  {isSelected && (
+                    <span className="material-symbols-outlined text-white dark:text-slate-900" style={{ fontSize: '8px' }}>check</span>
+                  )}
+                </div>
+
                 <div className={`rounded-full h-8 w-8 flex items-center justify-center shrink-0 ${
                   verificationStatus.percentage === 100
                     ? 'bg-status-green/20'
