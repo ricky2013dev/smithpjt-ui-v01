@@ -219,7 +219,7 @@ export type TabType = typeof TAB_TYPES[keyof typeof TAB_TYPES];
 
 // Tab labels for display
 export const TAB_LABELS: Record<TabType, string> = {
-  [TAB_TYPES.PATIENT_BASIC_INFO]: 'Patient Basic',
+  [TAB_TYPES.PATIENT_BASIC_INFO]: 'Patient Basic Info',
   [TAB_TYPES.INSURANCE_INFO]: 'Insurance - Basic',
   [TAB_TYPES.INSURANCE]: 'Insurance - Coverage',
   [TAB_TYPES.AI_CALL_HISTORY]: 'AI Call History',

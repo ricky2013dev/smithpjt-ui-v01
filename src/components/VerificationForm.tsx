@@ -1370,7 +1370,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.preventative ? 'expand_more' : 'expand_less'}
               </span>
-              <span className="material-symbols-outlined text-primary">shield_with_heart</span>
+              <span className="material-symbols-outlined ">shield_with_heart</span>
               <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
                 PREVENTATIVE COVERAGE
               </h4>
@@ -1717,7 +1717,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.basic ? 'expand_more' : 'expand_less'}
               </span>
-              <span className="material-symbols-outlined text-primary">medical_services</span>
+              <span className="material-symbols-outlined ">medical_services</span>
               <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
                 BASIC COVERAGE
               </h4>
@@ -1812,7 +1812,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.major ? 'expand_more' : 'expand_less'}
               </span>
-              <span className="material-symbols-outlined text-primary">verified</span>
+              <span className="material-symbols-outlined ">verified</span>
               <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
                 MAJOR COVERAGE
               </h4>
@@ -1907,7 +1907,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.periodontal ? 'expand_more' : 'expand_less'}
               </span>
-              <span className="material-symbols-outlined text-primary">dentistry</span>
+              <span className="material-symbols-outlined ">dentistry</span>
               <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
                 PERIODONTAL COVERAGE
               </h4>
@@ -2152,7 +2152,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.implant ? 'expand_more' : 'expand_less'}
               </span>
-              <span className="material-symbols-outlined text-primary">folder_special</span>
+              <span className="material-symbols-outlined ">folder_special</span>
               <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
                 IMPLANT COVERAGE
               </h4>
@@ -2426,7 +2426,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.orthodontic ? 'expand_more' : 'expand_less'}
               </span>
-              <span className="material-symbols-outlined text-primary">sentiment_satisfied</span>
+              <span className="material-symbols-outlined ">sentiment_satisfied</span>
               <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
                 ORTHODONTIC COVERAGE
               </h4>
@@ -2581,7 +2581,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">
                 {collapsedSections.miscellaneous ? 'expand_more' : 'expand_less'}
               </span>
-              <span className="material-symbols-outlined text-primary">more_horiz</span>
+              <span className="material-symbols-outlined ">more_horiz</span>
               <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
                 MISCELLANEOUS
               </h4>
@@ -2750,7 +2750,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
               className="w-full px-4 py-3 flex items-center gap-2 hover:bg-primary/5 dark:hover:bg-primary/10 transition-all group border-b-2 border-slate-200 dark:border-slate-700"
             >
               <h4 className="font-semibold text-slate-900 dark:text-white text-sm flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">note_add</span>
+                <span className="material-symbols-outlined ">note_add</span>
                 ADDITIONAL NOTES
               </h4>
               <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 group-hover:text-primary transition-colors">

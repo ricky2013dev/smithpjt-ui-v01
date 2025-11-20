@@ -401,7 +401,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <h3 className="text-sm font-medium text-slate-900 dark:text-white">
-                    Patient Basic Info
+                    Patient Infomation
                   </h3>
                   <span className="text-sm text-slate-500 dark:text-slate-400">
                     ID: <span className="font-medium text-slate-700 dark:text-slate-300">{patient.id}</span>

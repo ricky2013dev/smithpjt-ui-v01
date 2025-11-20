@@ -4,18 +4,34 @@ import PatientDetail from './PatientDetail';
 import Dashboard from './Dashboard';
 import PatientGuide from './PatientGuide';
 import Header from './Header';
+import Login from './Login';
 import { Patient, FilterType, TabType, TAB_TYPES } from '../types/patient';
 import patientsData from '../data/patients.json';
 
 const patients = patientsData as Patient[];
 
 const PatientsManagement: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const isAdmin = false; // Always user mode
   const [viewMode, setViewMode] = useState<'dashboard' | 'list'>('list'); // Default to list for non-admin
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeFilters, setActiveFilters] = useState<FilterType[]>([]);
   const [activeTab, setActiveTab] = useState<TabType>(TAB_TYPES.PATIENT_BASIC_INFO);
+
+  const handleLogin = (user: any) => {
+    setCurrentUser(user);
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setIsAuthenticated(false);
+    setSelectedPatientId(null);
+    setSearchQuery('');
+    setActiveFilters([]);
+  };
 
   // Filter and search patients
   const filteredPatients = React.useMemo(() => {
@@ -190,11 +206,18 @@ const PatientsManagement: React.FC = () => {
     setSelectedPatientId(null);
   };
 
+  // Show login page if not authenticated
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} />;
+  }
+
   return (
     <div className="flex h-screen w-full flex-col">
       {/* Smith AI Center Header */}
       <Header
         onLogoClick={handleHeaderClick}
+        currentUser={currentUser}
+        onLogout={handleLogout}
       />
 
 

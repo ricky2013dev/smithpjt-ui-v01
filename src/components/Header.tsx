@@ -2,9 +2,15 @@ import React from 'react';
 
 interface HeaderProps {
   onLogoClick?: () => void;
+  currentUser?: {
+    name: string;
+    email: string;
+    username: string;
+  } | null;
+  onLogout?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onLogoClick }) => {
+const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout }) => {
   return (
     <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-3 shrink-0">
       <div className="flex items-center justify-between">
@@ -38,6 +44,31 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick }) => {
             </p>
           </div>
         </div>
+
+        {/* User Info and Logout */}
+        {currentUser && (
+          <div className="flex items-center gap-4">
+            {/* User Info */}
+            <div className="text-right">
+<div className="flex items-center">
+  <span className="material-symbols-outlined text-md">person</span>
+  <span className="text-xs ml-1">{currentUser.name}</span>
+</div>
+            </div>
+
+            {/* Logout Button */}
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="px-2 text-xs py-1  rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm font-medium transition-colors"
+                title="Logout"
+              >
+                <span className="material-symbols-outlined text-sm">logout</span>
+                Logout
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </header>
   );
