@@ -42,7 +42,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                         </span>
                     </div>
                     <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Welcome To Smith AI Center</h2>
-                    <p className="text-slate-500 dark:text-slate-400 mt-2">Sign in to access your mith AI Center</p>
+                    <p className="text-slate-500 dark:text-slate-400 mt-2">Sign in to access</p>
                 </div>
 
                 <form onSubmit={handleLogin} className="space-y-6">
