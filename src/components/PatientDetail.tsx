@@ -124,10 +124,6 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
     return configs[stepKey];
   };
 
-  const getConnectorColor = () => {
-    return 'bg-slate-300 dark:bg-slate-600';
-  };
-
   const getPhone = () => {
     return patient.telecom.find((t) => t.system === "phone")?.value || "N/A";
   };

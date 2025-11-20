@@ -1,5 +1,7 @@
 {
+  "patientName": "",
   "patientSSN": "123-45-6789",
+  "patientDOB": "",
   "relationshipToSubscriber": "Self",
   "subscriberName": "John Smith",
   "subscriberSSN": "987-65-4321",

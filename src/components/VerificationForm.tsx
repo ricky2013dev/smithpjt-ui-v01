@@ -22,7 +22,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
     subscriberDOB: '',
     subscriberID: '',
     insuranceCompany: '',
-    insurerType: 'Primary' as const,
+    insurerType: { primary: true, secondary: false },
     insuranceAddress: '',
     insurancePhone: '',
     employer: '',
