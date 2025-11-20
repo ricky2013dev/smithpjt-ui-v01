@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PatientList from './PatientList';
 import PatientDetail from './PatientDetail';
 import Dashboard from './Dashboard';
@@ -10,17 +10,12 @@ import patientsData from '../data/patients.json';
 const patients = patientsData as Patient[];
 
 const PatientsManagement: React.FC = () => {
-  const [isAdmin, setIsAdmin] = useState<boolean>(false); // Default to user mode
+  const isAdmin = false; // Always user mode
   const [viewMode, setViewMode] = useState<'dashboard' | 'list'>('list'); // Default to list for non-admin
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeFilters, setActiveFilters] = useState<FilterType[]>([]);
   const [activeTab, setActiveTab] = useState<TabType>(TAB_TYPES.PATIENT_BASIC_INFO);
-
-  // Update viewMode when isAdmin changes
-  useEffect(() => {
-    setViewMode(isAdmin ? 'dashboard' : 'list');
-  }, [isAdmin]);
 
   // Filter and search patients
   const filteredPatients = React.useMemo(() => {
@@ -200,8 +195,6 @@ const PatientsManagement: React.FC = () => {
       {/* Smith AI Center Header */}
       <Header
         onLogoClick={handleHeaderClick}
-        isAdmin={isAdmin}
-        onToggleAdmin={setIsAdmin}
       />
 
 
