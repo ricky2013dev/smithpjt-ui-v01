@@ -5,6 +5,7 @@ import mermaid from 'mermaid';
 
 const HomePage: React.FC = () => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [showDesktopWarning, setShowDesktopWarning] = useState(false);
 
     useEffect(() => {
         mermaid.initialize({
@@ -16,6 +17,12 @@ const HomePage: React.FC = () => {
     }, []);
 
     const handleLoginClick = () => {
+        // Check if screen size is desktop (width >= 1024px)
+        if (window.innerWidth < 1024) {
+            setShowDesktopWarning(true);
+            setTimeout(() => setShowDesktopWarning(false), 5000); // Auto-hide after 5 seconds
+            return;
+        }
         setIsLoginModalOpen(true);
     };
 
@@ -26,6 +33,28 @@ const HomePage: React.FC = () => {
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col font-sans selection:bg-orange-100 dark:selection:bg-orange-900/30">
             <Header onLoginClick={handleLoginClick} showLoginButton={true} />
+
+            {/* Desktop Warning Toast */}
+            {showDesktopWarning && (
+                <div className="fixed inset-x-4 top-20 md:left-1/2 md:transform md:-translate-x-1/2 z-50 animate-fade-in md:w-auto">
+                    <div className="bg-red-600 text-white px-4 py-5 md:px-6 md:py-4 rounded-xl shadow-2xl md:max-w-md mx-auto">
+                        <div className="flex items-start gap-3">
+                            <span className="material-symbols-outlined text-3xl md:text-2xl flex-shrink-0">error</span>
+                            <div className="flex-1 min-w-0">
+                                <h3 className="font-bold text-lg md:text-lg mb-2">Desktop Access Only</h3>
+                                <p className="text-sm md:text-sm leading-relaxed">This application is not available on mobile or tablet devices. Please access from a desktop computer.</p>
+                            </div>
+                            <button
+                                onClick={() => setShowDesktopWarning(false)}
+                                className="text-white hover:text-red-200 transition-colors flex-shrink-0 p-1 -mr-1 -mt-1"
+                                aria-label="Close"
+                            >
+                                <span className="material-symbols-outlined text-2xl">close</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <main className="flex-grow flex flex-col items-center justify-center px-6 relative overflow-hidden">
                 {/* Background Elements */}

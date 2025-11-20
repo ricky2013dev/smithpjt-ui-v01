@@ -9,9 +9,18 @@ interface LoginModalProps {
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Check if screen size is desktop (width >= 1024px)
+        if (window.innerWidth < 1024) {
+            setErrorMessage('Desktop access only. This application is not available on your devices.');
+            return;
+        }
+
+        setErrorMessage('');
         setIsLoading(true);
 
         // Simulate authentication delay (800ms)
@@ -75,6 +84,16 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                             placeholder="••••••••"
                         />
                     </div>
+
+                    {/* Error Message */}
+                    {errorMessage && (
+                        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                            <div className="flex items-start gap-2">
+                                <span className="material-symbols-outlined text-red-600 dark:text-red-400 text-lg">error</span>
+                                <p className="text-sm text-red-600 dark:text-red-400 font-medium">{errorMessage}</p>
+                            </div>
+                        </div>
+                    )}
 
                     <button
                         type="submit"
