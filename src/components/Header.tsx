@@ -8,9 +8,11 @@ interface HeaderProps {
     username: string;
   } | null;
   onLogout?: () => void;
+  onLoginClick?: () => void;
+  showLoginButton?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout }) => {
+const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onLoginClick }) => {
   return (
     <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-3 shrink-0">
       <div className="flex items-center justify-between">
@@ -46,14 +48,14 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout }) =
         </div>
 
         {/* User Info and Logout */}
-        {currentUser && (
+        {currentUser ? (
           <div className="flex items-center gap-4">
             {/* User Info */}
             <div className="text-right">
-<div className="flex items-center">
-  <span className="material-symbols-outlined text-md">person</span>
-  <span className="text-xs ml-1">{currentUser.name}</span>
-</div>
+              <div className="flex items-center">
+                <span className="material-symbols-outlined text-md">person</span>
+                <span className="text-xs ml-1">{currentUser.name}</span>
+              </div>
             </div>
 
             {/* Logout Button */}
@@ -68,6 +70,15 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout }) =
               </button>
             )}
           </div>
+        ) : (
+          /* Login Button for Home Page */
+          <button
+            onClick={onLoginClick}
+            className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg shadow-sm shadow-orange-500/20 transition-colors flex items-center gap-2"
+          >
+            <span>Login</span>
+            <span className="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
         )}
       </div>
     </header>
