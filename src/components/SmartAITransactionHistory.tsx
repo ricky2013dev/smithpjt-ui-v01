@@ -388,7 +388,7 @@ const SmartAITransactionHistory: React.FC = () => {
 
               {/* Collapsible Detail */}
               {expandedId === transaction.id && (
-                <div className="ml-8 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-200 dark:border-slate-700">
+                <div className="ml-8 p-2 bg-slate-50 dark:bg-slate-800/30 border-t border-slate-200 dark:border-slate-700">
                   {/* Tabs */}
                   <div className="flex border-b border-slate-200 dark:border-slate-700 px-4">
                     <button
@@ -399,7 +399,7 @@ const SmartAITransactionHistory: React.FC = () => {
                           : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
                       }`}
                     >
-                      Transaction Action Info
+                      Transaction Info
                     </button>
                     <button
                       onClick={() => setDetailTab(transaction.id, 'summary')}
@@ -409,7 +409,7 @@ const SmartAITransactionHistory: React.FC = () => {
                           : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
                       }`}
                     >
-                      Content Summary
+                      Transaction Summary
                     </button>
                     <button
                       onClick={() => setDetailTab(transaction.id, 'detail')}
@@ -419,7 +419,7 @@ const SmartAITransactionHistory: React.FC = () => {
                           : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
                       }`}
                     >
-                      Content All Detail
+                      Transaction Detail
                     </button>
                   </div>
 
