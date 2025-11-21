@@ -15,6 +15,8 @@ import {
 import SmithAICenter from "./SmithAICenter";
 import VerificationForm from "./VerificationForm";
 import CoverageModal from "./CoverageModal";
+import InsuranceCardUploadModal, { ScannedData } from "./InsuranceCardUploadModal";
+import CoverageVerificationResults from "./CoverageVerificationResults";
 import sampleCoverageData from "../data/sampleCoverageData.json";
 import { PRIMARY_BUTTON } from "../styles/buttonStyles";
 
@@ -51,9 +53,19 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   const [coverageData, setCoverageData] = useState<any>(null);
   const [curlCommand, setCurlCommand] = useState<string | null>(null);
 
+  // Insurance Card Upload Modal state
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+
+  // Coverage Verification Results Modal state
+  const [isCoverageResultsOpen, setIsCoverageResultsOpen] = useState(false);
+
   // Patient Basic Info editing states
   // Default to edit mode for non-admin, view mode for admin
   const [isEditing, setIsEditing] = useState(!isAdmin);
+  const [editedFirstName, setEditedFirstName] = useState(patient.name.given[0] || "");
+  const [editedMiddleName, setEditedMiddleName] = useState(patient.name.given[1] || "");
+  const [editedLastName, setEditedLastName] = useState(patient.name.family);
+  const [editedSSN, setEditedSSN] = useState("");
   const [editedBirthDate, setEditedBirthDate] = useState(patient.birthDate);
   const [editedAge, setEditedAge] = useState("");
   const [editedGender, setEditedGender] = useState(patient.gender);
@@ -196,6 +208,43 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
     setEditedInsurance(updated);
   };
 
+  // Handle scanned insurance card data
+  const handleScannedData = (data: ScannedData) => {
+    setEditedFirstName(data.firstName);
+    setEditedMiddleName(data.middleName);
+    setEditedLastName(data.lastName);
+    setEditedSSN(data.ssn);
+    setEditedBirthDate(data.birthDate);
+    setEditedAge(data.age);
+    setEditedGender(data.gender);
+    setEditedPhone(data.phone);
+    setEditedEmail(data.email);
+    setEditedAddress(data.address);
+
+    // Update insurance information if available
+    if (data.insuranceProvider && data.policyNumber) {
+      const newInsurance: Insurance = {
+        type: "Primary",
+        provider: data.insuranceProvider,
+        policyNumber: data.policyNumber,
+        groupNumber: data.groupNumber,
+        subscriberName: `${data.firstName} ${data.lastName}`,
+        relationship: "Self",
+        effectiveDate: new Date().toISOString().split('T')[0],
+        expirationDate: "",
+        coverage: {
+          deductible: "$1,000",
+          deductibleMet: "$0",
+          maxBenefit: "$2,000",
+          preventiveCoverage: "100%",
+          basicCoverage: "80%",
+          majorCoverage: "50%"
+        }
+      };
+      setEditedInsurance([newInsurance]);
+    }
+  };
+
   // Run Validity API handlers
   const handleLoadSampleData = async () => {
     // Show loading state and open modal
@@ -246,7 +295,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           </div>
 
           <div className={`flex-1 flex justify-center gap-2 ${patient.id.startsWith('new-') ? 'invisible' : ''}`}>
-            <button
+            {/* <button
               onClick={handleLoadSampleData}
               disabled={isLoadingSampleData || patient.id.startsWith('new-')}
               className="px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm disabled:opacity-50"
@@ -259,17 +308,26 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               ) : (
                 <>
                   <span className="material-symbols-outlined text-base">description</span>
-                  Run  API Interface
+                  Run API IF
                 </>
               )}
-            </button>
+            </button> */}
+
             <button
+              onClick={() => setIsCoverageResultsOpen(true)}
+              disabled={patient.id.startsWith('new-')}
+              className="ml-4 px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm disabled:opacity-50"
+            >
+              <span className="material-symbols-outlined text-base">verified_user</span>
+              Document Analysis AI
+            </button>
+              <button
               onClick={() => setShowAICenter(true)}
               disabled={patient.id.startsWith('new-')}
-              className="px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm disabled:opacity-50"
+              className="ml-4 px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm disabled:opacity-50"
             >
               <span className="material-symbols-outlined text-base">smart_toy</span>
-              Start AI Call Center
+              Start Autonomous Voice AI
             </button>
           </div>
 
@@ -403,15 +461,24 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                     ID: <span className="font-medium text-slate-700 dark:text-slate-300">{patient.id}</span>
                   </span>
                 </div>
-                {isAdmin && !isEditing && (
+                <div className="flex items-center gap-3">
                   <button
-                    onClick={() => setIsEditing(true)}
-                    className="text-sm text-primary hover:text-primary/80 font-medium flex items-center gap-1"
+                    onClick={() => setIsUploadModalOpen(true)}
+                    className="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 text-sm font-medium transition-colors"
                   >
-                    <span className="material-symbols-outlined text-base">edit</span>
-                    Edit
+                    <span className="material-symbols-outlined text-base">upload_file</span>
+                    Upload Insurance Card And Scan
                   </button>
-                )}
+                  {isAdmin && !isEditing && (
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="text-sm text-primary hover:text-primary/80 font-medium flex items-center gap-1"
+                    >
+                      <span className="material-symbols-outlined text-base">edit</span>
+                      Edit
+                    </button>
+                  )}
+                </div>
               </div>
               <div className="p-6 grid grid-cols-1 md:grid-cols-4 gap-x-4 gap-y-4">
                 <div>
@@ -421,7 +488,8 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                   {isEditing ? (
                     <input
                       type="text"
-                      value={patient.name.given[0] || ""}
+                      value={editedFirstName}
+                      onChange={(e) => setEditedFirstName(e.target.value)}
                       className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary text-sm"
                       placeholder="First Name"
                     />
@@ -438,7 +506,8 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                   {isEditing ? (
                     <input
                       type="text"
-                      value={patient.name.given[1] || ""}
+                      value={editedMiddleName}
+                      onChange={(e) => setEditedMiddleName(e.target.value)}
                       className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary text-sm"
                       placeholder="Middle Name"
                     />
@@ -455,7 +524,8 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                   {isEditing ? (
                     <input
                       type="text"
-                      value={patient.name.family}
+                      value={editedLastName}
+                      onChange={(e) => setEditedLastName(e.target.value)}
                       className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary text-sm"
                       placeholder="Last Name"
                     />
@@ -472,13 +542,14 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                   {isEditing ? (
                     <input
                       type="text"
-                      value=""
+                      value={editedSSN}
+                      onChange={(e) => setEditedSSN(e.target.value)}
                       className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary text-sm"
                       placeholder="XXX-XX-XXXX"
                     />
                   ) : (
                     <p className="font-medium text-slate-800 dark:text-slate-100">
-                      N/A
+                      {editedSSN || "N/A"}
                     </p>
                   )}
                 </div>
@@ -1297,6 +1368,20 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
         isLoading={isLoadingSampleData}
         error={verificationError}
         curlCommand={curlCommand}
+      />
+
+      {/* Insurance Card Upload Modal */}
+      <InsuranceCardUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        onDataScanned={handleScannedData}
+      />
+
+      {/* Coverage Verification Results Modal */}
+      <CoverageVerificationResults
+        isOpen={isCoverageResultsOpen}
+        onClose={() => setIsCoverageResultsOpen(false)}
+        patientName={getFullName()}
       />
     </section>
   );

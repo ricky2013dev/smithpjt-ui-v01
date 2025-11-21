@@ -222,7 +222,7 @@ export const TAB_LABELS: Record<TabType, string> = {
   [TAB_TYPES.PATIENT_BASIC_INFO]: 'Patient Basic Info',
   [TAB_TYPES.INSURANCE_INFO]: 'Insurance - Basic',
   [TAB_TYPES.INSURANCE]: 'Insurance - Coverage',
-  [TAB_TYPES.AI_CALL_HISTORY]: 'AI Call History',
+  [TAB_TYPES.AI_CALL_HISTORY]: 'Smart AI Transaction History',
   [TAB_TYPES.APPOINTMENTS]: 'Appointments',
   [TAB_TYPES.TREATMENT_HISTORY]: 'Treatment History',
 };
