@@ -413,7 +413,75 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                   </button>
                 )}
               </div>
-              <div className="p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="p-6 grid grid-cols-1 md:grid-cols-4 gap-x-4 gap-y-4">
+                <div>
+                  <label className="text-sm text-slate-500 dark:text-slate-400 mb-2 block">
+                    First Name
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={patient.name.given[0] || ""}
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                      placeholder="First Name"
+                    />
+                  ) : (
+                    <p className="font-medium text-slate-800 dark:text-slate-100">
+                      {patient.name.given[0] || "N/A"}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="text-sm text-slate-500 dark:text-slate-400 mb-2 block">
+                    Middle Name
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={patient.name.given[1] || ""}
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                      placeholder="Middle Name"
+                    />
+                  ) : (
+                    <p className="font-medium text-slate-800 dark:text-slate-100">
+                      {patient.name.given[1] || "N/A"}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="text-sm text-slate-500 dark:text-slate-400 mb-2 block">
+                    Last Name
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={patient.name.family}
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                      placeholder="Last Name"
+                    />
+                  ) : (
+                    <p className="font-medium text-slate-800 dark:text-slate-100">
+                      {patient.name.family}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="text-sm text-slate-500 dark:text-slate-400 mb-2 block">
+                    SSN#
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value=""
+                      className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                      placeholder="XXX-XX-XXXX"
+                    />
+                  ) : (
+                    <p className="font-medium text-slate-800 dark:text-slate-100">
+                      N/A
+                    </p>
+                  )}
+                </div>
                 <div>
                   <label className="text-sm text-slate-500 dark:text-slate-400 mb-2 block">
                     Date of Birth

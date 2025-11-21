@@ -207,8 +207,6 @@ const PatientsManagement: React.FC = () => {
         onLogout={handleLogout}
       />
 
-
-
       {/* Main Content */}
       <main className="flex flex-1 overflow-hidden">
         {viewMode === 'dashboard' ? (

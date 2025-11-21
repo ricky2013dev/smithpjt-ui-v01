@@ -231,11 +231,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
   };
 
   const maskSSN = (ssn: string) => {
-    // Show only last 4 digits, mask the rest
-    const digits = ssn.replace(/\D/g, ''); // Remove non-digits
-    if (digits.length >= 4) {
-      return `***-**-${digits.slice(-4)}`;
-    }
+    // Hide all digits
     return '***-**-****';
   };
 

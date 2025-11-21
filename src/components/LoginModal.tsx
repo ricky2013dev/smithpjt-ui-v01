@@ -10,13 +10,14 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [hipaaAgreed, setHipaaAgreed] = useState(false);
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Check if screen size is desktop (width >= 1024px)
-        if (window.innerWidth < 1024) {
-            setErrorMessage('Desktop access only. This application is not available on your devices.');
+        // Check if screen size is mobile (width < 768px) - allow tablets and desktop
+        if (window.innerWidth < 768) {
+            setErrorMessage('Mobile access not supported. This application is not available on mobile devices.');
             return;
         }
 
@@ -95,9 +96,31 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                         </div>
                     )}
 
+                    {/* HIPAA Compliance Agreement */}
+                    <div className="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                        <input
+                            type="checkbox"
+                            id="hipaa-agreement"
+                            checked={hipaaAgreed}
+                            onChange={(e) => setHipaaAgreed(e.target.checked)}
+                            disabled={isLoading}
+                            className="mt-0.5 w-4 h-4 text-blue-600 bg-white border-blue-300 rounded focus:ring-blue-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                        />
+                        <label htmlFor="hipaa-agreement" className="flex-1 cursor-pointer">
+                            <div className="flex items-start gap-2">
+                                <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 text-lg flex-shrink-0">verified_user</span>
+                                <div>
+                                    <p className="text-xs text-blue-900 dark:text-blue-100 font-medium leading-relaxed">
+                                        I acknowledge and agree to HIPAA compliance standards. I understand that this system protects health information (PHI) and all data is encrypted and monitored.
+                                    </p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+
                     <button
                         type="submit"
-                        disabled={isLoading}
+                        disabled={isLoading || !hipaaAgreed}
                         className="w-full py-2.5 px-4 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg shadow-md shadow-orange-500/20 transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         {isLoading ? (

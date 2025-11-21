@@ -47,9 +47,41 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onL
           </div>
         </div>
 
-        {/* User Info and Logout */}
+        {/* HIPAA Compliance, User Info and Logout */}
         {onLogout ? (
           <div className="flex items-center gap-4">
+            {/* HIPAA Compliance Notice - Hover to expand */}
+            <div className="group relative">
+              {/* Compact Title - Always Visible */}
+              <div className="flex items-center gap-2 px-3 py-1.5  dark:bg-blue-900/40 rounded-lg cursor-pointer dark:border-blue-800 hover:bg-blue-200 dark:hover:bg-blue-900/60 transition-colors">
+                <span className="material-symbols-outlined text-sm text-blue-600 dark:text-blue-400">verified_user</span>
+                <span className="text-xs font-semibold text-blue-900 dark:text-blue-100 whitespace-nowrap">
+                  HIPAA Compliance 
+                </span>
+              </div>
+
+              {/* Expanded Message on Hover */}
+              <div className="absolute top-full right-0 mt-2 w-96 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="bg-blue-50 dark:bg-blue-900/95 border border-blue-200 dark:border-blue-800 rounded-lg shadow-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0">
+                      <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/40 rounded-lg flex items-center justify-center">
+                        <span className="material-symbols-outlined text-lg text-blue-600 dark:text-blue-400">verified_user</span>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2">
+                        HIPAA Compliance
+                      </h3>
+                      <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+                        This system follows HIPAA (Health Insurance Portability and Accountability Act) compliance standards to ensure the security and privacy of protected health information (PHI). All data is encrypted and access is monitored.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* User Info */}
             {currentUser && (
               <div className="text-right">
