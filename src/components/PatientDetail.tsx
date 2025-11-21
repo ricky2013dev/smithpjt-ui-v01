@@ -4,7 +4,6 @@ import {
   Appointment,
   Insurance,
   Treatment,
-  Procedure,
   TabType,
   TAB_TYPES,
   TAB_LABELS,
@@ -14,11 +13,10 @@ import {
 } from "../types/patient";
 import SmithAICenter from "./SmithAICenter";
 import VerificationForm from "./VerificationForm";
-import CoverageModal from "./CoverageModal";
 import InsuranceCardUploadModal, { ScannedData } from "./InsuranceCardUploadModal";
 import CoverageVerificationResults from "./CoverageVerificationResults";
 import SmartAITransactionHistory from "./SmartAITransactionHistory";
-import sampleCoverageData from "../data/sampleCoverageData.json";
+import CoverageByCodeView from "./CoverageByCodeView";
 import { PRIMARY_BUTTON } from "../styles/buttonStyles";
 
 interface PatientDetailProps {
@@ -47,12 +45,6 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   const [showAICenter, setShowAICenter] = useState(false);
   const [insuranceSubTab, setInsuranceSubTab] = useState<InsuranceSubTabType>(INSURANCE_SUB_TAB_TYPES.VERIFICATION_FORM);
 
-  // Run Validity API states
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoadingSampleData, setIsLoadingSampleData] = useState(false);
-  const [verificationError, setVerificationError] = useState<string | null>(null);
-  const [coverageData, setCoverageData] = useState<any>(null);
-  const [curlCommand, setCurlCommand] = useState<string | null>(null);
 
   // Insurance Card Upload Modal state
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -230,6 +222,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
         policyNumber: data.policyNumber,
         groupNumber: data.groupNumber,
         subscriberName: `${data.firstName} ${data.lastName}`,
+        subscriberId: data.ssn || "",
         relationship: "Self",
         effectiveDate: new Date().toISOString().split('T')[0],
         expirationDate: "",
@@ -244,32 +237,6 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
       };
       setEditedInsurance([newInsurance]);
     }
-  };
-
-  // Run Validity API handlers
-  const handleLoadSampleData = async () => {
-    // Show loading state and open modal
-    setIsLoadingSampleData(true);
-    setVerificationError(null);
-    setCurlCommand(null);
-    setIsModalOpen(true);
-
-    // Simulate API call with 2 second delay to show progress animation
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    // Load sample data and display in modal
-    setCoverageData(sampleCoverageData);
-    setIsLoadingSampleData(false);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    // Reset states after modal closes
-    setTimeout(() => {
-      setVerificationError(null);
-      setCoverageData(null);
-      setCurlCommand(null);
-    }, 300);
   };
 
   const fullName = getFullName();
@@ -320,7 +287,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               className="ml-4 px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm disabled:opacity-50"
             >
               <span className="material-symbols-outlined text-base">verified_user</span>
-              Start Document Analysis AI
+              Pre-Step: Run API Verification
             </button>
               <button
               onClick={() => setShowAICenter(true)}
@@ -1025,137 +992,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             {/* Coverage Details Sub Tab */}
             {insuranceSubTab === INSURANCE_SUB_TAB_TYPES.COVERAGE_DETAILS && (
               <TabContent>
-                {(patient as any).coverage &&
-                (patient as any).coverage.procedures.length > 0 ? (
-                  <>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                      <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
-                          Annual Maximum
-                        </p>
-                        <p className="text-2xl font-semibold text-slate-900 dark:text-white">
-                          $
-                          {(
-                            patient as any
-                          ).coverage.annual_maximum.toLocaleString()}
-                        </p>
-                      </div>
-                      <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
-                          Used This Year
-                        </p>
-                        <p className="text-2xl font-semibold text-slate-900 dark:text-white">
-                          ${(patient as any).coverage.annual_used.toLocaleString()}
-                        </p>
-                      </div>
-                      <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
-                          Remaining Benefit
-                        </p>
-                        <p className="text-2xl font-semibold text-status-green">
-                          $
-                          {(
-                            (patient as any).coverage.annual_maximum -
-                            (patient as any).coverage.annual_used
-                          ).toLocaleString()}
-                        </p>
-                      </div>
-                      <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
-                          Deductible Remaining
-                        </p>
-                        <p className="text-2xl font-semibold text-slate-900 dark:text-white">
-                          $
-                          {(
-                            (patient as any).coverage.deductible -
-                            (patient as any).coverage.deductible_met
-                          ).toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden">
-                      <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
-                        <h3 className="text-sm font-medium text-slate-900 dark:text-white">
-                          Coverage by Procedure
-                        </h3>
-                      </div>
-                      <div className="overflow-x-auto">
-                        <table className="w-full">
-                          <thead className="bg-slate-50 dark:bg-slate-800/50">
-                            <tr>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                                Code
-                              </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                                Procedure
-                              </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                                Category
-                              </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                                Coverage
-                              </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                                Est. Cost
-                              </th>
-                              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">
-                                Patient Pays
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                            {(patient as any).coverage.procedures.map(
-                              (proc: Procedure, index: number) => (
-                                <tr
-                                  key={index}
-                                  className="hover:bg-slate-50 dark:hover:bg-slate-800"
-                                >
-                                  <td className="px-6 py-4 text-sm font-mono font-medium text-slate-900 dark:text-white">
-                                    {proc.code}
-                                  </td>
-                                  <td className="px-6 py-4 text-sm text-slate-900 dark:text-white">
-                                    {proc.name}
-                                  </td>
-                                  <td className="px-6 py-4">
-                                    <span
-                                      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                                        proc.category === "Preventive"
-                                          ? "bg-blue-500/10 text-blue-600 dark:text-blue-500"
-                                          : proc.category === "Basic"
-                                            ? "bg-status-orange/10 text-status-orange"
-                                            : proc.category === "Major"
-                                              ? "bg-status-red/10 text-status-red"
-                                              : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
-                                      }`}
-                                    >
-                                      {proc.category}
-                                    </span>
-                                  </td>
-                                  <td className="px-6 py-4 text-sm font-medium text-status-green">
-                                    {proc.coverage}
-                                  </td>
-                                  <td className="px-6 py-4 text-sm text-slate-900 dark:text-white">
-                                    {proc.estimated_cost}
-                                  </td>
-                                  <td className="px-6 py-4 text-sm font-medium text-status-red">
-                                    {proc.patient_pays}
-                                  </td>
-                                </tr>
-                              )
-                            )}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-12 text-center">
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      No coverage details available
-                    </p>
-                  </div>
-                )}
+                <CoverageByCodeView />
               </TabContent>
             )}
 
@@ -1290,16 +1127,6 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           onClose={() => setShowAICenter(false)}
         />
       )}
-
-      {/* Coverage Verification Modal */}
-      <CoverageModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        data={coverageData}
-        isLoading={isLoadingSampleData}
-        error={verificationError}
-        curlCommand={curlCommand}
-      />
 
       {/* Insurance Card Upload Modal */}
       <InsuranceCardUploadModal
