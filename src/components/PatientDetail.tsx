@@ -17,6 +17,7 @@ import VerificationForm from "./VerificationForm";
 import CoverageModal from "./CoverageModal";
 import InsuranceCardUploadModal, { ScannedData } from "./InsuranceCardUploadModal";
 import CoverageVerificationResults from "./CoverageVerificationResults";
+import SmartAITransactionHistory from "./SmartAITransactionHistory";
 import sampleCoverageData from "../data/sampleCoverageData.json";
 import { PRIMARY_BUTTON } from "../styles/buttonStyles";
 
@@ -319,12 +320,12 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               className="ml-4 px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm disabled:opacity-50"
             >
               <span className="material-symbols-outlined text-base">verified_user</span>
-              Document Analysis AI
+              Start Document Analysis AI
             </button>
               <button
               onClick={() => setShowAICenter(true)}
               disabled={patient.id.startsWith('new-')}
-              className="ml-4 px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm disabled:opacity-50"
+              className="ml-8 px-3 py-1.5 bg-slate-900 dark:bg-slate-800 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-700 flex items-center gap-1.5 text-sm disabled:opacity-50"
             >
               <span className="material-symbols-outlined text-base">smart_toy</span>
               Start Autonomous Voice AI
@@ -1251,77 +1252,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
 
         {/* Tab Content - AI Call History */}
         {activeTab === TAB_TYPES.AI_CALL_HISTORY && (
-          <TabContent className="space-y-4">
-            {(patient as any).aiCallHistory &&
-            (patient as any).aiCallHistory.length > 0 ? (
-              (patient as any).aiCallHistory.map(
-                (call: any, index: number) => (
-                  <div
-                    key={index}
-                    className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="rounded-full bg-slate-100 dark:bg-slate-800 p-3 shrink-0">
-                        <span className="material-symbols-outlined text-slate-600 dark:text-slate-400 text-lg">
-                          smart_toy
-                        </span>
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="font-medium text-slate-900 dark:text-white">
-                            {call.topic || "AI Consultation"}
-                          </p>
-                          <span className="text-xs text-slate-500 dark:text-slate-400">
-                            {call.date} at {call.time}
-                          </span>
-                        </div>
-                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
-                          {call.summary || "AI-assisted consultation"}
-                        </p>
-                        <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
-                          <div>
-                            Duration: {call.duration || "N/A"}
-                          </div>
-                          <div>
-                            Agent: {call.agent || "Smith AI"}
-                          </div>
-                          <span
-                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                              call.status === "completed"
-                                ? "bg-status-green/10 text-status-green"
-                                : call.status === "in_progress"
-                                  ? "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
-                                  : "bg-status-orange/10 text-status-orange"
-                            }`}
-                          >
-                            {call.status?.toUpperCase() || "COMPLETED"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              )
-            ) : (
-              <div className="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-12 text-center">
-                <div className="flex flex-col items-center justify-center gap-4">
-                  <div className="rounded-full bg-slate-100 dark:bg-slate-800 p-8">
-                    <span className="material-symbols-outlined text-slate-400 dark:text-slate-600 text-5xl">
-                      smart_toy
-                    </span>
-                  </div>
-                  <div>
-                    <p className="text-slate-900 dark:text-white font-medium mb-1">
-                      No AI Call History
-                    </p>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
-                      Start a call with Smith AI Center to see call history here
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </TabContent>
+          <SmartAITransactionHistory />
         )}
       </div>
 

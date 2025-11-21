@@ -47,6 +47,16 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onL
           </div>
         </div>
 
+        {/* Navigation Links */}
+        <nav className="hidden md:flex items-center gap-6 ml-8 mr-auto">
+          <a href="/dashboard" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">
+            Dashboard
+          </a>
+          <a href="/smart-ai-transaction-history" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">
+            Smart AI History
+          </a>
+        </nav>
+
         {/* HIPAA Compliance, User Info and Logout */}
         {onLogout ? (
           <div className="flex items-center gap-4">
@@ -56,7 +66,7 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onL
               <div className="flex items-center gap-2 px-3 py-1.5  dark:bg-blue-900/40 rounded-lg cursor-pointer dark:border-blue-800 hover:bg-blue-200 dark:hover:bg-blue-900/60 transition-colors">
                 <span className="material-symbols-outlined text-sm text-blue-600 dark:text-blue-400">verified_user</span>
                 <span className="text-xs font-semibold text-blue-900 dark:text-blue-100 whitespace-nowrap">
-                  HIPAA Compliance 
+                  HIPAA Compliance
                 </span>
               </div>
 
