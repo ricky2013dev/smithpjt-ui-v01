@@ -10,10 +10,9 @@ interface HeaderProps {
   onLogout?: () => void;
   onLoginClick?: () => void;
   showLoginButton?: boolean;
-  showNavigation?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onLoginClick, showNavigation = true }) => {
+const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onLoginClick }) => {
   return (
     <header className="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-700/50 px-6 py-3 shrink-0 sticky top-0 z-50">
       <div className="flex items-center justify-between w-full">
