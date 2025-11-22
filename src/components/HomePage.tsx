@@ -32,7 +32,7 @@ const HomePage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col font-sans selection:bg-orange-100 dark:selection:bg-orange-900/30">
-            <Header onLoginClick={handleLoginClick} showLoginButton={true} />
+            <Header onLoginClick={handleLoginClick} showLoginButton={true} showNavigation={false} />
 
             {/* Desktop Warning Toast */}
             {showDesktopWarning && (

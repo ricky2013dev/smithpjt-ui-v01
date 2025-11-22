@@ -10,9 +10,10 @@ interface HeaderProps {
   onLogout?: () => void;
   onLoginClick?: () => void;
   showLoginButton?: boolean;
+  showNavigation?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onLoginClick }) => {
+const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onLoginClick, showNavigation = true }) => {
   return (
     <header className="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-700/50 px-6 py-3 shrink-0 sticky top-0 z-50">
       <div className="flex items-center justify-between w-full">
@@ -47,15 +48,6 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onL
           </div>
         </div>
 
-        {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-6 ml-8 mr-auto">
-          <a href="/dashboard" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">
-            Dashboard
-          </a>
-          <a href="/smart-ai-transaction-history" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">
-            Smart AI History
-          </a>
-        </nav>
 
         {/* HIPAA Compliance, User Info and Logout */}
         {onLogout ? (
