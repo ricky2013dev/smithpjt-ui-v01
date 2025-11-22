@@ -37,9 +37,31 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
     }
   ]);
   const [currentTypingMessage, setCurrentTypingMessage] = useState<string>('');
+  const [currentSpeaker, setCurrentSpeaker] = useState<'AI Agent' | 'Insurance Rep' | 'System' | null>(null);
   const [verificationData, setVerificationData] = useState<VerificationDataRow[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const callIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const callIntervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [isListening, setIsListening] = useState(false);
+  const isListeningRef = useRef(isListening);
+  const isCallActiveRef = useRef(isCallActive);
+  const [isCallCompleted, setIsCallCompleted] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<'end' | 'close' | null>(null);
+  const [, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [showSummary, setShowSummary] = useState(false);
+  const synth = window.speechSynthesis;
+
+  // Sync refs with state
+  useEffect(() => {
+    isListeningRef.current = isListening;
+    if (!isListening) {
+      synth.cancel();
+    }
+  }, [isListening]);
+
+  useEffect(() => {
+    isCallActiveRef.current = isCallActive;
+  }, [isCallActive]);
 
   // Initialize verification data with missing items
   useEffect(() => {
@@ -56,6 +78,27 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
       { saiCode: "VF000047", refInsCode: "D047", category: "Major Coverage", fieldName: "Major Effective Date", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
     ];
     setVerificationData(initialData);
+
+    // Load voices
+    const loadVoices = () => {
+      const availableVoices = synth.getVoices();
+      setVoices(availableVoices);
+    };
+
+    loadVoices();
+
+    // Chrome loads voices asynchronously
+    if (synth.onvoiceschanged !== undefined) {
+      synth.onvoiceschanged = loadVoices;
+    }
+
+    // Cleanup speech on unmount
+    return () => {
+      synth.cancel();
+      if (synth.onvoiceschanged !== undefined) {
+        synth.onvoiceschanged = null;
+      }
+    };
   }, []);
 
   const scrollToBottom = () => {
@@ -114,9 +157,88 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
     });
   };
 
+  // Cancellable wait helper
+  const wait = (ms: number) => new Promise<void>((resolve, reject) => {
+    if (!isCallActiveRef.current) {
+      reject(new Error('CallEnded'));
+      return;
+    }
+    setTimeout(() => {
+      if (!isCallActiveRef.current) {
+        reject(new Error('CallEnded'));
+      } else {
+        resolve();
+      }
+    }, ms);
+  });
+
+  const speakText = (text: string, speaker: 'AI Agent' | 'Insurance Rep' | 'System'): Promise<void> => {
+    // Use ref to get current listening state inside async/closure
+    if (!isListeningRef.current || speaker === 'System') return Promise.resolve();
+
+    return new Promise((resolve) => {
+      // Cancel any current speech to be safe, though we await previous ones
+      synth.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+
+      // Fetch voices directly to ensure we have the latest loaded voices
+      const currentVoices = synth.getVoices();
+
+      // Try to select better, more human-like voices
+      if (speaker === 'AI Agent') {
+        // Prefer a female voice for AI - "Google US English" is usually good/natural
+        const aiVoice = currentVoices.find(v =>
+          v.name === 'Google US English' ||
+          v.name.includes('Samantha') ||
+          v.name.includes('Natural') ||
+          v.name.includes('Female')
+        );
+        if (aiVoice) utterance.voice = aiVoice;
+        utterance.pitch = 1.0; // Natural pitch
+        utterance.rate = 0.9;  // Slightly slower for clarity
+      } else {
+        // Prefer a male voice for Rep
+        const repVoice = currentVoices.find(v =>
+          v.name === 'Google UK English Male' ||
+          v.name.includes('Daniel') ||
+          v.name.includes('Natural') ||
+          v.name.includes('Male')
+        );
+        if (repVoice) utterance.voice = repVoice;
+        utterance.pitch = 0.95; // Slightly lower pitch
+        utterance.rate = 0.85;  // Slower for the rep
+      }
+
+      utterance.onend = () => {
+        resolve();
+      };
+
+      utterance.onerror = () => {
+        // Resolve anyway to not block the flow
+        resolve();
+      };
+
+      synth.speak(utterance);
+    });
+  };
+
   // Simulate typing effect
   const typeMessage = async (speaker: 'AI Agent' | 'Insurance Rep' | 'System', fullText: string, delay: number = 30) => {
-    return new Promise<void>((resolve) => {
+    if (!isCallActiveRef.current) throw new Error('CallEnded');
+
+    // Set current speaker for visual indicator
+    setCurrentSpeaker(speaker);
+
+    let speechPromise = Promise.resolve();
+
+    // Start speaking when typing starts
+    // Use ref to check current state
+    if (isListeningRef.current && speaker !== 'System') {
+      speechPromise = speakText(fullText, speaker);
+    }
+
+    const typingPromise = new Promise<void>((resolve) => {
       let index = 0;
       const typingInterval = setInterval(() => {
         if (index <= fullText.length) {
@@ -125,6 +247,7 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
         } else {
           clearInterval(typingInterval);
           setCurrentTypingMessage('');
+          setCurrentSpeaker(null);
           setMessages(prev => [...prev, {
             speaker,
             text: fullText,
@@ -134,6 +257,10 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
         }
       }, delay);
     });
+
+    // Wait for BOTH the visual typing and the speech to finish before moving on
+    // This ensures the conversation speed matches the speech speed
+    await Promise.all([speechPromise, typingPromise]);
   };
 
   // Mark field as currently being checked
@@ -175,101 +302,115 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
 
   // Simulate AI conversation
   const simulateAIConversation = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      await wait(1000);
 
-    // Initial connection
-    await typeMessage('System', 'Connecting to Blue Cross Blue Shield...', 40);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    await typeMessage('System', 'Call connected. Starting verification...', 40);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+      // Initial connection
+      await typeMessage('System', 'Connecting to Blue Cross Blue Shield...', 40);
+      await wait(800);
+      await typeMessage('System', 'Call connected. Starting verification...', 40);
+      await wait(1000);
 
-    // Conversation 1 - Prophylaxis frequency
-    await typeMessage('AI Agent', 'Hello, this is Smith AI calling on behalf of our dental practice. I need to verify insurance benefits for a patient.', 25);
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    await typeMessage('Insurance Rep', 'Hello! I can help you with that. Please provide the member ID and date of birth.', 25);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    await typeMessage('AI Agent', 'Member ID is SUB123456789, date of birth is January 15, 1975.', 25);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    await typeMessage('Insurance Rep', 'Thank you. I have the member information pulled up. What benefits would you like to verify?', 25);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    setFieldChecking('VF000028', true);
-    await typeMessage('AI Agent', 'Can you confirm the prophylaxis and exam frequency covered under this plan?', 25);
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    await typeMessage('Insurance Rep', 'Yes, prophylaxis and exams are covered every 6 months under preventative care.', 25);
-    updateVerificationRow('VF000028', 'Every 6 months');
-    await new Promise(resolve => setTimeout(resolve, 1000));
+      // Conversation 1 - Prophylaxis frequency
+      await typeMessage('AI Agent', 'Hello, this is Smith AI calling on behalf of our dental practice. I need to verify insurance benefits for a patient.', 25);
+      await wait(1200);
+      await typeMessage('Insurance Rep', 'Hello! I can help you with that. Please provide the member ID and date of birth.', 25);
+      await wait(800);
+      await typeMessage('AI Agent', 'Member ID is SUB123456789, date of birth is January 15, 1975.', 25);
+      await wait(1500);
+      await typeMessage('Insurance Rep', 'Thank you. I have the member information pulled up. What benefits would you like to verify?', 25);
+      await wait(800);
+      setFieldChecking('VF000028', true);
+      await typeMessage('AI Agent', 'Can you confirm the prophylaxis and exam frequency covered under this plan?', 25);
+      await wait(1200);
+      await typeMessage('Insurance Rep', 'Yes, prophylaxis and exams are covered every 6 months under preventative care.', 25);
+      updateVerificationRow('VF000028', 'Every 6 months');
+      await wait(1000);
 
-    // Conversation 2 - FMS details
-    setFieldChecking('VF000029', true);
-    await typeMessage('AI Agent', 'Great. Can you tell me the date of the last full mouth series of x-rays?', 25);
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    await typeMessage('Insurance Rep', 'Let me check... The last FMS was on March 15, 2023.', 25);
-    updateVerificationRow('VF000029', '03/15/2023');
-    await new Promise(resolve => setTimeout(resolve, 800));
-    setFieldChecking('VF000030', true);
-    await typeMessage('AI Agent', 'Is the patient eligible for a full mouth series now?', 25);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    await typeMessage('Insurance Rep', 'Yes, they are eligible now since it has been over 3 years.', 25);
-    updateVerificationRow('VF000030', 'Yes');
-    await new Promise(resolve => setTimeout(resolve, 700));
-    updateVerificationRow('VF000031', '3');
-    await new Promise(resolve => setTimeout(resolve, 1000));
+      // Conversation 2 - FMS details
+      setFieldChecking('VF000029', true);
+      await typeMessage('AI Agent', 'Great. Can you tell me the date of the last full mouth series of x-rays?', 25);
+      await wait(1200);
+      await typeMessage('Insurance Rep', 'Let me check... The last FMS was on March 15, 2023.', 25);
+      updateVerificationRow('VF000029', '03/15/2023');
+      await wait(800);
+      setFieldChecking('VF000030', true);
+      await typeMessage('AI Agent', 'Is the patient eligible for a full mouth series now?', 25);
+      await wait(1000);
+      await typeMessage('Insurance Rep', 'Yes, they are eligible now since it has been over 3 years.', 25);
+      updateVerificationRow('VF000030', 'Yes');
+      await wait(700);
+      updateVerificationRow('VF000031', '3');
+      await wait(1000);
 
-    // Conversation 3 - Fluoride coverage
-    setFieldChecking('VF000032', true);
-    await typeMessage('AI Agent', 'What about fluoride varnish treatment frequency?', 25);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    await typeMessage('Insurance Rep', 'Fluoride varnish is covered every 6 months for patients under 18 years old.', 25);
-    updateVerificationRow('VF000032', 'Every 6 months (under 18)');
-    await new Promise(resolve => setTimeout(resolve, 1200));
+      // Conversation 3 - Fluoride coverage
+      setFieldChecking('VF000032', true);
+      await typeMessage('AI Agent', 'What about fluoride varnish treatment frequency?', 25);
+      await wait(1000);
+      await typeMessage('Insurance Rep', 'Fluoride varnish is covered every 6 months for patients under 18 years old.', 25);
+      updateVerificationRow('VF000032', 'Every 6 months (under 18)');
+      await wait(1200);
 
-    // Conversation 4 - Basic coverage
-    setFieldChecking('VF000041', true);
-    await typeMessage('AI Agent', 'Can you confirm the basic services coverage percentage?', 25);
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    await typeMessage('Insurance Rep', 'Basic services are covered at 80% after the deductible is met.', 25);
-    updateVerificationRow('VF000041', '80');
-    await new Promise(resolve => setTimeout(resolve, 800));
-    setFieldChecking('VF000042', true);
-    await typeMessage('AI Agent', 'Is there a waiting period for basic services?', 25);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    await typeMessage('Insurance Rep', 'No, there is no waiting period for basic services under this plan.', 25);
-    updateVerificationRow('VF000042', 'No');
-    await new Promise(resolve => setTimeout(resolve, 1200));
+      // Conversation 4 - Basic coverage
+      setFieldChecking('VF000041', true);
+      await typeMessage('AI Agent', 'Can you confirm the basic services coverage percentage?', 25);
+      await wait(1200);
+      await typeMessage('Insurance Rep', 'Basic services are covered at 80% after the deductible is met.', 25);
+      updateVerificationRow('VF000041', '80');
+      await wait(800);
+      setFieldChecking('VF000042', true);
+      await typeMessage('AI Agent', 'Is there a waiting period for basic services?', 25);
+      await wait(1000);
+      await typeMessage('Insurance Rep', 'No, there is no waiting period for basic services under this plan.', 25);
+      updateVerificationRow('VF000042', 'No');
+      await wait(1200);
 
-    // Conversation 5 - Major coverage
-    setFieldChecking('VF000045', true);
-    await typeMessage('AI Agent', 'And what is the coverage percentage for major services?', 25);
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    await typeMessage('Insurance Rep', 'Major services are covered at 50% after the deductible.', 25);
-    updateVerificationRow('VF000045', '50');
-    await new Promise(resolve => setTimeout(resolve, 800));
-    setFieldChecking('VF000046', true);
-    await typeMessage('AI Agent', 'Is there a waiting period for major services?', 25);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    await typeMessage('Insurance Rep', 'Yes, there is a 6-month waiting period for major services.', 25);
-    updateVerificationRow('VF000046', 'Yes');
-    await new Promise(resolve => setTimeout(resolve, 800));
-    setFieldChecking('VF000047', true);
-    await typeMessage('AI Agent', 'When will major services be effective for this patient?', 25);
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    await typeMessage('Insurance Rep', 'Based on the enrollment date, major services will be effective July 1, 2024.', 25);
-    updateVerificationRow('VF000047', '07/01/2024');
-    await new Promise(resolve => setTimeout(resolve, 1200));
+      // Conversation 5 - Major coverage
+      setFieldChecking('VF000045', true);
+      await typeMessage('AI Agent', 'And what is the coverage percentage for major services?', 25);
+      await wait(1200);
+      await typeMessage('Insurance Rep', 'Major services are covered at 50% after the deductible.', 25);
+      updateVerificationRow('VF000045', '50');
+      await wait(800);
+      setFieldChecking('VF000046', true);
+      await typeMessage('AI Agent', 'Is there a waiting period for major services?', 25);
+      await wait(1000);
+      await typeMessage('Insurance Rep', 'Yes, there is a 6-month waiting period for major services.', 25);
+      updateVerificationRow('VF000046', 'Yes');
+      await wait(800);
+      setFieldChecking('VF000047', true);
+      await typeMessage('AI Agent', 'When will major services be effective for this patient?', 25);
+      await wait(1200);
+      await typeMessage('Insurance Rep', 'Based on the enrollment date, major services will be effective July 1, 2024.', 25);
+      updateVerificationRow('VF000047', '07/01/2024');
+      await wait(1200);
 
-    // Closing
-    await typeMessage('AI Agent', 'Perfect. That covers all the information I needed. Thank you for your help!', 25);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    await typeMessage('Insurance Rep', 'You\'re welcome! Is there anything else I can help you with today?', 25);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    await typeMessage('AI Agent', 'No, that\'s everything. Have a great day!', 25);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    await typeMessage('System', 'Call completed successfully. All missing data has been verified and updated.', 40);
+      // Closing
+      await typeMessage('AI Agent', 'Perfect. That covers all the information I needed. Thank you for your help!', 25);
+      await wait(1000);
+      await typeMessage('Insurance Rep', 'You\'re welcome! Is there anything else I can help you with today?', 25);
+      await wait(800);
+      await typeMessage('AI Agent', 'No, that\'s everything. Have a great day!', 25);
+      await wait(1000);
+      await typeMessage('System', 'Call completed successfully. All missing data has been verified and updated.', 40);
+      endCall();
+    } catch (error: any) {
+      if (error.message === 'CallEnded') {
+        console.log('Conversation stopped');
+      } else {
+        console.error(error);
+      }
+    }
   };
 
   const startCall = () => {
     setIsCallActive(true);
+    isCallActiveRef.current = true; // Immediate update for the loop
+    setIsCallCompleted(false);
     setCallDuration(0);
+
+    // Clear the welcome message to save space
+    setMessages([]);
 
     // Start call duration counter
     callIntervalRef.current = setInterval(() => {
@@ -282,10 +423,38 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
 
   const endCall = () => {
     setIsCallActive(false);
-    setCallDuration(0);
+    isCallActiveRef.current = false; // Immediate stop
+    setIsCallCompleted(true);
     if (callIntervalRef.current) {
       clearInterval(callIntervalRef.current);
     }
+    synth.cancel(); // Stop speaking
+  };
+
+  const handleEndCallClick = () => {
+    setConfirmAction('end');
+  };
+
+  const handleCloseClick = () => {
+    if (isCallActive) {
+      setConfirmAction('close');
+    } else {
+      onClose();
+    }
+  };
+
+  const confirmActionHandler = () => {
+    if (confirmAction === 'end') {
+      endCall();
+    } else if (confirmAction === 'close') {
+      endCall();
+      onClose();
+    }
+    setConfirmAction(null);
+  };
+
+  const cancelActionHandler = () => {
+    setConfirmAction(null);
   };
 
   return (
@@ -303,8 +472,154 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
                 <p className="text-slate-500 dark:text-slate-400 text-xs">Interactive Insurance Assistant</p>
               </div>
             </div>
+
+            {/* Call Controls - Moved to Header */}
+            <div className="flex items-center gap-4 mr-4">
+              <div className={`flex items-center gap-3 px-4 py-1.5 rounded-full border ${isCallCompleted
+                ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
+                : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700'
+                }`}>
+                {isCallActive ? (
+                  <>
+                    <div className="w-2 h-2 bg-status-green rounded-full animate-pulse"></div>
+                    <div className="flex flex-col leading-none">
+                      <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Call Active</span>
+                      <span className="text-sm font-mono font-semibold text-slate-900 dark:text-white">{formatDuration(callDuration)}</span>
+                    </div>
+                  </>
+                ) : isCallCompleted ? (
+                  <>
+                    <span className="material-symbols-outlined text-status-green text-lg">check_circle</span>
+                    <div className="flex flex-col leading-none">
+                      <span className="text-[10px] font-medium text-green-600 dark:text-green-400 uppercase tracking-wider">Call Completed</span>
+                      <span className="text-sm font-mono font-semibold text-slate-900 dark:text-white">Total: {formatDuration(callDuration)}</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-2 h-2 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Ready to Connect</span>
+                  </>
+                )}
+
+                {/* Volume Toggle (only show when active or completed) */}
+                {(isCallActive || isCallCompleted) && (
+                  <>
+                    <div className={`w-px h-4 mx-1 ${isCallCompleted ? 'bg-green-200 dark:bg-green-800' : 'bg-slate-300 dark:bg-slate-600'}`}></div>
+                    <button
+                      onClick={() => setIsListening(!isListening)}
+                      className={`p-1 rounded-full transition-colors ${isListening
+                        ? 'text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30'
+                        : 'text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300'
+                        }`}
+                      title={isListening ? "Mute conversation" : "Listen to conversation"}
+                    >
+                      <span className="material-symbols-outlined text-lg">
+                        {isListening ? 'volume_up' : 'volume_off'}
+                      </span>
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Conversation Participants Diagram - In Header */}
+              {(isCallActive || isCallCompleted) && (
+                <div className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700">
+                  {/* Agent AI */}
+                  <div className="flex flex-col items-center gap-0.5">
+                    <div className={`w-7 h-7 rounded-full border-2 bg-white dark:bg-slate-900 flex items-center justify-center transition-all ${
+                      currentSpeaker === 'AI Agent'
+                        ? 'border-blue-500 shadow-lg shadow-blue-500/50'
+                        : 'border-blue-400'
+                    }`}>
+                      <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 text-sm">smart_toy</span>
+                    </div>
+                    <span className="text-[9px] font-semibold text-slate-600 dark:text-slate-400">Agent AI</span>
+                  </div>
+
+                  {/* Signal Waves with Phone Icon - Telecommunication Design */}
+                  <div className="flex items-center gap-1 pb-3">
+                    {/* Left Signal Waves - AI Speaking */}
+                    <div className="flex items-center gap-0.5">
+                      <span className={`w-1 h-3 rounded-full transition-all ${
+                        currentSpeaker === 'AI Agent'
+                          ? 'bg-blue-500 animate-pulse'
+                          : 'bg-slate-200 dark:bg-slate-700'
+                      }`}></span>
+                      <span className={`w-1 h-4 rounded-full transition-all ${
+                        currentSpeaker === 'AI Agent'
+                          ? 'bg-blue-500 animate-pulse'
+                          : 'bg-slate-200 dark:bg-slate-700'
+                      }`}></span>
+                      <span className={`w-1 h-5 rounded-full transition-all ${
+                        currentSpeaker === 'AI Agent'
+                          ? 'bg-blue-500 animate-pulse'
+                          : 'bg-slate-200 dark:bg-slate-700'
+                      }`}></span>
+                    </div>
+
+                    {/* Phone Icon in the middle */}
+                    <span className="material-symbols-outlined text-slate-500 dark:text-slate-400 text-base mx-1">
+                      phone_in_talk
+                    </span>
+
+                    {/* Right Signal Waves - Rep Speaking */}
+                    <div className="flex items-center gap-0.5">
+                      <span className={`w-1 h-5 rounded-full transition-all ${
+                        currentSpeaker === 'Insurance Rep'
+                          ? 'bg-slate-500 animate-pulse'
+                          : 'bg-slate-200 dark:bg-slate-700'
+                      }`}></span>
+                      <span className={`w-1 h-4 rounded-full transition-all ${
+                        currentSpeaker === 'Insurance Rep'
+                          ? 'bg-slate-500 animate-pulse'
+                          : 'bg-slate-200 dark:bg-slate-700'
+                      }`}></span>
+                      <span className={`w-1 h-3 rounded-full transition-all ${
+                        currentSpeaker === 'Insurance Rep'
+                          ? 'bg-slate-500 animate-pulse'
+                          : 'bg-slate-200 dark:bg-slate-700'
+                      }`}></span>
+                    </div>
+                  </div>
+
+                  {/* Insurance Representative */}
+                  <div className="flex flex-col items-center gap-0.5">
+                    <div className={`w-7 h-7 rounded-full border-2 bg-white dark:bg-slate-900 flex items-center justify-center transition-all ${
+                      currentSpeaker === 'Insurance Rep'
+                        ? 'border-slate-500 shadow-lg shadow-slate-500/50'
+                        : 'border-slate-400'
+                    }`}>
+                      <span className="material-symbols-outlined text-slate-600 dark:text-slate-400 text-sm">headset_mic</span>
+                    </div>
+                    <span className="text-[9px] font-semibold text-slate-600 dark:text-slate-400">Insurance</span>
+                  </div>
+                </div>
+              )}
+
+              {!isCallActive && !isCallCompleted && (
+                <button
+                  onClick={startCall}
+                  className="bg-slate-900 dark:bg-white hover:bg-slate-700 dark:hover:bg-slate-100 text-white dark:text-slate-900 px-3 py-1.5 rounded-md flex items-center gap-2 text-sm font-medium transition-colors shadow-sm"
+                >
+                  <span className="material-symbols-outlined text-lg">call</span>
+                  Start Call
+                </button>
+              )}
+
+              {isCallActive && (
+                <button
+                  onClick={handleEndCallClick}
+                  className="bg-status-red hover:bg-status-red/90 text-white px-3 py-1.5 rounded-md flex items-center gap-2 text-sm font-medium transition-colors shadow-sm"
+                >
+                  <span className="material-symbols-outlined text-lg">call_end</span>
+                  End Call
+                </button>
+              )}
+            </div>
+
             <button
-              onClick={onClose}
+              onClick={handleCloseClick}
               className="w-8 h-8 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors text-slate-600 dark:text-slate-400"
             >
               <span className="material-symbols-outlined text-lg">close</span>
@@ -313,20 +628,27 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
         </div>
 
         {/* Patient Info Card */}
-        <div className="bg-slate-50 dark:bg-slate-800 px-6 py-4 border-b border-slate-200 dark:border-slate-700">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center">
-              <span className="material-symbols-outlined text-2xl text-slate-600 dark:text-slate-400">person</span>
-            </div>
-            <div className="flex-1">
-              <h3 className="text-sm font-medium text-slate-900 dark:text-white">{getFullName()}</h3>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-1 mt-1 text-xs text-slate-600 dark:text-slate-400">
-                <div>ID: {patient.id}</div>
-                <div>{calculateAge(patient.birthDate)} years</div>
-                <div>{getPhone()}</div>
-                <div>{getEmail()}</div>
+        <div className="bg-slate-50 dark:bg-slate-800 px-6 py-2.5 border-b border-slate-200 dark:border-slate-700">
+          <div className="flex items-center justify-between gap-6">
+            {/* Patient Info - Single Line */}
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="material-symbols-outlined text-lg text-slate-600 dark:text-slate-400">person</span>
+              </div>
+              <div className="flex items-center gap-4 text-xs text-slate-600 dark:text-slate-400">
+                <span className="font-medium text-slate-900 dark:text-white">{getFullName()}</span>
+                <span className="text-slate-300 dark:text-slate-600">|</span>
+                <span>ID: {patient.id}</span>
+                <span className="text-slate-300 dark:text-slate-600">|</span>
+                <span>{calculateAge(patient.birthDate)} years</span>
+                <span className="text-slate-300 dark:text-slate-600">|</span>
+                <span>{getPhone()}</span>
+                <span className="text-slate-300 dark:text-slate-600">|</span>
+                <span>{getEmail()}</span>
               </div>
             </div>
+
+            {/* Active Status */}
             <div className={`px-3 py-1 rounded-md text-xs font-medium ${patient.active ? 'bg-status-green/10 text-status-green' : 'bg-status-red/10 text-status-red'}`}>
               {patient.active ? 'Active' : 'Inactive'}
             </div>
@@ -337,87 +659,180 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
         <div className="flex-1 flex overflow-hidden">
           {/* Left Panel - AI Chat */}
           <div className="flex-1 flex flex-col border-r border-slate-200 dark:border-slate-700">
-            {/* Call Status */}
-            <div className="p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  {isCallActive ? (
-                    <>
-                      <div className="w-2 h-2 bg-status-green rounded-full animate-pulse"></div>
-                      <div>
-                        <p className="text-sm font-medium text-slate-900 dark:text-white">Call Active</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">{formatDuration(callDuration)}</p>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="w-2 h-2 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
-                      <p className="text-sm font-medium text-slate-900 dark:text-white">Ready to Connect</p>
-                    </>
-                  )}
-                </div>
-                {!isCallActive ? (
-                  <button
-                    onClick={startCall}
-                    className="bg-slate-900 dark:bg-white hover:bg-slate-700 dark:hover:bg-slate-100 text-white dark:text-slate-900 px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-base">call</span>
-                    Start Call
-                  </button>
-                ) : (
-                  <button
-                    onClick={endCall}
-                    className="bg-status-red hover:bg-status-red/90 text-white px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-base">call_end</span>
-                    End Call
-                  </button>
-                )}
+            {/* Tab Buttons - Show when call completed */}
+            {isCallCompleted && (
+              <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+                <button
+                  onClick={() => setShowSummary(false)}
+                  className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                    !showSummary
+                      ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                  }`}
+                >
+                  Conversation
+                </button>
+                <button
+                  onClick={() => setShowSummary(true)}
+                  className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                    showSummary
+                      ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                  }`}
+                >
+                  Show Call Summary
+                </button>
               </div>
-            </div>
+            )}
 
-            {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50 dark:bg-slate-800/50">
-              {messages.map((message, index) => (
-                <div key={index} className="space-y-1">
+            {/* Chat Messages or Summary */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-slate-800/50">
+              {showSummary ? (
+                /* Call Summary View */
+                <div className="space-y-4">
+                  <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-4">
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Call Summary</h3>
+
+                    {/* Call Stats */}
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                        <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Call Duration</div>
+                        <div className="text-2xl font-bold text-slate-900 dark:text-white">{formatDuration(callDuration)}</div>
+                      </div>
+                      <div className="bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                        <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Fields Verified</div>
+                        <div className="text-2xl font-bold text-status-green">{verificationData.filter(r => r.aiCallValue).length}/{verificationData.length}</div>
+                      </div>
+                    </div>
+
+                    {/* Verified Fields List */}
+                    <div>
+                      <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Verified Information</h4>
+                      <div className="space-y-2">
+                        {verificationData.filter(r => r.aiCallValue).map((row, idx) => (
+                          <div key={idx} className="flex items-start justify-between p-2 bg-slate-50 dark:bg-slate-800 rounded-md">
+                            <div className="flex-1">
+                              <div className="text-xs font-medium text-slate-900 dark:text-white">{row.fieldName}</div>
+                              <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{row.saiCode}</div>
+                            </div>
+                            <div className="text-sm font-semibold text-blue-600 dark:text-blue-400 ml-4">{row.aiCallValue}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Conversation Messages */
+                <>
+                  {messages.map((message, index) => (
+                <div key={index} className="flex items-start gap-2">
                   {message.speaker !== 'System' && (
-                    <div className={`text-xs font-semibold ${
-                      message.speaker === 'AI Agent'
-                        ? 'text-blue-600 dark:text-blue-500'
-                        : 'text-slate-700 dark:text-slate-300'
-                    }`}>
-                      {message.speaker}:
+                    <div className="relative flex-shrink-0">
+                      {/* User Icon */}
+                      <div className={`w-9 h-9 rounded-full flex items-center justify-center border-2 ${
+                        message.speaker === 'AI Agent'
+                          ? 'bg-white dark:bg-slate-900 border-blue-500'
+                          : 'bg-white dark:bg-slate-900 border-slate-400'
+                      }`}>
+                        <span className={`material-symbols-outlined text-base ${
+                          message.speaker === 'AI Agent'
+                            ? 'text-blue-600 dark:text-blue-400'
+                            : 'text-slate-600 dark:text-slate-400'
+                        }`}>
+                          {message.speaker === 'AI Agent' ? 'smart_toy' : 'headset_mic'}
+                        </span>
+                      </div>
+                      {/* Phone Icon Badge */}
+                      <div className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 ${
+                        message.speaker === 'AI Agent'
+                          ? 'bg-blue-600 dark:bg-blue-500'
+                          : 'bg-slate-600 dark:bg-slate-500'
+                      }`}>
+                        <span className="material-symbols-outlined text-white text-[9px]">phone</span>
+                      </div>
                     </div>
                   )}
-                  <div className={`${
-                    message.speaker === 'System'
-                      ? 'bg-green-500/10 border border-green-500/20 text-green-700 dark:text-green-400 text-center py-2 px-4 rounded-md text-sm font-medium'
-                      : message.speaker === 'AI Agent'
-                        ? 'text-slate-900 dark:text-slate-100 text-sm'
-                        : 'text-slate-700 dark:text-slate-300 text-sm'
-                  }`}>
-                    {highlightValues(message.text)}
-                  </div>
-                  <div className="text-[10px] text-slate-400 dark:text-slate-500">
-                    {message.time}
+
+                  <div className="flex-1 space-y-1">
+                    {message.speaker === 'System' ? (
+                      <div className="bg-green-500/10 border border-green-500/20 text-green-700 dark:text-green-400 text-center py-2 px-4 rounded-md text-sm font-medium">
+                        {highlightValues(message.text)}
+                      </div>
+                    ) : (
+                      <>
+                        <div className={`text-sm ${
+                          message.speaker === 'AI Agent'
+                            ? 'text-slate-900 dark:text-slate-100'
+                            : 'text-slate-700 dark:text-slate-300'
+                        }`}>
+                          {highlightValues(message.text)}
+                        </div>
+                        <div className="text-[10px] text-slate-400 dark:text-slate-500">
+                          {message.time}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
 
               {/* Typing indicator */}
-              {currentTypingMessage && (
-                <div className="space-y-1">
-                  <div className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    Typing...
+              {currentTypingMessage && currentSpeaker && currentSpeaker !== 'System' && (
+                <div className="flex items-start gap-2">
+                  <div className="relative flex-shrink-0">
+                    {/* Pulsing circle indicator for active speaker */}
+                    <div className={`absolute inset-0 w-12 h-12 -left-1.5 -top-1.5 rounded-full border-2 animate-ping ${
+                      currentSpeaker === 'AI Agent'
+                        ? 'border-blue-500'
+                        : 'border-slate-500'
+                    } opacity-60`}></div>
+
+                    {/* User Icon */}
+                    <div className={`relative z-10 w-9 h-9 rounded-full flex items-center justify-center border-2 ${
+                      currentSpeaker === 'AI Agent'
+                        ? 'bg-white dark:bg-slate-900 border-blue-500'
+                        : 'bg-white dark:bg-slate-900 border-slate-400'
+                    }`}>
+                      <span className={`material-symbols-outlined text-base ${
+                        currentSpeaker === 'AI Agent'
+                          ? 'text-blue-600 dark:text-blue-400'
+                          : 'text-slate-600 dark:text-slate-400'
+                      }`}>
+                        {currentSpeaker === 'AI Agent' ? 'smart_toy' : 'headset_mic'}
+                      </span>
+                    </div>
+
+                    {/* Phone Icon Badge */}
+                    <div className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 ${
+                      currentSpeaker === 'AI Agent'
+                        ? 'bg-blue-600 dark:bg-blue-500'
+                        : 'bg-slate-600 dark:bg-slate-500'
+                    } z-10 animate-pulse`}>
+                      <span className="material-symbols-outlined text-white text-[9px]">phone</span>
+                    </div>
                   </div>
-                  <div className="text-slate-700 dark:text-slate-300 text-sm">
-                    {currentTypingMessage}
-                    <span className="inline-block w-1 h-4 bg-slate-400 dark:bg-slate-500 ml-0.5 animate-pulse"></span>
+
+                  <div className="flex-1">
+                    <div className="text-slate-700 dark:text-slate-300 text-sm">
+                      {currentTypingMessage}
+                      <span className="inline-block w-1 h-4 bg-slate-400 dark:bg-slate-500 ml-0.5 animate-pulse"></span>
+                    </div>
                   </div>
                 </div>
               )}
 
-              <div ref={messagesEndRef} />
+                  {/* System message typing */}
+                  {currentTypingMessage && currentSpeaker === 'System' && (
+                    <div className="bg-green-500/10 border border-green-500/20 text-green-700 dark:text-green-400 text-center py-2 px-4 rounded-md text-sm font-medium">
+                      {currentTypingMessage}
+                      <span className="inline-block w-1 h-4 bg-green-500 ml-0.5 animate-pulse"></span>
+                    </div>
+                  )}
+
+                  <div ref={messagesEndRef} />
+                </>
+              )}
             </div>
           </div>
 
@@ -445,13 +860,12 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
                   {verificationData.map((row, index) => (
                     <tr
                       key={index}
-                      className={`transition-colors ${
-                        row.isUpdating
-                          ? 'bg-green-50 dark:bg-green-900/20'
-                          : row.isChecking
-                            ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500'
-                            : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
-                      }`}
+                      className={`transition-colors ${row.isUpdating
+                        ? 'bg-green-50 dark:bg-green-900/20'
+                        : row.isChecking
+                          ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500'
+                          : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                        }`}
                     >
                       <td className="px-3 py-2 font-mono text-slate-900 dark:text-white">
                         <div className="flex items-center gap-2">
@@ -477,11 +891,10 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
                         )}
                       </td>
                       <td className="px-3 py-2 text-center">
-                        <span className={`text-xs font-semibold ${
-                          row.aiCallValue
-                            ? 'text-status-green'
-                            : 'text-status-red'
-                        }`}>
+                        <span className={`text-xs font-semibold ${row.aiCallValue
+                          ? 'text-status-green'
+                          : 'text-status-red'
+                          }`}>
                           {row.aiCallValue ? 'Yes' : 'No'}
                         </span>
                       </td>
@@ -493,6 +906,41 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
           </div>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      {confirmAction && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-lg shadow-xl max-w-sm w-full p-6 border border-slate-200 dark:border-slate-700 transform scale-100 transition-all">
+            <div className="flex flex-col items-center text-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                <span className="material-symbols-outlined text-red-600 dark:text-red-400 text-2xl">warning</span>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                  {confirmAction === 'end' ? 'End Call?' : 'Close Window?'}
+                </h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                  Are you sure you want to {confirmAction === 'end' ? 'end the current call' : 'close this window'}? The conversation will be stopped.
+                </p>
+              </div>
+              <div className="flex items-center gap-3 w-full mt-2">
+                <button
+                  onClick={cancelActionHandler}
+                  className="flex-1 px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-md text-sm font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmActionHandler}
+                  className="flex-1 px-4 py-2 bg-status-red hover:bg-status-red/90 text-white rounded-md text-sm font-medium transition-colors"
+                >
+                  {confirmAction === 'end' ? 'End Call' : 'Close'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

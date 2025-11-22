@@ -6,7 +6,7 @@ interface CoverageVerificationResultsProps {
   patientName?: string;
 }
 
-type Step = 'step1' | 'step2' | 'step3' | 'idle';
+type Step = 'step1' | 'step2' | 'idle';
 type StepStatus = 'pending' | 'in_progress' | 'completed';
 
 const CoverageVerificationResults: React.FC<CoverageVerificationResultsProps> = ({
@@ -17,17 +17,14 @@ const CoverageVerificationResults: React.FC<CoverageVerificationResultsProps> = 
   const [currentStep, setCurrentStep] = useState<Step>('idle');
   const [step1Status, setStep1Status] = useState<StepStatus>('pending');
   const [step2Status, setStep2Status] = useState<StepStatus>('pending');
-  const [step3Status, setStep3Status] = useState<StepStatus>('pending');
 
   const [step1Text, setStep1Text] = useState("");
   const [step2Text, setStep2Text] = useState("");
-  const [step3Text, setStep3Text] = useState("");
 
   // Refs for auto-scrolling
   const contentRef = useRef<HTMLDivElement>(null);
   const step1Ref = useRef<HTMLDivElement>(null);
   const step2Ref = useRef<HTMLDivElement>(null);
-  const step3Ref = useRef<HTMLDivElement>(null);
 
   // Sample API JSON response
   const apiResponse = JSON.stringify({
@@ -108,94 +105,6 @@ Remaining:              $1,550.00
 Deductible:             $50.00 (Met)
 Plan Renewal:           January 1st`;
 
-  // Document-formatted view
-  const documentFormatted = `
-╔═══════════════════════════════════════════════════════════════════════╗
-║                    INSURANCE COVERAGE VERIFICATION                    ║
-║                        BENEFITS DETERMINATION                         ║
-╚═══════════════════════════════════════════════════════════════════════╝
-
-VERIFICATION DETAILS
-────────────────────────────────────────────────────────────────────────
-Verification ID:       VER-2025-001234
-Date of Verification:  January 21, 2025 at 10:30 AM
-Verified By:           AI Coverage Assistant
-Status:                ✓ VERIFIED & ACTIVE
-
-PATIENT INFORMATION
-────────────────────────────────────────────────────────────────────────
-Name:                  Christopher James Davis
-Date of Birth:         March 15, 1985 (Age 40)
-Member ID:             BCBS123456789
-Relationship:          Subscriber (Self)
-
-INSURANCE CARRIER INFORMATION
-────────────────────────────────────────────────────────────────────────
-Insurance Company:     Blue Cross Blue Shield
-Plan Type:             PPO Premium
-Group Number:          GRP987654
-Policy Status:         ✓ ACTIVE
-Effective Date:        January 1, 2024
-Renewal Date:          January 1, 2026
-
-BENEFIT SUMMARY
-────────────────────────────────────────────────────────────────────────
-Annual Maximum:        $2,000.00
-Amount Used YTD:       $450.00
-Amount Remaining:      $1,550.00
-Deductible Amount:     $50.00 (Individual)
-Deductible Status:     ✓ MET IN FULL
-
-COVERAGE PERCENTAGES
-────────────────────────────────────────────────────────────────────────
-Preventive Care:       100% (No deductible, no waiting period)
-  • Exams, cleanings, X-rays, fluoride, sealants
-  • Frequency: 2 cleanings per calendar year
-  • No age restrictions on fluoride
-
-Basic Restorative:     80% (After deductible, no waiting period)
-  • Fillings (amalgam & composite)
-  • Simple extractions
-  • Emergency palliative treatment
-
-Major Services:        50% (After deductible, 12-month waiting period)
-  • Crowns, bridges, dentures
-  • ⚠ Waiting period applicable for new enrollees
-  • ⚠ Replacement limitation: Once every 5 years
-
-Periodontal Care:      80% (After deductible)
-  • Scaling & root planing: Once per 24 months
-  • Periodontal maintenance: Up to 4 times per year
-
-EXCLUSIONS & LIMITATIONS
-────────────────────────────────────────────────────────────────────────
-✗ Implants:            Not covered under this plan
-✗ Orthodontics:        Not covered under this plan
-✗ Cosmetic Services:   Not covered (whitening, veneers)
-⚠ Missing Tooth:       Prior extractions may not be covered
-
-SPECIAL NOTES
-────────────────────────────────────────────────────────────────────────
-• Pre-authorization required for treatments exceeding $500
-• Out-of-network coverage available at reduced benefit (60% of UCR)
-• Coordination of benefits applies if secondary insurance exists
-• Plan renews annually on January 1st
-
-RECOMMENDATIONS
-────────────────────────────────────────────────────────────────────────
-✓ Patient is eligible for preventive care with no out-of-pocket cost
-✓ Basic restorative work will have 20% patient responsibility
-⚠ Major work requires pre-authorization and has 50% patient cost
-⚠ Consider timing for major services to maximize annual benefit
-
-────────────────────────────────────────────────────────────────────────
-This verification is valid as of the date shown above. Benefits are
-subject to change. Please verify eligibility prior to each appointment.
-
-For questions, contact BCBS Member Services: 1-800-XXX-XXXX
-────────────────────────────────────────────────────────────────────────
-`;
-
   // Auto-scroll to active step
   const scrollToStep = (stepRef: React.RefObject<HTMLDivElement>) => {
     if (stepRef.current && contentRef.current) {
@@ -219,10 +128,8 @@ For questions, contact BCBS Member Services: 1-800-XXX-XXXX
       scrollToStep(step1Ref);
     } else if (currentStep === 'step2' && step2Status === 'in_progress') {
       scrollToStep(step2Ref);
-    } else if (currentStep === 'step3' && step3Status === 'in_progress') {
-      scrollToStep(step3Ref);
     }
-  }, [currentStep, step1Status, step2Status, step3Status]);
+  }, [currentStep, step1Status, step2Status]);
 
   // Auto-scroll during typing to keep cursor visible
   useEffect(() => {
@@ -236,12 +143,6 @@ For questions, contact BCBS Member Services: 1-800-XXX-XXXX
       contentRef.current.scrollTop = contentRef.current.scrollHeight;
     }
   }, [step2Text]);
-
-  useEffect(() => {
-    if (step3Status === 'in_progress' && contentRef.current) {
-      contentRef.current.scrollTop = contentRef.current.scrollHeight;
-    }
-  }, [step3Text]);
 
   // Typing animation effect
   const typeText = (
@@ -290,25 +191,14 @@ For questions, contact BCBS Member Services: 1-800-XXX-XXXX
     await typeText(codeLevelData, setStep2Text, 3);
     await new Promise(resolve => setTimeout(resolve, 500));
     setStep2Status('completed');
-
-    // Step 3: Convert to document format
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setCurrentStep('step3');
-    setStep3Status('in_progress');
-    await new Promise(resolve => setTimeout(resolve, 800));
-    await typeText(documentFormatted, setStep3Text, 2);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    setStep3Status('completed');
   };
 
   const resetModal = () => {
     setCurrentStep('idle');
     setStep1Status('pending');
     setStep2Status('pending');
-    setStep3Status('pending');
     setStep1Text("");
     setStep2Text("");
-    setStep3Text("");
   };
 
   const handleClose = () => {
@@ -346,7 +236,7 @@ For questions, contact BCBS Member Services: 1-800-XXX-XXXX
 
         {/* Progress Steps */}
         <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-          <div className="flex items-center justify-between max-w-3xl mx-auto">
+          <div className="flex items-center justify-center max-w-2xl mx-auto">
             {/* Step 1 */}
             <div className="flex items-center gap-2 flex-1">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
@@ -382,27 +272,6 @@ For questions, contact BCBS Member Services: 1-800-XXX-XXXX
               <div className="text-sm">
                 <div className="font-medium text-slate-900 dark:text-white">Code Analysis</div>
                 <div className="text-xs text-slate-500 dark:text-slate-400">Coverage Codes</div>
-              </div>
-            </div>
-
-            <div className={`h-0.5 flex-1 mx-2 ${
-              step2Status === 'completed' ? 'bg-green-500' : 'bg-slate-300 dark:bg-slate-600'
-            }`}></div>
-
-            {/* Step 3 */}
-            <div className="flex items-center gap-2 flex-1">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
-                step3Status === 'completed'
-                  ? 'bg-green-500 text-white'
-                  : step3Status === 'in_progress'
-                  ? 'bg-blue-500 text-white animate-pulse'
-                  : 'bg-slate-300 dark:bg-slate-600 text-slate-600 dark:text-slate-400'
-              }`}>
-                {step3Status === 'completed' ? '✓' : '3'}
-              </div>
-              <div className="text-sm">
-                <div className="font-medium text-slate-900 dark:text-white">Document</div>
-                <div className="text-xs text-slate-500 dark:text-slate-400">Formatted Report</div>
               </div>
             </div>
           </div>
@@ -478,42 +347,8 @@ For questions, contact BCBS Member Services: 1-800-XXX-XXXX
             </div>
           )}
 
-          {/* Step 3: Document Format */}
-          {(currentStep === 'step3' || step3Status === 'completed') && (
-            <div ref={step3Ref} className="mb-6">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-amber-600 dark:text-amber-400">
-                    description
-                  </span>
-                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                    Step 3: Formatted Document
-                  </h3>
-                </div>
-                {step3Status === 'completed' && (
-                  <span className="flex items-center gap-1 text-sm font-medium text-green-600 dark:text-green-400">
-                    <span className="material-symbols-outlined text-base">check_circle</span>
-                    Completed
-                  </span>
-                )}
-                {step3Status === 'in_progress' && (
-                  <span className="flex items-center gap-1 text-sm font-medium text-blue-600 dark:text-blue-400">
-                    <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>
-                    Formatting...
-                  </span>
-                )}
-              </div>
-              <div className="bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-lg p-6 font-mono text-xs overflow-x-auto shadow-inner">
-                <pre className="text-slate-800 dark:text-slate-200 whitespace-pre leading-relaxed">{step3Text}</pre>
-                {step3Status === 'in_progress' && (
-                  <span className="inline-block w-2 h-4 bg-slate-800 dark:bg-slate-200 animate-pulse ml-1"></span>
-                )}
-              </div>
-            </div>
-          )}
-
           {/* All Steps Completed Message */}
-          {step3Status === 'completed' && (
+          {step2Status === 'completed' && (
             <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 flex items-center gap-3">
               <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-3xl">
                 task_alt
@@ -532,7 +367,7 @@ For questions, contact BCBS Member Services: 1-800-XXX-XXXX
 
         {/* Footer */}
         <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200 dark:border-slate-800">
-          {step3Status === 'completed' && (
+          {step2Status === 'completed' && (
             <>
               <button
                 onClick={resetModal}
@@ -548,7 +383,7 @@ For questions, contact BCBS Member Services: 1-800-XXX-XXXX
               </button>
             </>
           )}
-          {step3Status !== 'completed' && (
+          {step2Status !== 'completed' && (
             <button
               onClick={handleClose}
               className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
