@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { VERIFICATION_STATUS_LABELS } from '../constants/verificationStatus';
 
 interface Transaction {
   id: string;
@@ -31,6 +32,32 @@ interface Transaction {
 }
 
 const mockData: Transaction[] = [
+  {
+    id: '5',
+    requestId: 'REQ-2025-11-26-0912',
+    type: 'API',
+    method: 'GET /api/pms/patient/basic-data',
+    startTime: '2025-11-26 09:12:33',
+    endTime: '2025-11-26 09:12:38',
+    duration: '5s',
+    status: 'SUCCESS',
+    patientId: 'P001',
+    patientName: 'Sarah Johnson',
+    insuranceProvider: 'System',
+    insuranceRep: 'PMS API',
+    runBy: 'Dr. Smith',
+    dataVerified: ['Demographics', 'Contact Info', 'Insurance Details', 'Medical History'],
+    verificationScore: 100,
+    responseCode: '200',
+    endpoint: 'https://pms.smithdental.com/api/v2/patient',
+    details: {
+      eligibilityCheck: 'Patient demographics successfully retrieved from PMS database',
+      benefitsVerification: 'Insurance information synchronized: Aetna Dental PPO - Policy #AET-789456',
+      coverageDetails: 'Contact details updated: Phone (555) 123-4567, Email sarah.j@email.com',
+      deductibleInfo: 'Medical history flags: None. Last visit: 08/15/2025. Next scheduled: 11/30/2025',
+      rawResponse: '{"patient_id":"P001","name":{"first":"Sarah","middle":"Marie","last":"Johnson"},"dob":"1985-03-12","gender":"Female","contact":{"phone":"555-123-4567","email":"sarah.j@email.com","address":"123 Main St, City, ST 12345"},"insurance":{"primary":{"provider":"Aetna Dental PPO","policy_number":"AET-789456","group_number":"GRP-001","subscriber":"Self","effective_date":"2025-01-01"}},"medical_history":{"allergies":[],"medications":[],"conditions":[]},"last_visit":"2025-08-15","next_appointment":"2025-11-30","status":"active"}'
+    }
+  },
   {
     id: '3',
     requestId: 'REQ-2025-11-21-0755',
@@ -493,7 +520,7 @@ const SmartAITransactionHistory: React.FC = () => {
                       <div className="space-y-3 text-sm">
                         {transaction.details.eligibilityCheck && (
                           <div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Eligibility Check</div>
+                            <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">{VERIFICATION_STATUS_LABELS.ELIGIBILITY_CHECK}</div>
                             <div className="text-sm text-slate-700 dark:text-slate-300">{transaction.details.eligibilityCheck}</div>
                           </div>
                         )}

@@ -174,6 +174,18 @@ Plan Renewal:           January 1st`;
     }
   }, [isOpen]);
 
+  // Auto-close modal 3 seconds after verification completes
+  useEffect(() => {
+    if (step2Status === 'completed') {
+      const timer = setTimeout(() => {
+        onClose();
+        resetModal();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [step2Status, onClose]);
+
   const startVerification = async () => {
     // Step 1: Get API Result
     setCurrentStep('step1');

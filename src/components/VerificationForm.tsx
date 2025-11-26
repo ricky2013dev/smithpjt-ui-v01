@@ -230,7 +230,7 @@ const VerificationForm: React.FC<VerificationFormProps> = ({ patient }) => {
     return `${given} ${patient.name.family}`.trim();
   };
 
-  const maskSSN = (ssn: string) => {
+  const maskSSN = (_ssn: string) => {
     // Hide all digits
     return '***-**-****';
   };

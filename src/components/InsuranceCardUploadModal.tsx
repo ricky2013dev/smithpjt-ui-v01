@@ -27,7 +27,7 @@ const InsuranceCardUploadModal: React.FC<InsuranceCardUploadModalProps> = ({
   onClose,
   onDataScanned,
 }) => {
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [_uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);

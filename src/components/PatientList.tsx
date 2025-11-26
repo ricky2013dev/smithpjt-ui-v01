@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Patient, FilterType } from '../types/patient';
+import { VERIFICATION_STATUS_LABELS } from '../constants/verificationStatus';
+
+type SortField = 'name' | 'appointment' | 'type' | 'status';
+type SortDirection = 'asc' | 'desc';
 
 interface PatientListProps {
   patients: Patient[];
@@ -24,11 +28,23 @@ const PatientList: React.FC<PatientListProps> = ({
   onAddFilter,
   isAdmin = false,
 }) => {
+  const [sortField, setSortField] = useState<SortField>('appointment');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+
   const toggleFilter = (filter: FilterType) => {
     if (activeFilters.includes(filter)) {
       onRemoveFilter(filter);
     } else {
       onAddFilter(filter);
+    }
+  };
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
     }
   };
 
@@ -45,41 +61,153 @@ const PatientList: React.FC<PatientListProps> = ({
 
   const getVerificationStatus = (patient: Patient) => {
     if (!patient.verificationStatus) {
-      return { text: 'Not Started', color: 'text-slate-400', step: 0, percentage: 0 };
+      return { text: VERIFICATION_STATUS_LABELS.NOT_STARTED, color: 'text-slate-400', step: 0, percentage: 0 };
     }
 
     const { eligibilityCheck, benefitsVerification, aiCallVerification, sendToPMS } = patient.verificationStatus;
 
     if (sendToPMS === 'completed') {
-      return { text: 'Verified', color: 'text-status-green', step: 4, percentage: 100 };
+      return { text: VERIFICATION_STATUS_LABELS.VERIFIED, color: 'text-status-green', step: 4, percentage: 100 };
     }
     if (sendToPMS === 'in_progress') {
-      return { text: 'Sending to PMS', color: 'text-primary', step: 4, percentage: 87 };
+      return { text: VERIFICATION_STATUS_LABELS.SENDING_TO_PMS, color: 'text-primary', step: 4, percentage: 87 };
     }
     if (aiCallVerification === 'completed') {
-      return { text: 'PMS Pending', color: 'text-status-orange', step: 4, percentage: 75 };
+      return { text: VERIFICATION_STATUS_LABELS.PMS_PENDING, color: 'text-status-orange', step: 4, percentage: 75 };
     }
     if (aiCallVerification === 'in_progress') {
-      return { text: 'AI Call Verification', color: 'text-primary', step: 3, percentage: 62 };
+      return { text: VERIFICATION_STATUS_LABELS.AI_CALL_VERIFICATION, color: 'text-primary', step: 3, percentage: 62 };
     }
     if (benefitsVerification === 'completed') {
-      return { text: 'AI Call Pending', color: 'text-status-orange', step: 3, percentage: 50 };
+      return { text: VERIFICATION_STATUS_LABELS.AI_CALL_PENDING, color: 'text-status-orange', step: 3, percentage: 50 };
     }
     if (benefitsVerification === 'in_progress') {
-      return { text: 'Benefits Check', color: 'text-primary', step: 2, percentage: 37 };
+      return { text: VERIFICATION_STATUS_LABELS.BENEFITS_CHECK, color: 'text-primary', step: 2, percentage: 37 };
     }
     if (eligibilityCheck === 'completed') {
-      return { text: 'Benefits Pending', color: 'text-status-orange', step: 2, percentage: 25 };
+      return { text: VERIFICATION_STATUS_LABELS.BENEFITS_PENDING, color: 'text-status-orange', step: 2, percentage: 25 };
     }
     if (eligibilityCheck === 'in_progress') {
-      return { text: 'Eligibility Check', color: 'text-primary', step: 1, percentage: 12 };
+      return { text: VERIFICATION_STATUS_LABELS.ELIGIBILITY_CHECK, color: 'text-primary', step: 1, percentage: 12 };
     }
 
-    return { text: 'Not Started', color: 'text-slate-400', step: 0, percentage: 0 };
+    return { text: VERIFICATION_STATUS_LABELS.NOT_STARTED, color: 'text-slate-400', step: 0, percentage: 0 };
   };
 
+  const getNextAppointment = (patient: Patient) => {
+    if (!patient.appointments || patient.appointments.length === 0) {
+      return null;
+    }
+
+    const now = new Date();
+    const upcomingAppointments = patient.appointments
+      .filter(apt => {
+        const aptDate = new Date(apt.date);
+        return aptDate >= now && apt.status === 'scheduled';
+      })
+      .sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return dateA.getTime() - dateB.getTime();
+      });
+
+    return upcomingAppointments.length > 0 ? upcomingAppointments[0] : null;
+  };
+
+  const formatAppointmentDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const isToday = date.toDateString() === today.toDateString();
+    const isTomorrow = date.toDateString() === tomorrow.toDateString();
+
+    if (isToday) return 'Today';
+    if (isTomorrow) return 'Tomorrow';
+
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  const getVerificationStatusLabel = (patient: Patient) => {
+    if (!patient.verificationStatus) {
+      return { label: VERIFICATION_STATUS_LABELS.NOT_STARTED, color: 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400' };
+    }
+
+    const { eligibilityCheck, benefitsVerification, aiCallVerification, sendToPMS } = patient.verificationStatus;
+
+    if (sendToPMS === 'completed') {
+      return { label: VERIFICATION_STATUS_LABELS.VERIFIED, color: 'bg-status-green/10 text-status-green' };
+    }
+    if (
+      eligibilityCheck === 'in_progress' ||
+      benefitsVerification === 'in_progress' ||
+      aiCallVerification === 'in_progress' ||
+      sendToPMS === 'in_progress'
+    ) {
+      return { label: VERIFICATION_STATUS_LABELS.IN_PROGRESS, color: 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400' };
+    }
+    if (
+      eligibilityCheck === 'completed' ||
+      benefitsVerification === 'completed' ||
+      aiCallVerification === 'completed'
+    ) {
+      return { label: VERIFICATION_STATUS_LABELS.PENDING, color: 'bg-status-orange/10 text-status-orange' };
+    }
+    return { label: VERIFICATION_STATUS_LABELS.NOT_STARTED, color: 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400' };
+  };
+
+  // Sort patients based on selected field and direction
+  const sortedPatients = useMemo(() => {
+    const sorted = [...patients].sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortField) {
+        case 'name':
+          comparison = getFullName(a).localeCompare(getFullName(b));
+          break;
+
+        case 'appointment': {
+          const aptA = getNextAppointment(a);
+          const aptB = getNextAppointment(b);
+
+          // Patients without appointments go to the end
+          if (!aptA && !aptB) comparison = 0;
+          else if (!aptA) comparison = 1;
+          else if (!aptB) comparison = -1;
+          else {
+            const dateA = new Date(aptA.date + ' ' + aptA.time);
+            const dateB = new Date(aptB.date + ' ' + aptB.time);
+            comparison = dateA.getTime() - dateB.getTime();
+          }
+          break;
+        }
+
+        case 'type': {
+          const aptA = getNextAppointment(a);
+          const aptB = getNextAppointment(b);
+          const typeA = aptA?.type || '';
+          const typeB = aptB?.type || '';
+          comparison = typeA.localeCompare(typeB);
+          break;
+        }
+
+        case 'status': {
+          const statusA = getVerificationStatusLabel(a).label;
+          const statusB = getVerificationStatusLabel(b).label;
+          comparison = statusA.localeCompare(statusB);
+          break;
+        }
+      }
+
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+
+    return sorted;
+  }, [patients, sortField, sortDirection]);
+
   return (
-    <aside className="flex w-full flex-col border-r border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 lg:w-[15%] lg:shrink-0">
+    <aside className="flex w-full flex-col border-r border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 lg:w-[20%] lg:shrink-0">
       {/* Search and Filters */}
       <div className="p-4 border-b border-slate-200 dark:border-slate-700">
         <label className="flex flex-col min-w-40 h-10 w-full">
@@ -150,32 +278,76 @@ const PatientList: React.FC<PatientListProps> = ({
       </div>
 
       {/* Column Headers */}
-      <div className="px-4 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
-        <div className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
-          Patients
+      <div className="px-2 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => handleSort('appointment')}
+            className="w-20 flex items-center gap-1 text-[10px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide hover:text-slate-900 dark:hover:text-white transition-colors text-left"
+          >
+            Date/Time
+            {sortField === 'appointment' && (
+              <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
+                {sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward'}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => handleSort('name')}
+            className="flex-1 flex items-center gap-1 text-[10px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide hover:text-slate-900 dark:hover:text-white transition-colors text-left pl-9"
+          >
+            Patient
+            {sortField === 'name' && (
+              <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
+                {sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward'}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => handleSort('type')}
+            className="w-16 flex items-center gap-1 text-[10px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide hover:text-slate-900 dark:hover:text-white transition-colors text-left"
+          >
+            Type
+            {sortField === 'type' && (
+              <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
+                {sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward'}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => handleSort('status')}
+            className="w-16 flex items-center gap-1 text-[10px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide hover:text-slate-900 dark:hover:text-white transition-colors text-left"
+          >
+            Status
+            {sortField === 'status' && (
+              <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
+                {sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward'}
+              </span>
+            )}
+          </button>
         </div>
       </div>
 
       {/* Patient List */}
       <div className="flex-1 overflow-y-auto">
-        {patients.map((patient) => {
+        {sortedPatients.map((patient) => {
           const fullName = getFullName(patient);
           const verificationStatus = getVerificationStatus(patient);
           const isSelected = selectedPatientId === patient.id;
+          const nextAppointment = getNextAppointment(patient);
 
           return (
             <div
               key={patient.id}
               onClick={() => onSelectPatient(patient.id)}
-              className={`cursor-pointer px-3 py-3 border-b border-slate-100 dark:border-slate-800 ${
+              className={`cursor-pointer px-2 py-2.5 border-b border-slate-100 dark:border-slate-800 ${
                 isSelected
                   ? 'bg-slate-100 dark:bg-slate-800 border-l-2 border-l-slate-900 dark:border-l-white'
                   : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
               }`}
             >
-              {/* Patient Info */}
-              <div className="flex items-center gap-2">
-                {/* Checkbox indicator */}
+              {/* Multi-Column Layout */}
+              <div className="flex items-center gap-1">
+                {/* Checkbox - Always First */}
                 <div className={`flex items-center justify-center shrink-0 w-3 h-3 rounded border transition-all ${
                   isSelected
                     ? 'bg-slate-900 border-slate-900 dark:bg-white dark:border-white'
@@ -186,42 +358,84 @@ const PatientList: React.FC<PatientListProps> = ({
                   )}
                 </div>
 
-                <div className={`rounded-full h-8 w-8 flex items-center justify-center shrink-0 ${
-                  verificationStatus.percentage === 100
-                    ? 'bg-status-green/20'
-                    : verificationStatus.percentage >= 50
-                      ? 'bg-status-orange/20'
-                      : 'bg-slate-100 dark:bg-slate-800'
-                }`}>
-                  <span className={`text-xs font-medium ${
-                    verificationStatus.percentage === 100
-                      ? 'text-status-green'
-                      : verificationStatus.percentage >= 50
-                        ? 'text-status-orange'
-                        : 'text-slate-700 dark:text-slate-300'
-                  }`}>
-                    {getInitials(patient)}
-                  </span>
+                {/* Column 1: Next Appointment Date/Time */}
+                <div className="w-20 shrink-0">
+                  {nextAppointment ? (
+                    <div>
+                      <div className="text-[10px] font-medium text-slate-900 dark:text-white">
+                        {formatAppointmentDate(nextAppointment.date)}
+                      </div>
+                      <div className="text-[9px] text-slate-500 dark:text-slate-400">
+                        {nextAppointment.time}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-[9px] text-slate-400 dark:text-slate-600">
+                      No appt
+                    </div>
+                  )}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-slate-900 dark:text-white text-xs font-medium truncate mb-1">
-                    {fullName}
-                  </p>
-                  {/* Verification Progress Bar */}
-                  <div className="flex items-center gap-2">
-                    <div className="flex-1 h-1 bg-slate-200 dark:bg-slate-700">
+
+                {/* Column 2: Patient Info */}
+                <div className="flex-1 flex items-center gap-1.5 min-w-0">
+                  <div className={`rounded-full h-7 w-7 flex items-center justify-center shrink-0 ${
+                    verificationStatus.percentage === 100
+                      ? 'bg-status-green/20'
+                      : verificationStatus.percentage >= 50
+                        ? 'bg-status-orange/20'
+                        : 'bg-slate-100 dark:bg-slate-800'
+                  }`}>
+                    <span className={`text-[10px] font-medium ${
+                      verificationStatus.percentage === 100
+                        ? 'text-status-green'
+                        : verificationStatus.percentage >= 50
+                          ? 'text-status-orange'
+                          : 'text-slate-700 dark:text-slate-300'
+                    }`}>
+                      {getInitials(patient)}
+                    </span>
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <p className="text-slate-900 dark:text-white text-[11px] font-medium truncate">
+                      {fullName}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Column 3: Appointment Type */}
+                <div className="w-16 shrink-0">
+                  {nextAppointment ? (
+                    <div className="text-[9px] text-slate-600 dark:text-slate-400 truncate" title={nextAppointment.type}>
+                      {nextAppointment.type}
+                    </div>
+                  ) : (
+                    <div className="text-[9px] text-slate-400 dark:text-slate-600">
+                      -
+                    </div>
+                  )}
+                </div>
+
+                {/* Column 4: Verification Status */}
+                <div className="w-16 shrink-0">
+                  <div className="flex flex-col gap-1">
+                    {/* Percentage */}
+                    <div className={`text-[9px] font-semibold text-center ${verificationStatus.color}`}>
+                      {verificationStatus.percentage}%
+                    </div>
+                    {/* Progress Bar */}
+                    <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
                       <div
-                        className={`h-1 transition-all ${
-                          verificationStatus.percentage > 0
-                            ? 'bg-slate-400 dark:bg-slate-500'
+                        className={`h-1.5 rounded-full transition-all ${
+                          verificationStatus.percentage === 100
+                            ? 'bg-status-green'
+                            : verificationStatus.percentage > 0
+                            ? 'bg-blue-500'
                             : 'bg-slate-300 dark:bg-slate-600'
                         }`}
                         style={{ width: `${verificationStatus.percentage}%` }}
                       />
                     </div>
-                    <span className="text-[10px] font-semibold text-slate-900 dark:text-white shrink-0">
-                      {verificationStatus.percentage}%
-                    </span>
                   </div>
                 </div>
               </div>

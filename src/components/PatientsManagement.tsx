@@ -211,7 +211,7 @@ const PatientsManagement: React.FC = () => {
       <main className="flex flex-1 overflow-hidden">
         {viewMode === 'dashboard' ? (
           <Dashboard patients={patients} onItemClick={handleDashboardItemClick} />
-        ) : (
+        ) : selectedPatient ? (
           <div className="flex w-full">
             <PatientList
               patients={filteredPatients}
@@ -225,22 +225,22 @@ const PatientsManagement: React.FC = () => {
               isAdmin={isAdmin}
             />
 
-            {selectedPatient ? (
-              <PatientDetail
-                patient={selectedPatient}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-                isAdmin={isAdmin}
-                onCancel={selectedPatient.id.startsWith('new-') ? handleCancelNewPatient : undefined}
-              />
-            ) : (
-              <PatientGuide
-                totalPatients={patients.length}
-                verificationStats={verificationStats}
-                onAddNewPatient={handleAddNewPatient}
-              />
-            )}
+            <PatientDetail
+              patient={selectedPatient}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              isAdmin={isAdmin}
+              onCancel={selectedPatient.id.startsWith('new-') ? handleCancelNewPatient : undefined}
+            />
           </div>
+        ) : (
+          <PatientGuide
+            totalPatients={patients.length}
+            verificationStats={verificationStats}
+            onAddNewPatient={handleAddNewPatient}
+            patients={patients}
+            onSelectPatient={setSelectedPatientId}
+          />
         )}
       </main>
     </div>

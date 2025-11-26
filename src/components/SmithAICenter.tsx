@@ -600,7 +600,7 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
               {!isCallActive && !isCallCompleted && (
                 <button
                   onClick={startCall}
-                  className="bg-slate-900 dark:bg-white hover:bg-slate-700 dark:hover:bg-slate-100 text-white dark:text-slate-900 px-3 py-1.5 rounded-md flex items-center gap-2 text-sm font-medium transition-colors shadow-sm"
+                  className="bg-slate-900 dark:bg-white hover:bg-slate-700 dark:hover:bg-slate-100 text-white dark:text-slate-900 px-3 py-1.5 rounded-md flex items-center gap-2 text-sm font-medium transition-colors shadow-sm relative animate-pulse ring-2 ring-slate-900 dark:ring-white ring-offset-2 ring-offset-slate-50 dark:ring-offset-slate-900"
                 >
                   <span className="material-symbols-outlined text-lg">call</span>
                   Start Call
