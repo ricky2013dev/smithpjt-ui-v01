@@ -604,7 +604,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             {canSendToPMS() && (
               <button
                 onClick={handleSendToPMS}
-                className="px-4 py-2 rounded-md border-2 flex items-center gap-2 text-xs font-medium transition-all border-orange-600 dark:border-orange-500 bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900/30"
+                className="px-4 py-2 rounded-md flex items-center gap-2 text-xs font-medium transition-all bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 shadow-sm"
                 title="Approve and send verified data to PMS"
               >
                 <span className="material-symbols-outlined text-base">approval</span>
@@ -1490,7 +1490,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                   disabled={!loginPassword || !hipaaAgreement || isLoggingIn}
                   className={`flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
                     loginPassword && hipaaAgreement && !isLoggingIn
-                      ? 'bg-orange-600 hover:bg-orange-700 text-white'
+                      ? 'bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900'
                       : 'bg-slate-300 dark:bg-slate-700 text-slate-500 cursor-not-allowed'
                   }`}
                 >

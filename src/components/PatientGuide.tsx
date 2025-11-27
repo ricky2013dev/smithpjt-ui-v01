@@ -395,16 +395,16 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
 
   return (
     <section className="flex flex-1 flex-col bg-slate-50 dark:bg-slate-950 w-full overflow-y-auto font-sans">
-      <div className="p-8 max-w-[1600px] mx-auto w-full space-y-8">
+      <div className="p-6 max-w-[1600px] mx-auto w-full space-y-6">
 
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-              Patient Verification Status and Appointments
+              Insurance Verification Dashboard
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Overview of patient verification status and appointments.
+              Select a patient from the list to initiate the insurance verification process.
             </p>
           </div>
           <button
@@ -412,12 +412,12 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
             className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg hover:bg-slate-800 dark:hover:bg-slate-100 flex items-center gap-2 text-sm font-medium shadow-sm transition-colors"
           >
             <span className="material-symbols-outlined text-lg">sync</span>
-            Pull Patient Appointment Data from PMS
+            Pull Up The Latest Upcoming Appointments 
           </button>
         </div>
 
         {/* Top Section: Chart + Stats Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-auto lg:h-[400px]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-auto lg:h-[330px]">
 
           {/* Column 1: Verification Status Chart */}
           <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
@@ -495,6 +495,7 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
                   <tr>
                     <th className="px-6 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Date</th>
                     <th className="px-6 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Patient</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Type</th>
                     <th className="px-6 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
                   </tr>
                 </thead>
@@ -510,7 +511,12 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
                           </td>
                           <td className="px-6 py-4">
                             <div className="text-sm font-medium text-slate-900 dark:text-white">{getPatientName(item.patient)}</div>
-                            <div className="text-xs text-slate-500">{item.appointment.type}</div>
+                            <div className="text-xs text-slate-500">Dr. {item.appointment.provider}</div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                              {item.appointment.type}
+                            </span>
                           </td>
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-2">
@@ -525,7 +531,7 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
                     })
                   ) : (
                     <tr>
-                      <td colSpan={3} className="px-6 py-12 text-center text-slate-500">No upcoming appointments found</td>
+                      <td colSpan={4} className="px-6 py-12 text-center text-slate-500">No upcoming appointments found</td>
                     </tr>
                   )}
                 </tbody>
@@ -554,30 +560,42 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
                     <th className="px-6 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Date</th>
                     <th className="px-6 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Patient</th>
                     <th className="px-6 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Type</th>
+                    <th className="px-6 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {pastAppointments.length > 0 ? (
-                    pastAppointments.map((item, index) => (
-                      <tr key={index} onClick={() => onSelectPatient?.(item.patient.id)} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="text-sm font-medium text-slate-900 dark:text-white">{new Date(item.appointment.date).toLocaleDateString()}</div>
-                          <div className="text-xs text-slate-500">{item.appointment.time}</div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="text-sm font-medium text-slate-900 dark:text-white">{getPatientName(item.patient)}</div>
-                          <div className="text-xs text-slate-500">Dr. {item.appointment.provider}</div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                            {item.appointment.type}
-                          </span>
-                        </td>
-                      </tr>
-                    ))
+                    pastAppointments.map((item, index) => {
+                      const status = getVerificationStatus(item.patient);
+                      return (
+                        <tr key={index} onClick={() => onSelectPatient?.(item.patient.id)} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors">
+                          <td className="px-6 py-4">
+                            <div className="text-sm font-medium text-slate-900 dark:text-white">{new Date(item.appointment.date).toLocaleDateString()}</div>
+                            <div className="text-xs text-slate-500">{item.appointment.time}</div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-sm font-medium text-slate-900 dark:text-white">{getPatientName(item.patient)}</div>
+                            <div className="text-xs text-slate-500">Dr. {item.appointment.provider}</div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                              {item.appointment.type}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              <div className="flex-1 h-1.5 bg-slate-100 dark:bg-slate-700 rounded-full w-20 overflow-hidden">
+                                <div className={`h-full rounded-full ${status.percentage === 100 ? 'bg-green-500' : 'bg-blue-500'}`} style={{ width: `${status.percentage}%` }}></div>
+                              </div>
+                              <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{status.percentage}%</span>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
                   ) : (
                     <tr>
-                      <td colSpan={3} className="px-6 py-12 text-center text-slate-500">No past appointments found</td>
+                      <td colSpan={4} className="px-6 py-12 text-center text-slate-500">No past appointments found</td>
                     </tr>
                   )}
                 </tbody>
