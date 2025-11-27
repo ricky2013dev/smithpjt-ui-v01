@@ -97,26 +97,6 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
     return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   };
 
-  const getAppointmentTypeIcon = (type: string) => {
-    const lowerType = type.toLowerCase();
-    if (lowerType.includes('cleaning') || lowerType.includes('prophylaxis')) return 'cleaning_services';
-    if (lowerType.includes('exam') || lowerType.includes('checkup')) return 'medical_services';
-    if (lowerType.includes('crown') || lowerType.includes('bridge')) return 'dentistry';
-    if (lowerType.includes('filling')) return 'handyman';
-    if (lowerType.includes('root canal')) return 'favorite';
-    if (lowerType.includes('extraction')) return 'healing';
-    return 'calendar_month';
-  };
-
-  const getAppointmentTypeColor = (type: string) => {
-    const lowerType = type.toLowerCase();
-    if (lowerType.includes('cleaning') || lowerType.includes('prophylaxis')) return 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400';
-    if (lowerType.includes('exam') || lowerType.includes('checkup')) return 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400';
-    if (lowerType.includes('crown') || lowerType.includes('bridge')) return 'bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400';
-    if (lowerType.includes('filling')) return 'bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400';
-    return 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400';
-  };
-
   const getVerificationStatus = (patient: Patient) => {
     if (!patient.verificationStatus) {
       return { label: VERIFICATION_STATUS_LABELS.NOT_STARTED, color: 'text-slate-600 dark:text-slate-400', percentage: 0 };
@@ -255,9 +235,6 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
 
     return true;
   });
-
-  const todayAppointmentsCount = filteredAppointments.filter(a => formatAppointmentDate(a.appointment.date) === 'Today').length;
-  const tomorrowAppointmentsCount = filteredAppointments.filter(a => formatAppointmentDate(a.appointment.date) === 'Tomorrow').length;
 
   // --- Components ---
 
