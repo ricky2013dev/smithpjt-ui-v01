@@ -76,14 +76,12 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   const [sendProgress, setSendProgress] = useState(0);
   const [sendMessage, setSendMessage] = useState('');
 
-  // Pull Basic Data state
-  const [isPullingData, setIsPullingData] = useState(false);
-  const [pullProgress, setPullProgress] = useState(0);
-  const [pullMessage, setPullMessage] = useState('');
-  const [showLoginForm, setShowLoginForm] = useState(false);
-  const [loginPassword, setLoginPassword] = useState('');
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [hipaaAgreement, setHipaaAgreement] = useState(false);
+  // Document Analysis AI state
+  const [showDocumentUploadModal, setShowDocumentUploadModal] = useState(false);
+  const [uploadedDocuments, setUploadedDocuments] = useState<File[]>([]);
+  const [isAnalyzingDocuments, setIsAnalyzingDocuments] = useState(false);
+  const [analysisProgress, setAnalysisProgress] = useState(0);
+  const [analysisMessage, setAnalysisMessage] = useState('');
 
   const getFullName = () => {
     const given = patient.name.given.join(" ");
@@ -178,107 +176,6 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
     return isVerification100Percent();
   };
 
-  const handlePullBasicData = () => {
-    // Show login form first
-    setShowLoginForm(true);
-    setLoginPassword('');
-    setHipaaAgreement(false);
-  };
-
-  const handleLogin = () => {
-    if (!loginPassword || !hipaaAgreement) return;
-
-    setIsLoggingIn(true);
-
-    // Simulate login process
-    setTimeout(() => {
-      setIsLoggingIn(false);
-      setShowLoginForm(false);
-
-      // Start data pulling process
-      startDataPulling();
-    }, 1500);
-  };
-
-  const startDataPulling = () => {
-    setIsPullingData(true);
-    setPullProgress(0);
-    setPullMessage('✅ Login successful! Initializing connection to insurance portal...');
-
-    // Stage 1: Post-login connection (0-10%)
-    setTimeout(() => {
-      setPullProgress(10);
-      setPullMessage('🌐 Establishing secure session: https://portal.insurance.com...');
-    }, 1500);
-
-    // Stage 2: Authentication (10-20%)
-    setTimeout(() => {
-      setPullProgress(20);
-      setPullMessage('🔍 Navigating to patient search interface...');
-    }, 3000);
-
-    // Stage 3: Navigation (20-30%)
-    setTimeout(() => {
-      setPullProgress(30);
-      setPullMessage('🔎 Searching patient database: ID=' + patient.id + ' | Name=' + fullName);
-    }, 4500);
-
-    // Stage 4: Patient Search (30-45%)
-    setTimeout(() => {
-      setPullProgress(45);
-      setPullMessage('📄 Loading patient profile page...');
-    }, 6000);
-
-    // Stage 5: Loading Profile (45-55%)
-    setTimeout(() => {
-      setPullProgress(55);
-      setPullMessage('📋 Extracting demographics: Name, DOB, Contact Information...');
-    }, 7500);
-
-    // Stage 6: Extracting Demographics (55-65%)
-    setTimeout(() => {
-      setPullProgress(65);
-      setPullMessage('🏥 Scraping insurance details: Provider, Policy #, Group #...');
-    }, 9000);
-
-    // Stage 7: Insurance Data (65-75%)
-    setTimeout(() => {
-      setPullProgress(75);
-      setPullMessage('📊 Parsing coverage information and benefit details...');
-    }, 10500);
-
-    // Stage 8: Coverage Details (75-85%)
-    setTimeout(() => {
-      setPullProgress(85);
-      setPullMessage('🔗 Cross-referencing with internal patient records...');
-    }, 12000);
-
-    // Stage 9: Cross-reference (85-92%)
-    setTimeout(() => {
-      setPullProgress(92);
-      setPullMessage('✓ Validating data integrity and completeness...');
-    }, 13500);
-
-    // Stage 10: Validation (92-98%)
-    setTimeout(() => {
-      setPullProgress(98);
-      setPullMessage('💾 Syncing extracted data to local database...');
-    }, 14500);
-
-    // Stage 11: Finalizing (98-100%)
-    setTimeout(() => {
-      setPullProgress(100);
-      setPullMessage('✅ Successfully retrieved patient data from insurance portal');
-    }, 15500);
-
-    // Close modal
-    setTimeout(() => {
-      setIsPullingData(false);
-      setPullProgress(0);
-      setPullMessage('');
-    }, 17000);
-  };
-
   const handleSendToPMS = () => {
     setIsSendingToPMS(true);
     setSendProgress(0);
@@ -326,6 +223,87 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
       setSendProgress(0);
       setSendMessage('');
     }, 4600);
+  };
+
+  const handleDocumentUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newFiles = Array.from(files).slice(0, 3 - uploadedDocuments.length);
+      setUploadedDocuments([...uploadedDocuments, ...newFiles]);
+    }
+  };
+
+  const handleRemoveDocument = (index: number) => {
+    setUploadedDocuments(uploadedDocuments.filter((_, i) => i !== index));
+  };
+
+  const handleStartDocumentAnalysis = () => {
+    setShowDocumentUploadModal(false);
+    setIsAnalyzingDocuments(true);
+    setAnalysisProgress(0);
+    setAnalysisMessage('🤖 Initializing AI Document Analysis System...');
+
+    // Stage 1: Initialization (0-15%)
+    setTimeout(() => {
+      setAnalysisProgress(15);
+      setAnalysisMessage('🔍 Scanning uploaded documents for content extraction...');
+    }, 1000);
+
+    // Stage 2: OCR Processing (15-30%)
+    setTimeout(() => {
+      setAnalysisProgress(30);
+      setAnalysisMessage('📄 Performing OCR on document images...');
+    }, 2500);
+
+    // Stage 3: Text Extraction (30-45%)
+    setTimeout(() => {
+      setAnalysisProgress(45);
+      setAnalysisMessage('🧠 Applying Natural Language Processing algorithms...');
+    }, 4000);
+
+    // Stage 4: NLP Analysis (45-60%)
+    setTimeout(() => {
+      setAnalysisProgress(60);
+      setAnalysisMessage('🔎 Identifying patient demographics and insurance data...');
+    }, 5500);
+
+    // Stage 5: Data Extraction (60-75%)
+    setTimeout(() => {
+      setAnalysisProgress(75);
+      setAnalysisMessage('✅ Validating extracted information accuracy...');
+    }, 7000);
+
+    // Stage 6: Validation (75-85%)
+    setTimeout(() => {
+      setAnalysisProgress(85);
+      setAnalysisMessage('🔗 Cross-referencing data with existing patient records...');
+    }, 8500);
+
+    // Stage 7: Cross-referencing (85-92%)
+    setTimeout(() => {
+      setAnalysisProgress(92);
+      setAnalysisMessage('💾 Preparing structured data for database insertion...');
+    }, 10000);
+
+    // Stage 8: Data Preparation (92-98%)
+    setTimeout(() => {
+      setAnalysisProgress(98);
+      setAnalysisMessage('🎯 Finalizing AI analysis results...');
+    }, 11500);
+
+    // Stage 9: Completion (98-100%)
+    setTimeout(() => {
+      setAnalysisProgress(100);
+      setAnalysisMessage('✨ Document analysis complete! Patient data extracted successfully.');
+    }, 12500);
+
+    // Close modal and reset
+    setTimeout(() => {
+      setIsAnalyzingDocuments(false);
+      setAnalysisProgress(0);
+      setAnalysisMessage('');
+      setUploadedDocuments([]);
+    }, 14000);
   };
 
   const getPhone = () => {
@@ -462,16 +440,16 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           </div>
 
           <div className={`flex-1 flex justify-center gap-2 ${patient.id.startsWith('new-') ? 'invisible' : ''}`}>
-            {/* Step 1: Pull Basic Data */}
+            {/* Step 1: Document Analysis AI */}
             <button
-              onClick={handlePullBasicData}
+              onClick={() => setShowDocumentUploadModal(true)}
               disabled={!canPullBasicData()}
               className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors ${
                 canPullBasicData()
                   ? 'bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700'
                   : 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'
               }`}
-              title={!canPullBasicData() ? (patient.id.startsWith('new-') ? 'Save patient data first' : 'Verification already complete') : 'Pull basic patient data from insurance web portal (can re-run)'}
+              title={!canPullBasicData() ? (patient.id.startsWith('new-') ? 'Save patient data first' : 'Verification already complete') : 'Upload documents for AI analysis (can re-run)'}
             >
               <span className={`material-symbols-outlined text-base ${
                 isPullBasicDataCompleted()
@@ -480,9 +458,9 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                     ? 'text-blue-500'
                     : ''
               }`}>
-                {isPullBasicDataCompleted() ? 'check_circle' : 'download'}
+                {isPullBasicDataCompleted() ? 'check_circle' : 'description'}
               </span>
-              Run Insurance Web Verification
+              Run Document Analysis AI
             </button>
 
             {/* Step 2: Run API Verification */}
@@ -1398,199 +1376,6 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
         patientName={getFullName()}
       />
 
-      {/* Login Form Modal */}
-      {showLoginForm && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-md mx-4 p-8">
-            {/* Header */}
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/40 rounded-xl flex items-center justify-center">
-                <span className="material-symbols-outlined text-3xl text-blue-600 dark:text-blue-400">
-                  lock
-                </span>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                  Insurance Portal Login
-                </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Enter credentials to access patient data
-                </p>
-              </div>
-            </div>
-
-            {/* Login Form */}
-            <div className="space-y-4">
-              {/* Username Field */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  Username
-                </label>
-                <input
-                  type="text"
-                  value="coziDental.admin@smith.com"
-                  readOnly
-                  className="w-full px-4 py-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white text-sm cursor-not-allowed"
-                />
-              </div>
-
-              {/* Password Field */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter' && loginPassword) {
-                      handleLogin();
-                    }
-                  }}
-                  placeholder="Enter your password"
-                  className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  autoFocus
-                />
-              </div>
-
-              {/* HIPAA Compliance Agreement */}
-              <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-                <div className="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    id="hipaa-login-agreement"
-                    checked={hipaaAgreement}
-                    onChange={(e) => setHipaaAgreement(e.target.checked)}
-                    className="mt-0.5 w-4 h-4 text-blue-600 bg-white dark:bg-slate-800 border-amber-400 dark:border-amber-600 rounded focus:ring-blue-500 cursor-pointer"
-                  />
-                  <label
-                    htmlFor="hipaa-login-agreement"
-                    className="text-xs text-amber-800 dark:text-amber-200 cursor-pointer select-none leading-relaxed"
-                  >
-                    <span className="font-semibold">HIPAA Compliance Agreement:</span> I confirm that I am authorized to access patient protected health information (PHI) and will comply with all HIPAA privacy and security regulations during this session.
-                  </label>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => {
-                    setShowLoginForm(false);
-                    setLoginPassword('');
-                    setHipaaAgreement(false);
-                  }}
-                  className="flex-1 px-4 py-2.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-300 dark:hover:bg-slate-600 text-sm font-medium transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleLogin}
-                  disabled={!loginPassword || !hipaaAgreement || isLoggingIn}
-                  className={`flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
-                    loginPassword && hipaaAgreement && !isLoggingIn
-                      ? 'bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900'
-                      : 'bg-slate-300 dark:bg-slate-700 text-slate-500 cursor-not-allowed'
-                  }`}
-                >
-                  {isLoggingIn ? (
-                    <>
-                      <span className="material-symbols-outlined text-base animate-spin">refresh</span>
-                      Logging in...
-                    </>
-                  ) : (
-                    <>
-                      <span className="material-symbols-outlined text-base">login</span>
-                      Login
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Security Notice */}
-            <div className="mt-6 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-              <div className="flex gap-2">
-                <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 text-sm">info</span>
-                <p className="text-xs text-blue-700 dark:text-blue-300">
-                  This connection is encrypted and secure. Your credentials are protected.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Pull Basic Data Progress Modal */}
-      {isPullingData && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg mx-4 p-8">
-            {/* Header */}
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/40 rounded-xl flex items-center justify-center">
-                <span className="material-symbols-outlined text-3xl text-blue-600 dark:text-blue-400 animate-pulse">
-                  cloud_download
-                </span>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                  Pulling Basic Patient Data
-                </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Retrieving data from Insurance Web Portal
-                </p>
-              </div>
-            </div>
-
-            {/* Progress Message */}
-            <div className="mb-4">
-              <p className="text-sm text-slate-700 dark:text-slate-300 mb-3">
-                {pullMessage}
-              </p>
-
-              {/* Progress Bar */}
-              <div className="relative w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
-                <div
-                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500 ease-out rounded-full"
-                  style={{ width: `${pullProgress}%` }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
-                </div>
-              </div>
-
-              {/* Progress Percentage */}
-              <div className="flex items-center justify-between mt-2">
-                <span className="text-xs text-slate-500 dark:text-slate-400">
-                  Progress
-                </span>
-                <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">
-                  {pullProgress}%
-                </span>
-              </div>
-            </div>
-
-            {/* Status Indicators */}
-            <div className="flex items-center gap-2 pt-4 border-t border-slate-200 dark:border-slate-700">
-              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                <span>Secure API</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-                <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                <span>Real-time Fetch</span>
-              </div>
-              {pullProgress === 100 && (
-                <div className="flex items-center gap-2 text-xs text-green-600 dark:text-green-400 ml-auto">
-                  <span className="material-symbols-outlined text-sm">check_circle</span>
-                  <span className="font-semibold">Complete</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Send to PMS Progress Modal */}
       {isSendingToPMS && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
@@ -1650,6 +1435,202 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 <span>Real-time Sync</span>
               </div>
               {sendProgress === 100 && (
+                <div className="flex items-center gap-2 text-xs text-green-600 dark:text-green-400 ml-auto">
+                  <span className="material-symbols-outlined text-sm">check_circle</span>
+                  <span className="font-semibold">Complete</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Document Upload Modal */}
+      {showDocumentUploadModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-2xl mx-4 p-8">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-purple-100 dark:bg-purple-900/40 rounded-xl flex items-center justify-center">
+                  <span className="material-symbols-outlined text-3xl text-purple-600 dark:text-purple-400">
+                    smart_toy
+                  </span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                    Document Analysis AI
+                  </h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    Upload up to 3 documents for AI analysis
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowDocumentUploadModal(false)}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            {/* Upload Area */}
+            <div className="mb-6">
+              <label className="block w-full">
+                <div className="border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-lg p-8 text-center hover:border-purple-500 dark:hover:border-purple-400 transition-colors cursor-pointer">
+                  <div className="flex flex-col items-center gap-3">
+                    <span className="material-symbols-outlined text-5xl text-slate-400">
+                      upload_file
+                    </span>
+                    <div>
+                      <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                        Click to upload or drag and drop
+                      </p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        PDF, JPG, PNG (max 3 files)
+                      </p>
+                    </div>
+                  </div>
+                  <input
+                    type="file"
+                    multiple
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={handleDocumentUpload}
+                    className="hidden"
+                    disabled={uploadedDocuments.length >= 3}
+                  />
+                </div>
+              </label>
+            </div>
+
+            {/* Uploaded Documents List */}
+            {uploadedDocuments.length > 0 && (
+              <div className="mb-6 space-y-2">
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+                  Uploaded Documents ({uploadedDocuments.length}/3)
+                </p>
+                {uploadedDocuments.map((file, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="material-symbols-outlined text-purple-600 dark:text-purple-400">
+                        description
+                      </span>
+                      <div>
+                        <p className="text-sm font-medium text-slate-900 dark:text-white">
+                          {file.name}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                          {(file.size / 1024).toFixed(2)} KB
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleRemoveDocument(index)}
+                      className="text-red-500 hover:text-red-700 dark:hover:text-red-400"
+                    >
+                      <span className="material-symbols-outlined text-xl">delete</span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Info Notice */}
+            <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <div className="flex gap-3">
+                <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 text-base">info</span>
+                <p className="text-xs text-blue-700 dark:text-blue-300">
+                  For demo purposes, you can start the analysis process even without uploading documents.
+                  The AI will simulate document processing and extraction.
+                </p>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowDocumentUploadModal(false);
+                  setUploadedDocuments([]);
+                }}
+                className="flex-1 px-4 py-2.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-300 dark:hover:bg-slate-600 text-sm font-medium transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleStartDocumentAnalysis}
+                className="flex-1 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"
+              >
+                <span className="material-symbols-outlined text-base">auto_awesome</span>
+                Start AI Analysis
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Document Analysis Progress Modal */}
+      {isAnalyzingDocuments && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-lg mx-4 p-8">
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-14 h-14 bg-purple-100 dark:bg-purple-900/40 rounded-xl flex items-center justify-center">
+                <span className="material-symbols-outlined text-3xl text-purple-600 dark:text-purple-400 animate-pulse">
+                  auto_awesome
+                </span>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                  AI Document Analysis
+                </h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  Processing and extracting data
+                </p>
+              </div>
+            </div>
+
+            {/* Progress Message */}
+            <div className="mb-4">
+              <p className="text-sm text-slate-700 dark:text-slate-300 mb-3 min-h-[40px]">
+                {analysisMessage}
+              </p>
+
+              {/* Progress Bar */}
+              <div className="relative w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
+                <div
+                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-purple-600 transition-all duration-500 ease-out rounded-full"
+                  style={{ width: `${analysisProgress}%` }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"></div>
+                </div>
+              </div>
+
+              {/* Progress Percentage */}
+              <div className="flex items-center justify-between mt-2">
+                <span className="text-xs text-slate-500 dark:text-slate-400">
+                  Progress
+                </span>
+                <span className="text-xs font-semibold text-purple-600 dark:text-purple-400">
+                  {analysisProgress}%
+                </span>
+              </div>
+            </div>
+
+            {/* Status Indicators */}
+            <div className="flex items-center gap-2 pt-4 border-t border-slate-200 dark:border-slate-700">
+              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span>AI Powered</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
+                <span>OCR Processing</span>
+              </div>
+              {analysisProgress === 100 && (
                 <div className="flex items-center gap-2 text-xs text-green-600 dark:text-green-400 ml-auto">
                   <span className="material-symbols-outlined text-sm">check_circle</span>
                   <span className="font-semibold">Complete</span>
