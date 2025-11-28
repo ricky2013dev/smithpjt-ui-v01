@@ -6,6 +6,7 @@ import mermaid from 'mermaid';
 const HomePage: React.FC = () => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [showDesktopWarning, setShowDesktopWarning] = useState(false);
+    const [showDiagramModal, setShowDiagramModal] = useState(false);
 
     useEffect(() => {
         mermaid.initialize({
@@ -15,6 +16,15 @@ const HomePage: React.FC = () => {
         });
         mermaid.contentLoaded();
     }, []);
+
+    useEffect(() => {
+        if (showDiagramModal) {
+            // Re-render mermaid diagram when modal opens
+            setTimeout(() => {
+                mermaid.contentLoaded();
+            }, 100);
+        }
+    }, [showDiagramModal]);
 
     const handleLoginClick = () => {
         // Check if screen size is mobile (width < 768px) - allow tablets and desktop
@@ -96,42 +106,13 @@ const HomePage: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Mermaid Diagram
-                     <div className="relative group w-full">
-                        <div className="relative bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 p-6 md:p-16 rounded-xl shadow-sm">
-                            <pre className="mermaid text-center" style={{ transform: 'scale(1.2)', transformOrigin: 'center' }}>
-{`
-flowchart TD
-  C[Multimodal Intelligence]:::pillar
-    
-    C --> D[Document Analysis]:::component
-    C --> E[Autonomous Voice AI]:::component
-
-    D --> F[Decipher Intricate Operational Workflows]:::action
-    E --> G[Interrogate Live Sources]:::action
-
-    F --> H[Bridge Data Gaps]:::result
-    G --> H
-
-    H --> I[Crystalline View of Transactional Status]:::outcome
-    I --> J[100% End-to-End Automation]:::final
-
-    classDef mission fill:#4b9cd3,stroke:#2c6690,color:#fff;
-    classDef goal fill:#6fbf73,stroke:#3f7f47,color:#fff;
-    classDef pillar fill:#f4b860,stroke:#c68a2e,color:#fff;
-    classDef component fill:#e38cb7,stroke:#a0567b,color:#fff;
-    classDef action fill:#c792ea,stroke:#8c57b8,color:#fff;
-    classDef result fill:#ffcc66,stroke:#cc9a33,color:#000;
-    classDef outcome fill:#7cd1b8,stroke:#4a8e78,color:#000;
-    classDef final fill:#4ccece,stroke:#2fa0a0,color:#fff;
-
-    `}
-                            </pre>
-                        </div>
-                    </div>  */}
-
-                    {/* CTA / Visual Indicator - Formula Style */}
-                    <div className="pt-4 flex justify-center items-center gap-4 flex-wrap">
+                    {/* CTA / Visual Indicator - Formula Style - Clickable */}
+                    <div
+                        onClick={() => setShowDiagramModal(true)}
+                        className="pt-4 flex justify-center items-center gap-4 flex-wrap cursor-pointer group/workflow hover:scale-105 transition-transform duration-300"
+                        title="Click to view detailed workflow diagram"
+                    >
+                        <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/10 to-orange-500/10 rounded-3xl opacity-0 group-hover/workflow:opacity-100 transition-opacity duration-300 blur-xl"></div>
 
  
 
@@ -164,9 +145,12 @@ flowchart TD
                             </div>
                             <span className="text-xs font-medium text-orange-600 dark:text-orange-400 uppercase tracking-wide">Multimodal Intelligence</span>
                         </div>
+                    </div>
 
-
-
+                    {/* Click hint */}
+                    <div className="mt-6 flex items-center justify-center gap-2 text-sm text-slate-500 dark:text-slate-400 opacity-70 hover:opacity-100 transition-opacity">
+                        <span className="material-symbols-outlined text-base">touch_app</span>
+                        <span>Click above to view detailed workflow diagram</span>
                     </div>
 
                 </div>
@@ -177,6 +161,84 @@ flowchart TD
             </footer>
 
             <LoginModal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} />
+
+            {/* Workflow Diagram Modal */}
+            {showDiagramModal && (
+                <div
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                    onClick={() => setShowDiagramModal(false)}
+                >
+                    <div
+                        className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 w-full max-w-5xl max-h-[90vh] overflow-auto"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Header */}
+                        <div className="sticky top-0 z-10 flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+                            <div>
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                                    Smart AI Workflow
+                                </h2>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                                    Detailed sequence diagram of the verification process
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => setShowDiagramModal(false)}
+                                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-2"
+                            >
+                                <span className="material-symbols-outlined text-3xl">close</span>
+                            </button>
+                        </div>
+
+                        {/* Mermaid Diagram Content */}
+                        <div className="p-8">
+                            <div className="relative bg-slate-50 dark:bg-slate-800/50 rounded-xl p-8">
+                                <pre className="mermaid text-center">
+{`sequenceDiagram
+    participant PMS
+    participant SMITH as Smith AI Center
+    participant INS as Insurance Company
+
+    Note over PMS, INS: Smith AI end-to-end automation workflow
+
+    PMS->>SMITH: Pull Patient schedule Data
+
+    rect rgb(240, 240, 240)
+        Note right of SMITH: 1. Web Portal
+        SMITH->>INS: Login
+        INS-->>SMITH: Upload Web document/pdf
+    end
+
+    rect rgb(240, 240, 240)
+        Note right of SMITH: 2. API Interface
+        SMITH->>INS: API Call
+        INS-->>SMITH: Data
+    end
+
+    rect rgb(240, 240, 240)
+        Note right of SMITH: 3. AI Call
+        SMITH->>INS: AI Call
+        INS-->>SMITH: Voice call
+    end
+
+    SMITH-->>PMS: Send back To PMS
+`}
+                                </pre>
+                            </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="sticky bottom-0 p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 flex justify-end">
+                            <button
+                                onClick={() => setShowDiagramModal(false)}
+                                className="px-6 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors font-medium"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

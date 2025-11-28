@@ -44,7 +44,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   onCancel,
 }) => {
   const [showAICenter, setShowAICenter] = useState(false);
-  const [insuranceSubTab, setInsuranceSubTab] = useState<InsuranceSubTabType>(INSURANCE_SUB_TAB_TYPES.VERIFICATION_FORM);
+  const [insuranceSubTab, setInsuranceSubTab] = useState<InsuranceSubTabType>(INSURANCE_SUB_TAB_TYPES.COVERAGE_DETAILS);
 
 
   // Insurance Card Upload Modal state
@@ -156,20 +156,6 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   // Check if status is 100% (all 3 steps completed)
   const isVerification100Percent = () => {
     return isAICallCompleted();
-  };
-
-  // Check if each step can be started (previous step is completed)
-  // Users can re-run steps until final verification is complete
-  const canPullBasicData = () => {
-    return !patient.id.startsWith('new-') && !isVerification100Percent();
-  };
-
-  const canRunAPIVerification = () => {
-    return isPullBasicDataCompleted() && !isVerification100Percent();
-  };
-
-  const canStartAICall = () => {
-    return isAPIVerificationCompleted() && !isVerification100Percent();
   };
 
   const canSendToPMS = () => {
@@ -441,7 +427,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
 
           <div className={`flex-1 flex justify-center gap-2 ${patient.id.startsWith('new-') ? 'invisible' : ''}`}>
             {/* Step 1: Document Analysis AI */}
-            <button
+            {/* <button
               onClick={() => setShowDocumentUploadModal(true)}
               disabled={!canPullBasicData()}
               className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors ${
@@ -461,18 +447,13 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 {isPullBasicDataCompleted() ? 'check_circle' : 'description'}
               </span>
               Run Document Analysis AI
-            </button>
+            </button> */}
 
             {/* Step 2: Run API Verification */}
             <button
               onClick={() => setIsCoverageResultsOpen(true)}
-              disabled={!canRunAPIVerification()}
-              className={`ml-3 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors ${
-                canRunAPIVerification()
-                  ? 'bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700'
-                  : 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'
-              }`}
-              title={!canRunAPIVerification() ? (isVerification100Percent() ? 'Verification already complete' : 'Pull Basic Data first') : 'Run API verification (can re-run)'}
+              className="ml-3 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700"
+              title="Run API verification (can re-run)"
             >
               <span className={`material-symbols-outlined text-base ${
                 isAPIVerificationCompleted()
@@ -489,13 +470,8 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             {/* Step 3: Start AI Call */}
             <button
               onClick={() => setShowAICenter(true)}
-              disabled={!canStartAICall()}
-              className={`ml-3 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors ${
-                canStartAICall()
-                  ? 'bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700'
-                  : 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'
-              }`}
-              title={!canStartAICall() ? (isVerification100Percent() ? 'Verification already complete' : 'Complete API Verification first') : 'Start AI call verification (can re-run)'}
+              className="ml-3 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700"
+              title="Start AI call verification (can re-run)"
             >
               <span className={`material-symbols-outlined text-base ${
                 isAICallCompleted()
@@ -1223,6 +1199,13 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
         {/* Tab Content - AI Insurance Verification with Sub Tabs */}
         {activeTab === TAB_TYPES.INSURANCE && (
           <>
+                      {/* Verification Form Sub Tab */}
+            {insuranceSubTab === INSURANCE_SUB_TAB_TYPES.VERIFICATION_FORM && (
+              <TabContent>
+                <VerificationForm patient={patient} />
+              </TabContent>
+            )}
+            
             {/* Coverage Details Sub Tab */}
             {insuranceSubTab === INSURANCE_SUB_TAB_TYPES.COVERAGE_DETAILS && (
               <TabContent>
@@ -1230,12 +1213,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               </TabContent>
             )}
 
-            {/* Verification Form Sub Tab */}
-            {insuranceSubTab === INSURANCE_SUB_TAB_TYPES.VERIFICATION_FORM && (
-              <TabContent>
-                <VerificationForm patient={patient} />
-              </TabContent>
-            )}
+
           </>
         )}
 

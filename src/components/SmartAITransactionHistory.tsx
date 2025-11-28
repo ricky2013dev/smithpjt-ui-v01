@@ -31,7 +31,269 @@ interface Transaction {
   };
 }
 
-const mockData: Transaction[] = [
+export const mockData: Transaction[] = [
+  // Upcoming patients - 50% verified (100%)
+  {
+    id: '10',
+    requestId: 'REQ-2025-11-28-1045',
+    type: 'CALL',
+    method: 'VOICE /ai-agent/verify',
+    startTime: '2025-11-28 10:45:22',
+    endTime: '2025-11-28 11:02:15',
+    duration: '16m 53s',
+    status: 'SUCCESS',
+    patientId: 'P010',
+    patientName: 'Emma Thompson',
+    insuranceProvider: 'Delta Dental',
+    insuranceRep: 'James Wilson',
+    runBy: 'Smith AI System',
+    dataVerified: ['Eligibility', 'Benefits', 'Coverage Limits', 'Deductibles'],
+    verificationScore: 100,
+    phoneNumber: '1-800-555-0188',
+    details: {
+      transcript: 'Complete verification successful for upcoming patient Emma Thompson. All benefits verified.',
+      benefitsVerification: 'Preventive: 100%, Basic: 80%, Major: 50%',
+      coverageDetails: 'Annual Maximum: $2,000 | Used: $0 | Remaining: $2,000',
+      deductibleInfo: 'Individual Deductible: $50 | Met: $0'
+    }
+  },
+  {
+    id: '9',
+    requestId: 'REQ-2025-11-28-0930',
+    type: 'API',
+    method: 'POST /api/benefits/query',
+    startTime: '2025-11-28 09:30:15',
+    endTime: '2025-11-28 09:30:21',
+    duration: '6s',
+    status: 'SUCCESS',
+    patientId: 'P009',
+    patientName: 'Robert Taylor',
+    insuranceProvider: 'Aetna Dental',
+    insuranceRep: 'System',
+    runBy: 'Smith AI System',
+    dataVerified: ['Eligibility', 'Benefits', 'Coverage', 'Deductibles'],
+    verificationScore: 100,
+    responseCode: '200',
+    endpoint: 'https://api.aetna.com/dental/benefits',
+    details: {
+      eligibilityCheck: 'ACTIVE - Policy effective through 12/31/2026',
+      benefitsVerification: 'Preventive: 100%, Basic: 80%, Major: 50%',
+      coverageDetails: 'Annual Maximum: $1,800 | Used: $0 | Remaining: $1,800',
+      deductibleInfo: 'Deductible: $100 | Met: $0',
+      rawResponse: '{"status":"active","coverage":{"preventive":"100%","basic":"80%","major":"50%"},"annual_max":1800,"annual_used":0,"deductible_met":0}'
+    }
+  },
+  {
+    id: '8',
+    requestId: 'REQ-2025-11-27-1520',
+    type: 'CALL',
+    method: 'VOICE /ai-agent/verify',
+    startTime: '2025-11-27 15:20:08',
+    endTime: '2025-11-27 15:38:44',
+    duration: '18m 36s',
+    status: 'SUCCESS',
+    patientId: 'P008',
+    patientName: 'Lisa Anderson',
+    insuranceProvider: 'MetLife Dental',
+    insuranceRep: 'Karen White',
+    runBy: 'Smith AI System',
+    dataVerified: ['Eligibility', 'Benefits', 'Coverage', 'Waiting Periods'],
+    verificationScore: 100,
+    phoneNumber: '1-800-555-0177',
+    details: {
+      transcript: 'Complete verification for upcoming patient Lisa Anderson. All coverage details confirmed.',
+      benefitsVerification: 'Preventive: 100%, Basic: 70%, Major: 50%',
+      coverageDetails: 'Annual Maximum: $2,500 | Used: $0 | Remaining: $2,500',
+      deductibleInfo: 'Individual Deductible: $75 | Met: $0'
+    }
+  },
+  {
+    id: '7',
+    requestId: 'REQ-2025-11-27-1130',
+    type: 'API',
+    method: 'POST /api/benefits/query',
+    startTime: '2025-11-27 11:30:45',
+    endTime: '2025-11-27 11:30:52',
+    duration: '7s',
+    status: 'SUCCESS',
+    patientId: 'P007',
+    patientName: 'William Davis',
+    insuranceProvider: 'Guardian Dental',
+    insuranceRep: 'System',
+    runBy: 'Smith AI System',
+    dataVerified: ['Eligibility', 'Benefits', 'Coverage'],
+    verificationScore: 100,
+    responseCode: '200',
+    endpoint: 'https://api.guardian.com/dental/benefits',
+    details: {
+      eligibilityCheck: 'ACTIVE - Policy effective through 06/30/2026',
+      benefitsVerification: 'Preventive: 100%, Basic: 80%, Major: 60%',
+      coverageDetails: 'Annual Maximum: $2,200 | Used: $0 | Remaining: $2,200',
+      deductibleInfo: 'Deductible: $50 | Met: $0',
+      rawResponse: '{"status":"active","coverage":{"preventive":"100%","basic":"80%","major":"60%"},"annual_max":2200,"annual_used":0}'
+    }
+  },
+  {
+    id: '6',
+    requestId: 'REQ-2025-11-27-0915',
+    type: 'CALL',
+    method: 'VOICE /ai-agent/verify',
+    startTime: '2025-11-27 09:15:33',
+    endTime: '2025-11-27 09:29:18',
+    duration: '13m 45s',
+    status: 'SUCCESS',
+    patientId: 'P006',
+    patientName: 'Jessica Miller',
+    insuranceProvider: 'Humana Dental',
+    insuranceRep: 'Michael Brown',
+    runBy: 'Smith AI System',
+    dataVerified: ['Eligibility', 'Benefits', 'Coverage Limits'],
+    verificationScore: 100,
+    phoneNumber: '1-800-555-0166',
+    details: {
+      transcript: 'Upcoming patient verification complete for Jessica Miller. Full benefits confirmed.',
+      benefitsVerification: 'Preventive: 100%, Basic: 80%, Major: 50%',
+      coverageDetails: 'Annual Maximum: $1,500 | Used: $0 | Remaining: $1,500',
+      deductibleInfo: 'Individual Deductible: $100 | Met: $0'
+    }
+  },
+
+  // Upcoming patients - 20% in progress (partial)
+  {
+    id: '11',
+    requestId: 'REQ-2025-11-28-1330',
+    type: 'API',
+    method: 'POST /api/benefits/query',
+    startTime: '2025-11-28 13:30:22',
+    endTime: '2025-11-28 13:30:41',
+    duration: '19s',
+    status: 'PARTIAL',
+    patientId: 'P011',
+    patientName: 'Daniel Garcia',
+    insuranceProvider: 'UnitedHealthcare',
+    insuranceRep: 'System',
+    runBy: 'Smith AI System',
+    dataVerified: ['Eligibility', 'Basic Coverage'],
+    verificationScore: 75,
+    responseCode: '206',
+    endpoint: 'https://api.uhc.com/dental/benefits',
+    errorMessage: 'Partial response: Deductible information pending',
+    details: {
+      eligibilityCheck: 'ACTIVE - Policy effective through 12/31/2025',
+      benefitsVerification: 'Preventive: 100%, Basic: 80%',
+      coverageDetails: 'Annual Maximum: $1,600 | Used: $0',
+      deductibleInfo: 'ERROR: Deductible data pending verification',
+      rawResponse: '{"status":"active","coverage":{"preventive":"100%","basic":"80%"},"annual_max":1600,"deductible":null}'
+    }
+  },
+  {
+    id: '12',
+    requestId: 'REQ-2025-11-28-1445',
+    type: 'CALL',
+    method: 'VOICE /ai-agent/verify',
+    startTime: '2025-11-28 14:45:10',
+    endTime: '2025-11-28 14:58:22',
+    duration: '13m 12s',
+    status: 'PARTIAL',
+    patientId: 'P012',
+    patientName: 'Maria Rodriguez',
+    insuranceProvider: 'Cigna Dental',
+    insuranceRep: 'Patricia Lee',
+    runBy: 'Smith AI System',
+    dataVerified: ['Eligibility', 'Benefits'],
+    verificationScore: 70,
+    phoneNumber: '1-800-555-0199',
+    errorMessage: 'Coverage limits verification pending',
+    details: {
+      transcript: 'Partial verification for Maria Rodriguez. Basic eligibility confirmed, coverage limits pending additional review.',
+      benefitsVerification: 'Preventive: 100%, Basic: 80% - Major coverage pending',
+      coverageDetails: 'Annual Maximum: $2,000 | Remaining limits under review',
+      deductibleInfo: 'Individual Deductible: $75 - verification in progress'
+    }
+  },
+
+  // Upcoming patients - 30% pending (lower scores)
+  {
+    id: '13',
+    requestId: 'REQ-2025-11-28-1615',
+    type: 'API',
+    method: 'POST /api/benefits/query',
+    startTime: '2025-11-28 16:15:05',
+    endTime: '2025-11-28 16:15:18',
+    duration: '13s',
+    status: 'PARTIAL',
+    patientId: 'P013',
+    patientName: 'Christopher Wilson',
+    insuranceProvider: 'BlueCross BlueShield',
+    insuranceRep: 'System',
+    runBy: 'Smith AI System',
+    dataVerified: ['Eligibility Only'],
+    verificationScore: 40,
+    responseCode: '206',
+    endpoint: 'https://api.bcbs.com/dental/benefits',
+    errorMessage: 'Benefits and coverage information pending',
+    details: {
+      eligibilityCheck: 'ACTIVE - Policy verification pending',
+      benefitsVerification: 'Pending full benefits verification',
+      coverageDetails: 'Coverage details pending',
+      deductibleInfo: 'Deductible information not available',
+      rawResponse: '{"status":"active","coverage":null,"benefits_pending":true}'
+    }
+  },
+  {
+    id: '14',
+    requestId: 'REQ-2025-11-28-1730',
+    type: 'CALL',
+    method: 'VOICE /ai-agent/verify',
+    startTime: '2025-11-28 17:30:44',
+    endTime: '2025-11-28 17:38:12',
+    duration: '7m 28s',
+    status: 'PARTIAL',
+    patientId: 'P014',
+    patientName: 'Ashley Martinez',
+    insuranceProvider: 'Anthem Dental',
+    insuranceRep: 'Customer Service',
+    runBy: 'Smith AI System',
+    dataVerified: ['Basic Eligibility'],
+    verificationScore: 35,
+    phoneNumber: '1-800-555-0144',
+    errorMessage: 'Full benefits verification pending callback',
+    details: {
+      transcript: 'Initial verification for Ashley Martinez. Eligibility confirmed, full benefits pending specialist review.',
+      benefitsVerification: 'Pending detailed benefits verification',
+      coverageDetails: 'Coverage verification in progress',
+      deductibleInfo: 'Pending full policy review'
+    }
+  },
+  {
+    id: '15',
+    requestId: 'REQ-2025-11-28-1845',
+    type: 'API',
+    method: 'POST /api/benefits/query',
+    startTime: '2025-11-28 18:45:33',
+    endTime: '2025-11-28 18:45:45',
+    duration: '12s',
+    status: 'PARTIAL',
+    patientId: 'P015',
+    patientName: 'Kevin Thompson',
+    insuranceProvider: 'Principal Dental',
+    insuranceRep: 'System',
+    runBy: 'Smith AI System',
+    dataVerified: ['Eligibility Check'],
+    verificationScore: 30,
+    responseCode: '206',
+    endpoint: 'https://api.principal.com/dental/benefits',
+    errorMessage: 'Awaiting complete benefits data',
+    details: {
+      eligibilityCheck: 'ACTIVE - Additional verification required',
+      benefitsVerification: 'Benefits verification pending',
+      coverageDetails: 'Awaiting coverage details',
+      deductibleInfo: 'Deductible info pending',
+      rawResponse: '{"status":"pending","eligibility":"active","full_benefits":null}'
+    }
+  },
+
+  // Past patients - all 100% verified
   {
     id: '5',
     requestId: 'REQ-2025-11-26-0912',
@@ -45,7 +307,7 @@ const mockData: Transaction[] = [
     patientName: 'Sarah Johnson',
     insuranceProvider: 'System',
     insuranceRep: 'PMS API',
-    runBy: 'Dr. Smith',
+    runBy: 'Smith AI System',
     dataVerified: ['Demographics', 'Contact Info', 'Insurance Details', 'Medical History'],
     verificationScore: 100,
     responseCode: '200',
@@ -66,23 +328,22 @@ const mockData: Transaction[] = [
     startTime: '2025-11-21 07:55:08',
     endTime: '2025-11-21 07:55:31',
     duration: '23s',
-    status: 'PARTIAL',
+    status: 'SUCCESS',
     patientId: 'P003',
     patientName: 'Jennifer Martinez',
     insuranceProvider: 'Cigna Dental',
     insuranceRep: 'System',
-    runBy: 'Dr. Smith',
-    dataVerified: ['Eligibility', 'Active Coverage'],
-    verificationScore: 65,
-    responseCode: '206',
+    runBy: 'Smith AI System',
+    dataVerified: ['Eligibility', 'Benefits', 'Coverage', 'Deductibles'],
+    verificationScore: 100,
+    responseCode: '200',
     endpoint: 'https://api.cigna.com/dental/benefits',
-    errorMessage: 'Partial response: Deductible information not available',
     details: {
       eligibilityCheck: 'ACTIVE - Policy effective through 06/30/2026',
       benefitsVerification: 'Preventive: 100%, Basic: 70%, Major: 50%',
       coverageDetails: 'Annual Maximum: $1,800 | Used: $320 | Remaining: $1,480',
-      deductibleInfo: 'ERROR: Deductible data unavailable from API response',
-      rawResponse: '{"status":"active","coverage":{"preventive":"100%","basic":"70%","major":"50%"},"annual_max":1800,"annual_used":320,"deductible":null,"error":"deductible_unavailable"}'
+      deductibleInfo: 'Individual Deductible: $50 | Met: $50',
+      rawResponse: '{"status":"active","coverage":{"preventive":"100%","basic":"70%","major":"50%"},"annual_max":1800,"annual_used":320,"deductible_met":50}'
     }
   },
 
@@ -99,9 +360,9 @@ const mockData: Transaction[] = [
     patientName: 'David Anderson',
     insuranceProvider: 'Cigna Dental',
     insuranceRep: 'Sarah Mitchell',
-    runBy: 'Dr. Smith',
+    runBy: 'Smith AI System',
     dataVerified: ['Eligibility', 'Benefits', 'Coverage Limits', 'Waiting Periods', 'Frequency Limits'],
-    verificationScore: 70,
+    verificationScore: 100,
     phoneNumber: '1-800-555-0142',
     details: {
       transcript: 'AI Agent: "Good morning, this is the Smith Dental automated verification system. I need to verify dental insurance benefits for patient David Anderson."\n\nInsurance Rep: "Good morning, this is MetLife Dental. I can help you with that. What\'s the member ID?"\n\nAI Agent: "The member ID is MET-2034567. Patient David Anderson, date of birth July 22, 1978."\n\nInsurance Rep: "Thank you, pulling up the account now... Okay, I have David Anderson in the system. What do you need to verify?"\n\nAI Agent: "We need a comprehensive benefits verification. Can we start with the policy status and effective dates?"\n\nInsurance Rep: "The policy is active. Effective dates are January 1, 2025 through December 31, 2025."\n\nAI Agent: "What is the annual maximum benefit?"\n\nInsurance Rep: "The annual maximum is $2,500 per calendar year."\n\nAI Agent: "How much has been used so far this year?"\n\nInsurance Rep: "As of today, $875 has been used, leaving $1,625 remaining."\n\nAI Agent: "What was that $875 used for?"\n\nInsurance Rep: "Let me check the claims history... There were two claims. First was D1110 prophylaxis on March 15, 2025 for $125, and D2391 resin-based composite on April 3, 2025 for $750."\n\nAI Agent: "Thank you. What is the deductible on this plan?"\n\nInsurance Rep: "There\'s a $75 individual deductible per calendar year, and a $225 family deductible."\n\nAI Agent: "How much of the deductible has been met?"\n\nInsurance Rep: "The individual deductible of $75 has been fully met. The family has met $150 of the $225 family deductible."\n\nAI Agent: "What are the coverage percentages?"\n\nInsurance Rep: "Preventive services are covered at 100% with no deductible. Basic services are 80% after deductible. Major services are 50% after deductible. Orthodontic services are also 50% with a lifetime maximum of $2,000."\n\nAI Agent: "Are there any waiting periods?"\n\nInsurance Rep: "No waiting periods on this policy. All services are available immediately."\n\nAI Agent: "What about frequency limitations for routine services?"\n\nInsurance Rep: "D1110 prophylaxis is covered twice per calendar year. The patient has used one so far, so one more is available. D0150 comprehensive exam is once every three years. D0274 bitewing X-rays are once per calendar year. D0210 complete series X-rays are once every three years."\n\nAI Agent: "We\'re planning some periodontal treatment. What\'s the coverage for D4341 periodontal scaling and root planing?"\n\nInsurance Rep: "D4341 is classified as Basic, so it\'s covered at 80% after deductible. Since the deductible is already met, the patient would get 80% coverage."\n\nAI Agent: "Is there a frequency limit on scaling and root planing?"\n\nInsurance Rep: "Yes, it\'s limited to once per quadrant every 24 months."\n\nAI Agent: "What about D4910 periodontal maintenance?"\n\nInsurance Rep: "Periodontal maintenance is also covered at 80% as a Basic procedure. It\'s limited to four times per calendar year, but only after active periodontal treatment has been completed."\n\nAI Agent: "Can you clarify the rule about alternating with prophylaxis?"\n\nInsurance Rep: "Yes, D4910 periodontal maintenance can be alternated with D1110 prophylaxis for a total of four cleanings per year after periodontal therapy. For example, two D4910 and two D1110, or any combination up to four total."\n\nAI Agent: "That\'s very helpful. What about major restorative work? If we need to do crowns or bridges?"\n\nInsurance Rep: "Crowns and bridges are covered at 50% after deductible as Major services. There\'s a replacement rule - once every five years per tooth."\n\nAI Agent: "Does this require pre-authorization?"\n\nInsurance Rep: "Pre-authorization is not required but is strongly recommended for any treatment over $500 to avoid surprises."\n\nAI Agent: "What about implants?"\n\nInsurance Rep: "Implants are not covered under this plan. However, if an implant is placed, the crown that goes on top of the implant code D6058 or D6059 may be covered at 50% as a Major service."\n\nAI Agent: "Is there a missing tooth clause?"\n\nInsurance Rep: "Yes, teeth that were missing before the effective date of coverage are not eligible for replacement."\n\nAI Agent: "When did this patient\'s coverage begin?"\n\nInsurance Rep: "The original effective date was January 1, 2023."\n\nAI Agent: "Let me summarize: Policy MET-2034567 for David Anderson is active through December 31, 2025. Annual maximum $2,500 with $1,625 remaining. Individual deductible $75 fully met. Preventive 100%, Basic 80%, Major 50%, Ortho 50% with $2,000 lifetime max. Frequency limits apply. Scaling and root planing once per quadrant per 24 months. Periodontal maintenance alternates with prophylaxis up to four per year. Pre-authorization recommended for treatment over $500. Is that all correct?"\n\nInsurance Rep: "Yes, that\'s exactly right. Very thorough summary."\n\nAI Agent: "Perfect. Thank you for your help today."\n\nInsurance Rep: "You\'re welcome. Have a great day."\n\nOutcome: Complete verification successful for David Anderson policy MET-2034567. Annual maximum $2,500 with $1,625 remaining after $875 in claims. Individual deductible $75 fully met. One prophylaxis remaining this year. Periodontal treatment D4341 scaling and root planing covered at 80%, limited to once per quadrant per 24 months. D4910 periodontal maintenance covered at 80%, up to four times per year alternating with regular prophylaxis. Major services like crowns covered at 50% with pre-authorization recommended for treatment over $500.',
@@ -123,7 +384,7 @@ const mockData: Transaction[] = [
     patientName: 'Michael Chen',
     insuranceProvider: 'Cigna Dental',
     insuranceRep: 'Amanda Rodriguez',
-    runBy: 'Dr. Smith',
+    runBy: 'Smith AI System',
     dataVerified: ['Eligibility', 'Benefits', 'Pre-Auth', 'Coverage Limits'],
     verificationScore: 100,
     phoneNumber: '1-800-555-0199',
@@ -351,11 +612,11 @@ const SmartAITransactionHistory: React.FC = () => {
         <div className="grid grid-cols-[auto_1fr] gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs font-medium">
           <div className="w-6"></div>
           <div className="grid grid-cols-12 gap-3">
+            <div className="col-span-2">Start Time</div>
             <div className="col-span-1 text-center">Type</div>
             <div className="col-span-1 text-center">Status</div>
             <div className="col-span-2">Insurance Provider</div>
             <div className="col-span-2">Insurance Rep</div>
-            <div className="col-span-2">Start Time</div>
             <div className="col-span-1 text-center">Duration</div>
             <div className="col-span-1 text-center">Score</div>
             <div className="col-span-2">Run By</div>
@@ -387,6 +648,10 @@ const SmartAITransactionHistory: React.FC = () => {
                   </span>
                 </div>
                 <div className="grid grid-cols-12 gap-3 items-center text-sm">
+                  <div className="col-span-2">
+                    <div className="text-slate-900 dark:text-white">{transaction.startTime}</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">{transaction.requestId}</div>
+                  </div>
                   <div className={`col-span-1 text-center font-semibold text-xs ${getTypeColor(transaction.type)}`}>
                     {transaction.type}
                   </div>
@@ -395,10 +660,6 @@ const SmartAITransactionHistory: React.FC = () => {
                   </div>
                   <div className="col-span-2 text-slate-700 dark:text-slate-300">{transaction.insuranceProvider}</div>
                   <div className="col-span-2 text-slate-600 dark:text-slate-400">{transaction.insuranceRep}</div>
-                  <div className="col-span-2">
-                    <div className="text-slate-900 dark:text-white">{transaction.startTime}</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400">{transaction.requestId}</div>
-                  </div>
                   <div className="col-span-1 text-center font-mono text-xs text-slate-600 dark:text-slate-400">{transaction.duration}</div>
                   <div className="col-span-1 text-center">
                     <span className={`font-semibold text-sm ${

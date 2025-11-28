@@ -447,7 +447,7 @@
         "time": "9:00 AM",
         "type": "Regular Checkup",
         "status": "completed",
-        "provider": "Dr. Smith"
+        "provider": "Smith AI System"
       }
     ],
     "treatments": [
