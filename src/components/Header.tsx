@@ -9,7 +9,6 @@ interface HeaderProps {
   } | null;
   onLogout?: () => void;
   onLoginClick?: () => void;
-  showLoginButton?: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onLoginClick }) => {

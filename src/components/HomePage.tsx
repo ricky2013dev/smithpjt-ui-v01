@@ -42,7 +42,7 @@ const HomePage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col font-sans selection:bg-orange-100 dark:selection:bg-orange-900/30">
-            <Header onLoginClick={handleLoginClick} showLoginButton={true} />
+            <Header onLoginClick={handleLoginClick} />
 
             {/* Desktop Warning Toast */}
             {showDesktopWarning && (
@@ -203,20 +203,16 @@ const HomePage: React.FC = () => {
 
     PMS->>SMITH: Pull Patient schedule Data
 
-    rect rgb(240, 240, 240)
-        Note right of SMITH: 1. Web Portal
-        SMITH->>INS: Login
-        INS-->>SMITH: Upload Web document/pdf
-    end
+
 
     rect rgb(240, 240, 240)
-        Note right of SMITH: 2. API Interface
+        Note right of SMITH: API Interface
         SMITH->>INS: API Call
         INS-->>SMITH: Data
     end
 
     rect rgb(240, 240, 240)
-        Note right of SMITH: 3. AI Call
+        Note right of SMITH: AI Call
         SMITH->>INS: AI Call
         INS-->>SMITH: Voice call
     end

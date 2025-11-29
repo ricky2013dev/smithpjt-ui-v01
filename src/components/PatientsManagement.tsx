@@ -6,7 +6,7 @@ import Dashboard from './Dashboard';
 import PatientGuide from './PatientGuide';
 import Header from './Header';
 import { Patient, FilterType, TabType, TAB_TYPES } from '../types/patient';
-import patientsData from '../data/patients.json';
+import patientsData from '../../server/mockupdata/patients.json';
 
 const patients = patientsData as Patient[];
 
@@ -46,15 +46,13 @@ const PatientsManagement: React.FC = () => {
 
       // Verification step filters (OR logic - if any step filter is active, show patients matching any of those steps)
       const stepFilters = activeFilters.filter(f =>
-        f === 'Eligibility' || f === 'Verification' || f === 'Authorization'
+        f === 'Eligibility' || f === 'Verification'
       );
       if (stepFilters.length > 0) {
         const getPatientVerificationStep = (p: Patient) => {
           if (!p.verificationStatus) return 0;
-          const { eligibilityCheck, benefitsVerification, aiCallVerification, sendToPMS } = p.verificationStatus;
+          const { eligibilityCheck, benefitsVerification } = p.verificationStatus;
 
-          if (sendToPMS === 'completed' || sendToPMS === 'in_progress') return 4;
-          if (aiCallVerification === 'completed' || aiCallVerification === 'in_progress') return 3;
           if (benefitsVerification === 'completed' || benefitsVerification === 'in_progress') return 2;
           if (eligibilityCheck === 'completed' || eligibilityCheck === 'in_progress') return 1;
           return 0;
@@ -64,7 +62,6 @@ const PatientsManagement: React.FC = () => {
         const matchesAnyStepFilter = stepFilters.some(filter => {
           if (filter === 'Eligibility') return verificationStep === 1;
           if (filter === 'Verification') return verificationStep === 2;
-          if (filter === 'Authorization') return verificationStep === 3;
           return false;
         });
 
@@ -133,9 +130,9 @@ const PatientsManagement: React.FC = () => {
     }
   };
 
-  const handleDashboardItemClick = () => {
+  const handleDashboardItemClick = (_patientId?: string) => {
     setViewMode('list');
-    // Do not select any patient - let user choose
+    // Clear selected patient to show PatientGuide first
     setSelectedPatientId(null);
   };
 

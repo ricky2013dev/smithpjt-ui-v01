@@ -1,8 +1,0 @@
-Table Name: Availity Payer List 1.0.4 - Parameters
-Field,Type,Definition
-payerId,Query string (optional),The payer's Availity-specific identifier
-transactionType,Query array (optional),EDI/HIPAA transaction codes supported by payers
-submissionMode,Query array (optional),The method of submission for the transaction(s)
-availability,Query string (optional),Filters payers by contract requirements
-enrollmentRequired,Query boolean (optional),Allows you to filter whether enrollment is required
-Accept,Header string (optional),Specifies response format

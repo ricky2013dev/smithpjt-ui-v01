@@ -1,8 +1,0 @@
-Table Name: Configurations API - Response Primary Fields
-Field,Type,Definition
-totalCount,Integer,Total number of assets
-count,Integer,Number of assets in the result set
-offset,Integer,Paging offset
-limit,Integer,Paging limit
-links,Object,Object containing a set of resource URIs
-configurations,Array,Configurations organized by type/payer

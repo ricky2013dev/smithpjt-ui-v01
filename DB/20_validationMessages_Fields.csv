@@ -1,6 +1,0 @@
-Table Name: validationMessages Fields
-Field,Type,Definition
-field,String,The field or parameter associated with this error
-code,String,The error code
-errorMessage,String,The message associated with this error
-index,Integer,The array index of the item associated with this error

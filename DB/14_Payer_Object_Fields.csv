@@ -1,6 +1,0 @@
-Table Name: Payer Object Fields (within coverages)
-Field,Type,Definition
-payerId,String,The requested payer's Availity-specific identifier
-name,String,The requested payer's name
-responsePayerId,String,The ID the payer responded with
-responseName,String,The name the payer responded with

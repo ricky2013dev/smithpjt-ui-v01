@@ -1,5 +1,0 @@
-Table Name: coverage.reminders Fields
-Field,Type,Definition
-titles,Object,Object containing clinical message titles
-messages,Array,Array listing objects containing clinical message content
-inference,String,Clinical inference

@@ -202,8 +202,7 @@ export type FilterType =
   | 'Active'
   | 'Inactive'
   | 'Eligibility'
-  | 'Verification'
-  | 'Authorization';
+  | 'Verification';
 
 // Tab type constants
 export const TAB_TYPES = {

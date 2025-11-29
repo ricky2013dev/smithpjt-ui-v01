@@ -1,7 +1,0 @@
-Table Name: Service Reviews - Endpoints
-Path,Function,Definition
-POST /v2/service-reviews,Create service reviews,Create service reviews (i.e., submit authorizations/referrals) asynchronously
-GET /v2/service-reviews,Search service reviews,Search for service reviews in the health plan's system
-GET /v2/service-reviews/{id},Retrieve service review,Retrieve a specific service review
-PUT /v2/service-reviews,Update service reviews,Update service reviews asynchronously
-DELETE /v2/service-reviews/{id},Delete service review,Void an existing service review asynchronously

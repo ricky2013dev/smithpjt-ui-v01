@@ -1,6 +1,0 @@
-Table Name: plans.benefits.amounts Fields
-Field,Type,Definition
-coPayment,Object,Copayment amount information
-outOfPocket,Object,Out-of-pocket amount information
-deductibles,Object,Deductible amount information
-coInsurance,Object,Coinsurance amount information

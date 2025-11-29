@@ -3,7 +3,7 @@ import { Patient, Appointment } from '../types/patient';
 
 interface DashboardProps {
     patients: Patient[];
-    onItemClick: () => void;
+    onItemClick: (patientId?: string) => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
@@ -205,7 +205,7 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                         {/* Card 1: Overview Statistics */}
-                        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div onClick={() => onItemClick()} className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-600 transition-all">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-8 h-8 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-400">
                                     <span className="material-symbols-outlined text-lg">analytics</span>
@@ -276,7 +276,7 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
                         </div>
 
                         {/* Card 2: Verification Status (Donut Chart) */}
-                        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
+                        <div onClick={() => onItemClick()} className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col cursor-pointer hover:shadow-lg hover:border-purple-300 dark:hover:border-purple-600 transition-all">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-8 h-8 bg-purple-50 dark:bg-purple-900/20 rounded-lg flex items-center justify-center text-purple-600 dark:text-purple-400">
                                     <span className="material-symbols-outlined text-lg">pie_chart</span>
@@ -317,7 +317,7 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
                         </div>
 
                         {/* Card 3: Quick Insights */}
-                        <div className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div onClick={() => onItemClick()} className="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm cursor-pointer hover:shadow-lg hover:border-green-300 dark:hover:border-green-600 transition-all">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-8 h-8 bg-green-50 dark:bg-green-900/20 rounded-lg flex items-center justify-center text-green-600 dark:text-green-400">
                                     <span className="material-symbols-outlined text-lg">insights</span>
@@ -402,7 +402,7 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
                                     <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
                                         {upcomingAppointments.length > 0 ? (
                                             upcomingAppointments.map((item, index) => (
-                                                <tr key={index} onClick={onItemClick} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors cursor-pointer">
+                                                <tr key={index} onClick={() => onItemClick()} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors cursor-pointer">
                                                     <td className="px-6 py-4">
                                                         <div className="text-xs font-medium text-green-600 dark:text-green-400">Today</div>
                                                         <div className="text-sm font-semibold text-slate-900 dark:text-white">{item.appointment.time}</div>
@@ -467,7 +467,7 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
                                     <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
                                         {pastAppointments.length > 0 ? (
                                             pastAppointments.map((item, index) => (
-                                                <tr key={index} onClick={onItemClick} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors cursor-pointer">
+                                                <tr key={index} onClick={() => onItemClick()} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors cursor-pointer">
                                                     <td className="px-6 py-4">
                                                         <div className="text-xs font-medium text-slate-900 dark:text-white">{new Date(item.appointment.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</div>
                                                         <div className="text-xs text-slate-500">{item.appointment.time}</div>

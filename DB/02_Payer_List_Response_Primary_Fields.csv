@@ -1,7 +1,0 @@
-Table Name: Payer List Response - Primary Fields
-Field,Type,Definition
-name,String,The common name for the health plan
-payerId,String,The payer's Availity-specific identifier
-displayName,String,The payer's name as displayed on Availity Essentials
-shortName,String,The payer's shortened name used in the file naming convention
-processingRoutes,Object,Information about routes for payer communication

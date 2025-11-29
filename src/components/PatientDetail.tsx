@@ -426,30 +426,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           </div>
 
           <div className={`flex-1 flex justify-center gap-2 ${patient.id.startsWith('new-') ? 'invisible' : ''}`}>
-            {/* Step 1: Document Analysis AI */}
-            {/* <button
-              onClick={() => setShowDocumentUploadModal(true)}
-              disabled={!canPullBasicData()}
-              className={`px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors ${
-                canPullBasicData()
-                  ? 'bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700'
-                  : 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed'
-              }`}
-              title={!canPullBasicData() ? (patient.id.startsWith('new-') ? 'Save patient data first' : 'Verification already complete') : 'Upload documents for AI analysis (can re-run)'}
-            >
-              <span className={`material-symbols-outlined text-base ${
-                isPullBasicDataCompleted()
-                  ? 'text-green-500'
-                  : patient.verificationStatus?.eligibilityCheck === 'in_progress'
-                    ? 'text-blue-500'
-                    : ''
-              }`}>
-                {isPullBasicDataCompleted() ? 'check_circle' : 'description'}
-              </span>
-              Run Document Analysis AI
-            </button> */}
-
-            {/* Step 2: Run API Verification */}
+            {/* Step 1: Run API Verification */}
             <button
               onClick={() => setIsCoverageResultsOpen(true)}
               className="ml-3 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700"

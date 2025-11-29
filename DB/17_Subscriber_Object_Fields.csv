@@ -1,9 +1,0 @@
-Table Name: Subscriber Object Fields
-Field,Type,Definition
-memberId,String,The subscriber's health plan member ID number
-medicaidId,String,Subscriber's Medicaid member ID if applicable
-lastName/firstName/middleName/suffix,String,Subscriber name components
-birthDate,String (date-time),The subscriber's date of birth
-gender,String,The subscriber's gender
-genderCode,String,Code for subscriber gender
-caseNumber,String,The case number assigned to the subscriber
