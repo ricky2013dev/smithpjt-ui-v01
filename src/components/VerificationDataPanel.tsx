@@ -32,6 +32,65 @@ const tabSwitchAnimation = `
     }
   }
 
+  @keyframes pulseBlue {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7), inset 0 0 10px rgba(59, 130, 246, 0.1);
+    }
+    50% {
+      box-shadow: 0 0 0 12px rgba(59, 130, 246, 0), inset 0 0 20px rgba(59, 130, 246, 0.2);
+    }
+  }
+
+  @keyframes verifiedBadgeScale {
+    0% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes moveToVerified {
+    0% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: translateX(20px) scale(1.02);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(100px) scale(0.95);
+    }
+  }
+
+  @keyframes highlightMove {
+    0% {
+      background-color: rgb(220, 252, 231);
+      border-left-color: rgb(34, 197, 94);
+    }
+    50% {
+      background-color: rgb(187, 247, 208);
+      border-left-color: rgb(16, 185, 129);
+    }
+    100% {
+      background-color: transparent;
+      border-left-color: transparent;
+    }
+  }
+
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
   .animate-slide-out {
     animation: slideOutToRight 0.6s ease-in forwards;
   }
@@ -42,6 +101,26 @@ const tabSwitchAnimation = `
 
   .animate-pulse-green {
     animation: pulseGreen 1.5s ease-out;
+  }
+
+  .animate-pulse-blue {
+    animation: pulseBlue 1.2s ease-in-out infinite;
+  }
+
+  .animate-verified-badge {
+    animation: verifiedBadgeScale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .animate-move-verified {
+    animation: moveToVerified 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  .animate-highlight-move {
+    animation: highlightMove 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  .animate-fade-out {
+    animation: fadeOut 0.8s ease-out forwards;
   }
 `;
 
@@ -77,6 +156,8 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
 }) => {
   const [internalTab, setInternalTab] = useState<'missing' | 'verified'>('verified');
   const [recentlyVerified, setRecentlyVerified] = useState<Set<string>>(new Set());
+  const [animatingOut, setAnimatingOut] = useState<Set<string>>(new Set());
+  const [showBadge, setShowBadge] = useState<Set<string>>(new Set());
 
   const verificationTab = propActiveTab ?? internalTab;
 
@@ -86,14 +167,37 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
     newlyVerified.forEach(code => {
       if (!recentlyVerified.has(code)) {
         setRecentlyVerified(prev => new Set([...prev, code]));
-        // Remove from recently verified after animation
+
+        // Show verified badge after a delay
+        setTimeout(() => {
+          setShowBadge(prev => new Set([...prev, code]));
+        }, 800);
+
+        // Let user see the verified status in same tab for 2 seconds (delay before animation)
+        // Start animation out after a much longer delay to allow user to see status change
+        setTimeout(() => {
+          setAnimatingOut(prev => new Set([...prev, code]));
+        }, 2800);
+
+        // Remove from recently verified after animation completes
+        // Total time: 800ms (badge) + 2000ms (view verified status) + 1200ms (animation) = 4000ms
         setTimeout(() => {
           setRecentlyVerified(prev => {
             const updated = new Set(prev);
             updated.delete(code);
             return updated;
           });
-        }, 2000);
+          setAnimatingOut(prev => {
+            const updated = new Set(prev);
+            updated.delete(code);
+            return updated;
+          });
+          setShowBadge(prev => {
+            const updated = new Set(prev);
+            updated.delete(code);
+            return updated;
+          });
+        }, 4000);
       }
     });
   }, [data, recentlyVerified]);
@@ -173,13 +277,15 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
               <tr
                 key={index}
                 className={`transition-all duration-500 ${
-                  row.isUpdating
-                    ? 'bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 animate-pulse-green'
-                    : row.isChecking
-                      ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500'
-                      : recentlyVerified.has(row.saiCode)
-                        ? 'bg-green-100 dark:bg-green-900/40 border-l-4 border-green-500 animate-slide-out'
-                        : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                  row.isChecking
+                    ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 animate-pulse-blue shadow-lg'
+                    : row.isUpdating
+                      ? 'bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 animate-pulse-green'
+                      : animatingOut.has(row.saiCode)
+                        ? 'bg-green-100 dark:bg-green-900/40 border-l-4 border-green-500 animate-move-verified animate-highlight-move'
+                        : recentlyVerified.has(row.saiCode)
+                          ? 'bg-green-100 dark:bg-green-900/40 border-l-4 border-green-500'
+                          : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
                 }`}
               >
                 <td className="px-3 py-2 font-mono text-slate-900 dark:text-white">
@@ -215,8 +321,12 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
                       }`}>
                       {row.aiCallValue ? 'Yes' : 'No'}
                     </span>
-                    {recentlyVerified.has(row.saiCode) && (
-                      <div className="flex items-center gap-1 text-[10px] text-green-600 dark:text-green-400 font-semibold animate-pulse">
+                    {(recentlyVerified.has(row.saiCode) || animatingOut.has(row.saiCode)) && (
+                      <div className={`flex items-center gap-1 text-[10px] font-semibold transition-all ${
+                        animatingOut.has(row.saiCode)
+                          ? 'text-green-700 dark:text-green-300 animate-bounce'
+                          : 'text-green-600 dark:text-green-400 animate-pulse'
+                      }`}>
                         <span className="material-symbols-outlined text-xs">arrow_forward</span>
                         Moving to Verified
                       </div>
@@ -224,15 +334,19 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
                   </div>
                 </td>
                 <td className="px-3 py-2 text-center">
-                  {row.aiCallValue && (
+                  {row.aiCallValue && showBadge.has(row.saiCode) && (
                     <div className="flex items-center justify-center">
                       {row.verifiedBy === 'CALL' ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded text-[10px] font-semibold">
+                        <span className={`inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded text-[10px] font-semibold transition-all ${
+                          showBadge.has(row.saiCode) ? 'animate-verified-badge' : ''
+                        }`}>
                           <span className="material-symbols-outlined text-xs">phone</span>
                           AI Call
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded text-[10px] font-semibold">
+                        <span className={`inline-flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded text-[10px] font-semibold transition-all ${
+                          showBadge.has(row.saiCode) ? 'animate-verified-badge' : ''
+                        }`}>
                           <span className="material-symbols-outlined text-xs">api</span>
                           API
                         </span>
