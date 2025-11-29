@@ -290,14 +290,14 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
 
       {/* Table */}
       <div className="flex-1 overflow-auto">
-        <table className="w-full text-xs">
+        <table className="w-full text-xs border-collapse">
           <thead className="bg-slate-50 dark:bg-slate-800/50 sticky top-0">
             <tr>
-              <th className="px-3 py-2 text-left font-medium text-slate-600 dark:text-slate-400">Insurance Code</th>
-              <th className="px-3 py-2 text-left font-medium text-slate-600 dark:text-slate-400">Field Name</th>
-              <th className="px-3 py-2 text-left font-medium text-slate-600 dark:text-slate-400">Value</th>
-              <th className="px-3 py-2 text-center font-medium text-slate-600 dark:text-slate-400">Status</th>
-              <th className="px-3 py-2 text-center font-medium text-slate-600 dark:text-slate-400">Verified By</th>
+              <th className="px-3 py-2 text-left font-medium text-slate-600 dark:text-slate-400 w-20">Insurance Code</th>
+              <th className="px-3 py-2 text-left font-medium text-slate-600 dark:text-slate-400 w-40">Field Name</th>
+              <th className="px-3 py-2 text-left font-medium text-slate-600 dark:text-slate-400 flex-1">Value</th>
+              <th className="px-3 py-2 text-center font-medium text-slate-600 dark:text-slate-400 w-16">Status</th>
+              <th className="px-3 py-2 text-center font-medium text-slate-600 dark:text-slate-400 w-24">Verified By</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -316,7 +316,7 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
                           : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
                 }`}
               >
-                <td className="px-3 py-2 font-mono text-slate-900 dark:text-white">
+                <td className="px-3 py-2 font-mono text-slate-900 dark:text-white w-20">
                   <div className="flex items-center gap-2">
                     {row.isChecking && (
                       <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -324,7 +324,7 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
                     {row.refInsCode}
                   </div>
                 </td>
-                <td className="px-3 py-2 text-slate-700 dark:text-slate-300">
+                <td className="px-3 py-2 text-slate-700 dark:text-slate-300 w-40">
                   <div className="flex items-center gap-2">
                     {row.fieldName}
                     {row.isChecking && (
@@ -334,12 +334,12 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
                     )}
                   </div>
                 </td>
-                <td className="px-3 py-2 text-slate-900 dark:text-white font-medium">
+                <td className="px-3 py-2 text-slate-900 dark:text-white font-medium flex-1">
                   {row.aiCallValue || (
                     <span className="text-slate-400 dark:text-slate-500 italic">Pending...</span>
                   )}
                 </td>
-                <td className={`px-3 py-2 text-center ${
+                <td className={`px-3 py-2 text-center w-16 ${
                   statusChanged.has(row.saiCode) ? 'animate-status-change' : ''
                 }`}>
                   <div className="flex items-center justify-center gap-2">
@@ -367,7 +367,7 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
                     )}
                   </div>
                 </td>
-                <td className="px-3 py-2 text-center">
+                <td className="px-3 py-2 text-center w-24">
                   {row.aiCallValue && showBadge.has(row.saiCode) && (
                     <div className="flex items-center justify-center">
                       {row.verifiedBy === 'CALL' ? (
