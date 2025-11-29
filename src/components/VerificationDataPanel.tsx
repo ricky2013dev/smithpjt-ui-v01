@@ -368,7 +368,7 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
                   </div>
                 </td>
                 <td className="px-3 py-2 text-center w-24">
-                  {row.aiCallValue && showBadge.has(row.saiCode) && (
+                  {row.aiCallValue && (
                     <div className="flex items-center justify-center">
                       {row.verifiedBy === 'CALL' ? (
                         <span className={`inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded text-[10px] font-semibold transition-all ${
