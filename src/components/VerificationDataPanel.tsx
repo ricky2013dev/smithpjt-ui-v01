@@ -165,6 +165,7 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
               <th className="px-3 py-2 text-left font-medium text-slate-600 dark:text-slate-400">Field Name</th>
               <th className="px-3 py-2 text-left font-medium text-slate-600 dark:text-slate-400">Value</th>
               <th className="px-3 py-2 text-center font-medium text-slate-600 dark:text-slate-400">Status</th>
+              <th className="px-3 py-2 text-center font-medium text-slate-600 dark:text-slate-400">Verified By</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
@@ -207,7 +208,9 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
                 <td className="px-3 py-2 text-center">
                   <div className="flex items-center justify-center gap-2">
                     <span className={`text-xs font-semibold ${row.aiCallValue
-                      ? 'text-status-green'
+                      ? row.verifiedBy === 'CALL'
+                        ? 'text-blue-600 dark:text-blue-400'
+                        : 'text-status-green'
                       : 'text-status-red'
                       }`}>
                       {row.aiCallValue ? 'Yes' : 'No'}
@@ -219,6 +222,23 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
                       </div>
                     )}
                   </div>
+                </td>
+                <td className="px-3 py-2 text-center">
+                  {row.aiCallValue && (
+                    <div className="flex items-center justify-center">
+                      {row.verifiedBy === 'CALL' ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded text-[10px] font-semibold">
+                          <span className="material-symbols-outlined text-xs">phone</span>
+                          AI Call
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded text-[10px] font-semibold">
+                          <span className="material-symbols-outlined text-xs">api</span>
+                          API
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
