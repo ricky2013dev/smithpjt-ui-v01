@@ -91,6 +91,25 @@ const tabSwitchAnimation = `
     }
   }
 
+  @keyframes statusChangeGlow {
+    0% {
+      background-color: rgb(220, 252, 231);
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5), inset 0 0 10px rgba(34, 197, 94, 0.2);
+    }
+    50% {
+      background-color: rgb(187, 247, 208);
+      box-shadow: 0 0 0 8px rgba(34, 197, 94, 0.1), inset 0 0 15px rgba(34, 197, 94, 0.3);
+    }
+    100% {
+      background-color: transparent;
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0), inset 0 0 0px rgba(34, 197, 94, 0);
+    }
+  }
+
+  .animate-status-change {
+    animation: statusChangeGlow 3s ease-out forwards;
+  }
+
   .animate-slide-out {
     animation: slideOutToRight 0.6s ease-in forwards;
   }
@@ -158,6 +177,7 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
   const [recentlyVerified, setRecentlyVerified] = useState<Set<string>>(new Set());
   const [animatingOut, setAnimatingOut] = useState<Set<string>>(new Set());
   const [showBadge, setShowBadge] = useState<Set<string>>(new Set());
+  const [statusChanged, setStatusChanged] = useState<Set<string>>(new Set());
 
   const verificationTab = propActiveTab ?? internalTab;
 
@@ -168,19 +188,22 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
       if (!recentlyVerified.has(code)) {
         setRecentlyVerified(prev => new Set([...prev, code]));
 
+        // Immediately highlight status change (Yes/No change)
+        setStatusChanged(prev => new Set([...prev, code]));
+
         // Show verified badge after a delay
         setTimeout(() => {
           setShowBadge(prev => new Set([...prev, code]));
         }, 800);
 
-        // Let user see the verified status in same tab for 2 seconds (delay before animation)
-        // Start animation out after a much longer delay to allow user to see status change
+        // Let user see the verified status change and badge for 3 seconds
+        // Then start animation out to let record leave the tab
         setTimeout(() => {
           setAnimatingOut(prev => new Set([...prev, code]));
-        }, 2800);
+        }, 3800);
 
         // Remove from recently verified after animation completes
-        // Total time: 800ms (badge) + 2000ms (view verified status) + 1200ms (animation) = 4000ms
+        // Total time: 0ms (status highlight) + 3800ms (view status + badge) + 1200ms (animation) = 5000ms
         setTimeout(() => {
           setRecentlyVerified(prev => {
             const updated = new Set(prev);
@@ -197,7 +220,12 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
             updated.delete(code);
             return updated;
           });
-        }, 4000);
+          setStatusChanged(prev => {
+            const updated = new Set(prev);
+            updated.delete(code);
+            return updated;
+          });
+        }, 5000);
       }
     });
   }, [data, recentlyVerified]);
@@ -311,9 +339,15 @@ const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
                     <span className="text-slate-400 dark:text-slate-500 italic">Pending...</span>
                   )}
                 </td>
-                <td className="px-3 py-2 text-center">
+                <td className={`px-3 py-2 text-center ${
+                  statusChanged.has(row.saiCode) ? 'animate-status-change' : ''
+                }`}>
                   <div className="flex items-center justify-center gap-2">
-                    <span className={`text-xs font-semibold ${row.aiCallValue
+                    <span className={`text-xs font-semibold px-2 py-1 rounded transition-all ${
+                      statusChanged.has(row.saiCode)
+                        ? 'bg-green-200/50 dark:bg-green-800/30 ring-2 ring-green-400 dark:ring-green-500'
+                        : ''
+                    } ${row.aiCallValue
                       ? row.verifiedBy === 'CALL'
                         ? 'text-blue-600 dark:text-blue-400'
                         : 'text-status-green'
