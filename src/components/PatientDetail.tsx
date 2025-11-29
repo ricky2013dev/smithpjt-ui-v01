@@ -283,7 +283,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
       setAnalysisMessage('✨ Document analysis complete! Patient data extracted successfully.');
     }, 12500);
 
-    // Close modal and reset
+    // Close modal
     setTimeout(() => {
       setIsAnalyzingDocuments(false);
       setAnalysisProgress(0);
@@ -444,7 +444,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               Run API Verification
             </button>
 
-            {/* Step 3: Start AI Call */}
+            {/* Step 2: Start AI Call */}
             <button
               onClick={() => setShowAICenter(true)}
               className="ml-3 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700"
@@ -1595,6 +1595,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           </div>
         </div>
       )}
+
     </section>
   );
 };

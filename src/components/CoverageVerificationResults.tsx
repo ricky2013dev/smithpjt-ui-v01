@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import VerificationDataPanel, { VerificationDataRow } from "./VerificationDataPanel";
 
 interface CoverageVerificationResultsProps {
   isOpen: boolean;
@@ -6,7 +7,7 @@ interface CoverageVerificationResultsProps {
   patientName?: string;
 }
 
-type Step = 'step1' | 'step2' | 'idle';
+type Step = 'step1' | 'step2' | 'step3' | 'idle';
 type StepStatus = 'pending' | 'in_progress' | 'completed';
 
 const CoverageVerificationResults: React.FC<CoverageVerificationResultsProps> = ({
@@ -17,14 +18,63 @@ const CoverageVerificationResults: React.FC<CoverageVerificationResultsProps> = 
   const [currentStep, setCurrentStep] = useState<Step>('idle');
   const [step1Status, setStep1Status] = useState<StepStatus>('pending');
   const [step2Status, setStep2Status] = useState<StepStatus>('pending');
+  const [step3Status, setStep3Status] = useState<StepStatus>('pending');
 
   const [step1Text, setStep1Text] = useState("");
   const [step2Text, setStep2Text] = useState("");
+  const [showCompletionToast, setShowCompletionToast] = useState(false);
+
+  // Sample API verification results data with verified and missing fields
+  const apiVerificationData: VerificationDataRow[] = [
+    // Verified fields - Plan Information
+    { saiCode: "VF000001", refInsCode: "D001", category: "Plan Information", fieldName: "Plan Name", preStepValue: "Blue Cross Dental Plus", missing: "N", aiCallValue: "Blue Cross Dental Plus", verifiedBy: "API" },
+    { saiCode: "VF000002", refInsCode: "D002", category: "Plan Information", fieldName: "Group Number", preStepValue: "GRP987654", missing: "N", aiCallValue: "GRP987654", verifiedBy: "API" },
+    { saiCode: "VF000003", refInsCode: "D003", category: "Plan Information", fieldName: "Effective Date", preStepValue: "01/01/2024", missing: "N", aiCallValue: "01/01/2024", verifiedBy: "API" },
+    { saiCode: "VF000004", refInsCode: "D004", category: "Plan Information", fieldName: "Carrier Name", preStepValue: "Blue Cross Blue Shield", missing: "N", aiCallValue: "Blue Cross Blue Shield", verifiedBy: "API" },
+    { saiCode: "VF000005", refInsCode: "D005", category: "Plan Information", fieldName: "Member ID", preStepValue: "SUB123456789", missing: "N", aiCallValue: "SUB123456789", verifiedBy: "API" },
+
+    // Verified fields - Deductible
+    { saiCode: "VF000051", refInsCode: "D051", category: "Deductible", fieldName: "Annual Deductible Amount", preStepValue: "0", missing: "N", aiCallValue: "$0 - No Deductible", verifiedBy: "API" },
+    { saiCode: "VF000052", refInsCode: "D052", category: "Deductible", fieldName: "Deductible Applies To", preStepValue: "Basic & Major", missing: "N", aiCallValue: "Basic & Major", verifiedBy: "API" },
+    { saiCode: "VF000053", refInsCode: "D053", category: "Deductible", fieldName: "Family Deductible", preStepValue: "$0", missing: "N", aiCallValue: "$0", verifiedBy: "API" },
+
+    // Verified fields - Preventative Coverage
+    { saiCode: "VF000010", refInsCode: "D010", category: "Preventative Coverage", fieldName: "Annual Cleaning Benefit", preStepValue: "2 Cleanings", missing: "N", aiCallValue: "2 Cleanings per Year", verifiedBy: "API" },
+    { saiCode: "VF000011", refInsCode: "D011", category: "Preventative Coverage", fieldName: "Annual Exams", preStepValue: "2 Exams", missing: "N", aiCallValue: "2 Exams per Year", verifiedBy: "API" },
+    { saiCode: "VF000012", refInsCode: "D012", category: "Preventative Coverage", fieldName: "X-ray Coverage", preStepValue: "1 FMS per 5 years", missing: "N", aiCallValue: "1 Full Mouth Series per 5 years", verifiedBy: "API" },
+
+    // Verified fields - Basic Coverage
+    { saiCode: "VF000020", refInsCode: "D020", category: "Basic Coverage", fieldName: "Fillings Coverage", preStepValue: "80%", missing: "N", aiCallValue: "80%", verifiedBy: "API" },
+    { saiCode: "VF000021", refInsCode: "D021", category: "Basic Coverage", fieldName: "Extractions Coverage", preStepValue: "80%", missing: "N", aiCallValue: "80%", verifiedBy: "API" },
+    { saiCode: "VF000022", refInsCode: "D022", category: "Basic Coverage", fieldName: "Scaling & Root Planing", preStepValue: "80%", missing: "N", aiCallValue: "80%", verifiedBy: "API" },
+
+    // Verified fields - Major Coverage
+    { saiCode: "VF000030", refInsCode: "D030", category: "Major Coverage", fieldName: "Crowns Coverage", preStepValue: "50%", missing: "N", aiCallValue: "50%", verifiedBy: "API" },
+    { saiCode: "VF000031", refInsCode: "D031", category: "Major Coverage", fieldName: "Bridges Coverage", preStepValue: "50%", missing: "N", aiCallValue: "50%", verifiedBy: "API" },
+    { saiCode: "VF000032", refInsCode: "D032", category: "Major Coverage", fieldName: "Dentures Coverage", preStepValue: "50%", missing: "N", aiCallValue: "50%", verifiedBy: "API" },
+    { saiCode: "VF000033", refInsCode: "D033", category: "Major Coverage", fieldName: "Root Canals Coverage", preStepValue: "50%", missing: "N", aiCallValue: "50%", verifiedBy: "API" },
+    { saiCode: "VF000034", refInsCode: "D034", category: "Major Coverage", fieldName: "Implants Coverage", preStepValue: "Not Covered", missing: "N", aiCallValue: "Not Covered - Considered Cosmetic", verifiedBy: "API" },
+
+    // Verified fields - Annual Maximums
+    { saiCode: "VF000060", refInsCode: "D060", category: "Annual Maximum", fieldName: "Annual Maximum Benefit", preStepValue: "$1200", missing: "N", aiCallValue: "$1,200 per Year", verifiedBy: "API" },
+    { saiCode: "VF000061", refInsCode: "D061", category: "Annual Maximum", fieldName: "Ortho Maximum", preStepValue: "Not Included", missing: "N", aiCallValue: "Not Included", verifiedBy: "API" },
+
+    // Missing fields - To verify during call
+    { saiCode: "VF000028", refInsCode: "D028", category: "Preventative Coverage", fieldName: "Prophylaxis/Exam Frequency", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+    { saiCode: "VF000029", refInsCode: "D029", category: "Preventative Coverage", fieldName: "Last FMS Date", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+    { saiCode: "VF000040", refInsCode: "D040", category: "Preventative Coverage", fieldName: "Eligible for FMS Now", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+    { saiCode: "VF000041", refInsCode: "D041", category: "Preventative Coverage", fieldName: "FMS Frequency (Years)", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+    { saiCode: "VF000042", refInsCode: "D042", category: "Preventative Coverage", fieldName: "Fluoride Varnish Frequency", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+    { saiCode: "VF000045", refInsCode: "D045", category: "Major Coverage", fieldName: "Major Waiting Period", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+    { saiCode: "VF000046", refInsCode: "D046", category: "Major Coverage", fieldName: "Major Services Effective Date", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+    { saiCode: "VF000070", refInsCode: "D070", category: "Coverage Limits", fieldName: "Frequency Limitations", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+  ];
 
   // Refs for auto-scrolling
   const contentRef = useRef<HTMLDivElement>(null);
   const step1Ref = useRef<HTMLDivElement>(null);
   const step2Ref = useRef<HTMLDivElement>(null);
+  const step3Ref = useRef<HTMLDivElement>(null);
 
   // Sample API JSON response
   const apiResponse = JSON.stringify({
@@ -174,41 +224,59 @@ Plan Renewal:           January 1st`;
     }
   }, [isOpen]);
 
-  // Auto-close modal 3 seconds after verification completes
+  // Auto-scroll to step 3 when it's completed to show results
   useEffect(() => {
-    if (step2Status === 'completed') {
-      const timer = setTimeout(() => {
-        onClose();
-        resetModal();
-      }, 3000);
+    if (step3Status === 'completed' && step3Ref.current && contentRef.current) {
+      // Give a moment for the DOM to update, then scroll
+      setTimeout(() => {
+        scrollToStep(step3Ref);
+      }, 100);
+    }
+  }, [step3Status]);
 
+  // Show completion toast when step 3 completes
+  useEffect(() => {
+    if (step3Status === 'completed') {
+      setShowCompletionToast(true);
+      // Auto-hide toast after 4 seconds
+      const timer = setTimeout(() => {
+        setShowCompletionToast(false);
+      }, 4000);
       return () => clearTimeout(timer);
     }
-  }, [step2Status, onClose]);
+  }, [step3Status]);
 
   const startVerification = async () => {
     // Step 1: Get API Result
     setCurrentStep('step1');
     setStep1Status('in_progress');
-    await new Promise(resolve => setTimeout(resolve, 800));
-    await typeText(apiResponse, setStep1Text, 5);
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 100));
+    await typeText(apiResponse, setStep1Text, 0);
+    await new Promise(resolve => setTimeout(resolve, 50));
     setStep1Status('completed');
 
     // Step 2: Analyze and convert to code-level
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 150));
     setCurrentStep('step2');
     setStep2Status('in_progress');
-    await new Promise(resolve => setTimeout(resolve, 800));
-    await typeText(codeLevelData, setStep2Text, 3);
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 100));
+    await typeText(codeLevelData, setStep2Text, 0);
+    await new Promise(resolve => setTimeout(resolve, 50));
     setStep2Status('completed');
+
+    // Step 3: Display verification results in table format
+    await new Promise(resolve => setTimeout(resolve, 150));
+    setCurrentStep('step3');
+    setStep3Status('in_progress');
+    await new Promise(resolve => setTimeout(resolve, 100));
+    setStep3Status('completed');
   };
 
   const resetModal = () => {
     setCurrentStep('idle');
     setStep1Status('pending');
     setStep2Status('pending');
+    setStep3Status('pending');
     setStep1Text("");
     setStep2Text("");
   };
@@ -248,7 +316,7 @@ Plan Renewal:           January 1st`;
 
         {/* Progress Steps */}
         <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-          <div className="flex items-center justify-center max-w-2xl mx-auto">
+          <div className="flex items-center justify-center">
             {/* Step 1 */}
             <div className="flex items-center gap-2 flex-1">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
@@ -284,6 +352,27 @@ Plan Renewal:           January 1st`;
               <div className="text-sm">
                 <div className="font-medium text-slate-900 dark:text-white">Code Analysis</div>
                 <div className="text-xs text-slate-500 dark:text-slate-400">Coverage Codes</div>
+              </div>
+            </div>
+
+            <div className={`h-0.5 flex-1 mx-2 ${
+              step2Status === 'completed' ? 'bg-green-500' : 'bg-slate-300 dark:bg-slate-600'
+            }`}></div>
+
+            {/* Step 3 */}
+            <div className="flex items-center gap-2 flex-1">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
+                step3Status === 'completed'
+                  ? 'bg-green-500 text-white'
+                  : step3Status === 'in_progress'
+                  ? 'bg-blue-500 text-white animate-pulse'
+                  : 'bg-slate-300 dark:bg-slate-600 text-slate-600 dark:text-slate-400'
+              }`}>
+                {step3Status === 'completed' ? '✓' : '3'}
+              </div>
+              <div className="text-sm">
+                <div className="font-medium text-slate-900 dark:text-white">Verification Data</div>
+                <div className="text-xs text-slate-500 dark:text-slate-400">Results Table</div>
               </div>
             </div>
           </div>
@@ -359,27 +448,47 @@ Plan Renewal:           January 1st`;
             </div>
           )}
 
-          {/* All Steps Completed Message */}
-          {step2Status === 'completed' && (
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 flex items-center gap-3">
-              <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-3xl">
-                task_alt
-              </span>
-              <div>
-                <h4 className="font-semibold text-green-900 dark:text-green-200">
-                  Verification Complete!
-                </h4>
-                <p className="text-sm text-green-700 dark:text-green-300">
-                  All coverage information has been successfully processed and formatted.
-                </p>
+          {/* Step 3: Verification Data Results Table */}
+          {(currentStep === 'step3' || step3Status !== 'pending') && (
+            <div ref={step3Ref} className="mb-6">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-green-600 dark:text-green-400">
+                    table_chart
+                  </span>
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                    Step 3: API Verification Results
+                  </h3>
+                </div>
+                {step3Status === 'completed' && (
+                  <span className="flex items-center gap-1 text-sm font-medium text-green-600 dark:text-green-400">
+                    <span className="material-symbols-outlined text-base">check_circle</span>
+                    Completed
+                  </span>
+                )}
+                {step3Status === 'in_progress' && (
+                  <span className="flex items-center gap-1 text-sm font-medium text-blue-600 dark:text-blue-400">
+                    <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>
+                    Processing...
+                  </span>
+                )}
               </div>
+              {step3Status !== 'pending' && (
+                <VerificationDataPanel
+                  data={apiVerificationData}
+                  showTabs={true}
+                  title="API Verification Results"
+                  subtitle="Watching"
+                />
+              )}
             </div>
           )}
+
         </div>
 
         {/* Footer */}
         <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-200 dark:border-slate-800">
-          {step2Status === 'completed' && (
+          {step3Status === 'completed' && (
             <>
               <button
                 onClick={resetModal}
@@ -395,7 +504,7 @@ Plan Renewal:           January 1st`;
               </button>
             </>
           )}
-          {step2Status !== 'completed' && (
+          {step3Status !== 'completed' && (
             <button
               onClick={handleClose}
               className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
@@ -405,6 +514,47 @@ Plan Renewal:           January 1st`;
           )}
         </div>
       </div>
+
+      {/* Completion Toast Notification - Centered in Modal */}
+      {showCompletionToast && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none">
+          <div className="bg-white dark:bg-slate-900 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-700 max-w-md pointer-events-auto animate-fadeIn">
+            {/* Success Header */}
+            <div className="bg-blue-50 dark:bg-blue-900/30 border-b border-blue-100 dark:border-blue-800 px-6 py-4 flex items-start gap-4">
+              <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 text-2xl flex-shrink-0">
+                task_alt
+              </span>
+              <div className="flex-1">
+                <h4 className="font-semibold text-blue-900 dark:text-blue-200 mb-1">
+                  API Verification Complete
+                </h4>
+                <p className="text-sm text-blue-700 dark:text-blue-300">
+                  The API run has successfully verified coverage details. However, {apiVerificationData.filter(r => r.missing === 'Y').length} fields are still missing and require voice AI verification.
+                </p>
+              </div>
+            </div>
+
+            {/* Summary Stats */}
+            <div className="px-6 py-4 space-y-3">
+              <div className="flex items-center gap-3 text-sm">
+                <span className="material-symbols-outlined text-green-600 dark:text-green-400 flex-shrink-0">check_circle</span>
+                <span className="text-slate-700 dark:text-slate-300"><strong>Verified:</strong> {apiVerificationData.filter(r => r.missing === 'N').length} fields successfully verified via API</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm">
+                <span className="material-symbols-outlined text-status-red flex-shrink-0">pending</span>
+                <span className="text-slate-700 dark:text-slate-300"><strong>Still Missing:</strong> {apiVerificationData.filter(r => r.missing === 'Y').length} fields need voice AI verification</span>
+              </div>
+            </div>
+
+            {/* Next Step */}
+            <div className="bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 px-6 py-3">
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                <strong>Next Step:</strong> Run AI Call to complete the verification process
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

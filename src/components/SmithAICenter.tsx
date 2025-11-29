@@ -1,22 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Patient } from '../types/patient';
+import VerificationDataPanel, { VerificationDataRow } from './VerificationDataPanel';
 
 interface SmithAICenterProps {
   patient: Patient;
   onClose: () => void;
-}
-
-interface VerificationDataRow {
-  saiCode: string;
-  refInsCode: string;
-  category: string;
-  fieldName: string;
-  preStepValue: string;
-  missing: string;
-  aiCallValue: string;
-  verifiedBy: string;
-  isUpdating?: boolean;
-  isChecking?: boolean;
 }
 
 interface ConversationMessage {
@@ -63,19 +51,51 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
     isCallActiveRef.current = isCallActive;
   }, [isCallActive]);
 
-  // Initialize verification data with missing items
+  // Initialize verification data with realistic mix of missing and verified items
   useEffect(() => {
     const initialData: VerificationDataRow[] = [
+      // Verified fields - Plan Information
+      { saiCode: "VF000001", refInsCode: "D001", category: "Plan Information", fieldName: "Plan Name", preStepValue: "Blue Cross Dental Plus", missing: "N", aiCallValue: "Blue Cross Dental Plus", verifiedBy: "CALL" },
+      { saiCode: "VF000002", refInsCode: "D002", category: "Plan Information", fieldName: "Group Number", preStepValue: "GRP987654", missing: "N", aiCallValue: "GRP987654", verifiedBy: "CALL" },
+      { saiCode: "VF000003", refInsCode: "D003", category: "Plan Information", fieldName: "Effective Date", preStepValue: "01/01/2024", missing: "N", aiCallValue: "01/01/2024", verifiedBy: "CALL" },
+      { saiCode: "VF000004", refInsCode: "D004", category: "Plan Information", fieldName: "Carrier Name", preStepValue: "Blue Cross Blue Shield", missing: "N", aiCallValue: "Blue Cross Blue Shield", verifiedBy: "CALL" },
+      { saiCode: "VF000005", refInsCode: "D005", category: "Plan Information", fieldName: "Member ID", preStepValue: "SUB123456789", missing: "N", aiCallValue: "SUB123456789", verifiedBy: "CALL" },
+
+      // Verified fields - Deductible
+      { saiCode: "VF000051", refInsCode: "D051", category: "Deductible", fieldName: "Annual Deductible Amount", preStepValue: "0", missing: "N", aiCallValue: "$0 - No Deductible", verifiedBy: "CALL" },
+      { saiCode: "VF000052", refInsCode: "D052", category: "Deductible", fieldName: "Deductible Applies To", preStepValue: "Basic & Major", missing: "N", aiCallValue: "Basic & Major", verifiedBy: "CALL" },
+      { saiCode: "VF000053", refInsCode: "D053", category: "Deductible", fieldName: "Family Deductible", preStepValue: "$0", missing: "N", aiCallValue: "$0", verifiedBy: "CALL" },
+
+      // Verified fields - Preventative Coverage
+      { saiCode: "VF000010", refInsCode: "D010", category: "Preventative Coverage", fieldName: "Annual Cleaning Benefit", preStepValue: "2 Cleanings", missing: "N", aiCallValue: "2 Cleanings per Year", verifiedBy: "CALL" },
+      { saiCode: "VF000011", refInsCode: "D011", category: "Preventative Coverage", fieldName: "Annual Exams", preStepValue: "2 Exams", missing: "N", aiCallValue: "2 Exams per Year", verifiedBy: "CALL" },
+      { saiCode: "VF000012", refInsCode: "D012", category: "Preventative Coverage", fieldName: "X-ray Coverage", preStepValue: "1 FMS per 5 years", missing: "N", aiCallValue: "1 Full Mouth Series per 5 years", verifiedBy: "CALL" },
+
+      // Verified fields - Basic Coverage
+      { saiCode: "VF000020", refInsCode: "D020", category: "Basic Coverage", fieldName: "Fillings Coverage", preStepValue: "80%", missing: "N", aiCallValue: "80%", verifiedBy: "CALL" },
+      { saiCode: "VF000021", refInsCode: "D021", category: "Basic Coverage", fieldName: "Extractions Coverage", preStepValue: "80%", missing: "N", aiCallValue: "80%", verifiedBy: "CALL" },
+      { saiCode: "VF000022", refInsCode: "D022", category: "Basic Coverage", fieldName: "Scaling & Root Planing", preStepValue: "80%", missing: "N", aiCallValue: "80%", verifiedBy: "CALL" },
+
+      // Verified fields - Major Coverage
+      { saiCode: "VF000030", refInsCode: "D030", category: "Major Coverage", fieldName: "Crowns Coverage", preStepValue: "50%", missing: "N", aiCallValue: "50%", verifiedBy: "CALL" },
+      { saiCode: "VF000031", refInsCode: "D031", category: "Major Coverage", fieldName: "Bridges Coverage", preStepValue: "50%", missing: "N", aiCallValue: "50%", verifiedBy: "CALL" },
+      { saiCode: "VF000032", refInsCode: "D032", category: "Major Coverage", fieldName: "Dentures Coverage", preStepValue: "50%", missing: "N", aiCallValue: "50%", verifiedBy: "CALL" },
+      { saiCode: "VF000033", refInsCode: "D033", category: "Major Coverage", fieldName: "Root Canals Coverage", preStepValue: "50%", missing: "N", aiCallValue: "50%", verifiedBy: "CALL" },
+      { saiCode: "VF000034", refInsCode: "D034", category: "Major Coverage", fieldName: "Implants Coverage", preStepValue: "Not Covered", missing: "N", aiCallValue: "Not Covered - Considered Cosmetic", verifiedBy: "CALL" },
+
+      // Verified fields - Annual Maximums
+      { saiCode: "VF000060", refInsCode: "D060", category: "Annual Maximum", fieldName: "Annual Maximum Benefit", preStepValue: "$1200", missing: "N", aiCallValue: "$1,200 per Year", verifiedBy: "CALL" },
+      { saiCode: "VF000061", refInsCode: "D061", category: "Annual Maximum", fieldName: "Ortho Maximum", preStepValue: "Not Included", missing: "N", aiCallValue: "Not Included", verifiedBy: "CALL" },
+
+      // Missing fields - To verify during call
       { saiCode: "VF000028", refInsCode: "D028", category: "Preventative Coverage", fieldName: "Prophylaxis/Exam Frequency", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
-      { saiCode: "VF000029", refInsCode: "D029", category: "Preventative Coverage", fieldName: "Last FMS", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
-      { saiCode: "VF000030", refInsCode: "D030", category: "Preventative Coverage", fieldName: "Eligible for FMS Now", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
-      { saiCode: "VF000031", refInsCode: "D031", category: "Preventative Coverage", fieldName: "Eligible for FMS Every (Years)", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
-      { saiCode: "VF000032", refInsCode: "D032", category: "Preventative Coverage", fieldName: "Fluoride Varnish Frequency", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
-      { saiCode: "VF000041", refInsCode: "D041", category: "Basic Coverage", fieldName: "Basic Covered At (%)", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
-      { saiCode: "VF000042", refInsCode: "D042", category: "Basic Coverage", fieldName: "Basic Waiting Period", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
-      { saiCode: "VF000045", refInsCode: "D045", category: "Major Coverage", fieldName: "Major Covered At (%)", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
-      { saiCode: "VF000046", refInsCode: "D046", category: "Major Coverage", fieldName: "Major Waiting Period", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
-      { saiCode: "VF000047", refInsCode: "D047", category: "Major Coverage", fieldName: "Major Effective Date", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+      { saiCode: "VF000029", refInsCode: "D029", category: "Preventative Coverage", fieldName: "Last FMS Date", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+      { saiCode: "VF000040", refInsCode: "D040", category: "Preventative Coverage", fieldName: "Eligible for FMS Now", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+      { saiCode: "VF000041", refInsCode: "D041", category: "Preventative Coverage", fieldName: "FMS Frequency (Years)", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+      { saiCode: "VF000042", refInsCode: "D042", category: "Preventative Coverage", fieldName: "Fluoride Varnish Frequency", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+      { saiCode: "VF000045", refInsCode: "D045", category: "Major Coverage", fieldName: "Major Waiting Period", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+      { saiCode: "VF000046", refInsCode: "D046", category: "Major Coverage", fieldName: "Major Services Effective Date", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
+      { saiCode: "VF000070", refInsCode: "D070", category: "Coverage Limits", fieldName: "Frequency Limitations", preStepValue: "", missing: "Y", aiCallValue: "", verifiedBy: "-" },
     ];
     setVerificationData(initialData);
 
@@ -837,73 +857,12 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
           </div>
 
           {/* Right Panel - Verification Data (Always visible) */}
-          <div className="flex-1 bg-white dark:bg-slate-900 overflow-hidden flex flex-col">
-            <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-700">
-              <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
-                Live Verification Data Updates
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Watching {verificationData.length} fields
-              </p>
-            </div>
-            <div className="flex-1 overflow-auto">
-              <table className="w-full text-xs">
-                <thead className="bg-slate-50 dark:bg-slate-800/50 sticky top-0">
-                  <tr>
-                    <th className="px-3 py-2 text-left font-medium text-slate-600 dark:text-slate-400">SAI Code</th>
-                    <th className="px-3 py-2 text-left font-medium text-slate-600 dark:text-slate-400">Field Name</th>
-                    <th className="px-3 py-2 text-left font-medium text-slate-600 dark:text-slate-400">Value</th>
-                    <th className="px-3 py-2 text-center font-medium text-slate-600 dark:text-slate-400">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                  {verificationData.map((row, index) => (
-                    <tr
-                      key={index}
-                      className={`transition-colors ${row.isUpdating
-                        ? 'bg-green-50 dark:bg-green-900/20'
-                        : row.isChecking
-                          ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500'
-                          : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
-                        }`}
-                    >
-                      <td className="px-3 py-2 font-mono text-slate-900 dark:text-white">
-                        <div className="flex items-center gap-2">
-                          {row.isChecking && (
-                            <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                          )}
-                          {row.saiCode}
-                        </div>
-                      </td>
-                      <td className="px-3 py-2 text-slate-700 dark:text-slate-300">
-                        <div className="flex items-center gap-2">
-                          {row.fieldName}
-                          {row.isChecking && (
-                            <span className="text-blue-600 dark:text-blue-400 text-[10px] font-semibold animate-pulse">
-                              Checking...
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-3 py-2 text-slate-900 dark:text-white font-medium">
-                        {row.aiCallValue || (
-                          <span className="text-slate-400 dark:text-slate-500 italic">Pending...</span>
-                        )}
-                      </td>
-                      <td className="px-3 py-2 text-center">
-                        <span className={`text-xs font-semibold ${row.aiCallValue
-                          ? 'text-status-green'
-                          : 'text-status-red'
-                          }`}>
-                          {row.aiCallValue ? 'Yes' : 'No'}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <VerificationDataPanel
+            data={verificationData}
+            showTabs={true}
+            title="Live Verification Data Updates"
+            subtitle="Watching"
+          />
         </div>
       </div>
 
