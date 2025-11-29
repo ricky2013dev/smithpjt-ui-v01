@@ -18,15 +18,24 @@ interface VerificationDataPanelProps {
   showTabs?: boolean;
   title?: string;
   subtitle?: string;
+  activeTab?: 'missing' | 'verified';
+  onTabChange?: (tab: 'missing' | 'verified') => void;
 }
 
 const VerificationDataPanel: React.FC<VerificationDataPanelProps> = ({
   data,
   showTabs = true,
   title = "Live Verification Data Updates",
-  subtitle = "Watching"
+  subtitle = "Watching",
+  activeTab: propActiveTab,
+  onTabChange: propOnTabChange
 }) => {
-  const [verificationTab, setVerificationTab] = useState<'missing' | 'verified'>('verified');
+  const [internalTab, setInternalTab] = useState<'missing' | 'verified'>('verified');
+  const verificationTab = propActiveTab ?? internalTab;
+  const setVerificationTab = (tab: 'missing' | 'verified') => {
+    setInternalTab(tab);
+    propOnTabChange?.(tab);
+  };
 
   const filteredData = showTabs
     ? data.filter(row =>

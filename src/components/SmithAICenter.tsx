@@ -37,6 +37,7 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
   const [confirmAction, setConfirmAction] = useState<'end' | 'close' | null>(null);
   const [, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [showSummary, setShowSummary] = useState(false);
+  const [verificationTab, setVerificationTab] = useState<'missing' | 'verified'>('verified');
   const synth = window.speechSynthesis;
 
   // Sync refs with state
@@ -428,6 +429,7 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
     isCallActiveRef.current = true; // Immediate update for the loop
     setIsCallCompleted(false);
     setCallDuration(0);
+    setVerificationTab('missing');
 
     // Clear the welcome message to save space
     setMessages([]);
@@ -862,6 +864,8 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
             showTabs={true}
             title="Live Verification Data Updates"
             subtitle="Watching"
+            activeTab={verificationTab}
+            onTabChange={setVerificationTab}
           />
         </div>
       </div>
