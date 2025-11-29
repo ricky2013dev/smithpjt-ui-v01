@@ -355,55 +355,49 @@ const SmithAICenter: React.FC<SmithAICenterProps> = ({ patient, onClose }) => {
       await typeMessage('Insurance Rep', 'Let me check... The last FMS was on March 15, 2023.', 25);
       updateVerificationRow('VF000029', '03/15/2023');
       await wait(800);
-      setFieldChecking('VF000030', true);
+      setFieldChecking('VF000040', true);
       await typeMessage('AI Agent', 'Is the patient eligible for a full mouth series now?', 25);
       await wait(1000);
       await typeMessage('Insurance Rep', 'Yes, they are eligible now since it has been over 3 years.', 25);
-      updateVerificationRow('VF000030', 'Yes');
+      updateVerificationRow('VF000040', 'Yes');
       await wait(700);
-      updateVerificationRow('VF000031', '3');
+      setFieldChecking('VF000041', true);
+      await typeMessage('AI Agent', 'What is the FMS frequency requirement?', 25);
+      await wait(800);
+      await typeMessage('Insurance Rep', 'The plan allows one full mouth series every 3 years.', 25);
+      updateVerificationRow('VF000041', '3');
       await wait(1000);
 
       // Conversation 3 - Fluoride coverage
-      setFieldChecking('VF000032', true);
+      setFieldChecking('VF000042', true);
       await typeMessage('AI Agent', 'What about fluoride varnish treatment frequency?', 25);
       await wait(1000);
       await typeMessage('Insurance Rep', 'Fluoride varnish is covered every 6 months for patients under 18 years old.', 25);
-      updateVerificationRow('VF000032', 'Every 6 months (under 18)');
+      updateVerificationRow('VF000042', 'Every 6 months (under 18)');
       await wait(1200);
 
-      // Conversation 4 - Basic coverage
-      setFieldChecking('VF000041', true);
-      await typeMessage('AI Agent', 'Can you confirm the basic services coverage percentage?', 25);
-      await wait(1200);
-      await typeMessage('Insurance Rep', 'Basic services are covered at 80% after the deductible is met.', 25);
-      updateVerificationRow('VF000041', '80');
-      await wait(800);
-      setFieldChecking('VF000042', true);
-      await typeMessage('AI Agent', 'Is there a waiting period for basic services?', 25);
+      // Conversation 4 - Frequency limitations
+      setFieldChecking('VF000070', true);
+      await typeMessage('AI Agent', 'Are there any other frequency limitations I should be aware of?', 25);
       await wait(1000);
-      await typeMessage('Insurance Rep', 'No, there is no waiting period for basic services under this plan.', 25);
-      updateVerificationRow('VF000042', 'No');
+      await typeMessage('Insurance Rep', 'The plan includes standard frequency limitations: 2 cleanings per year, 2 exams per year, and 1 FMS every 3 years.', 25);
+      updateVerificationRow('VF000070', 'Standard: 2 cleanings/year, 2 exams/year, 1 FMS/3 years');
       await wait(1200);
 
-      // Conversation 5 - Major coverage
+      // Conversation 5 - Major waiting period
       setFieldChecking('VF000045', true);
-      await typeMessage('AI Agent', 'And what is the coverage percentage for major services?', 25);
-      await wait(1200);
-      await typeMessage('Insurance Rep', 'Major services are covered at 50% after the deductible.', 25);
-      updateVerificationRow('VF000045', '50');
-      await wait(800);
-      setFieldChecking('VF000046', true);
-      await typeMessage('AI Agent', 'Is there a waiting period for major services?', 25);
+      await typeMessage('AI Agent', 'Can you confirm the waiting period for major services?', 25);
       await wait(1000);
       await typeMessage('Insurance Rep', 'Yes, there is a 6-month waiting period for major services.', 25);
-      updateVerificationRow('VF000046', 'Yes');
+      updateVerificationRow('VF000045', '6 months');
       await wait(800);
-      setFieldChecking('VF000047', true);
+
+      // Conversation 6 - Major services effective date
+      setFieldChecking('VF000046', true);
       await typeMessage('AI Agent', 'When will major services be effective for this patient?', 25);
       await wait(1200);
       await typeMessage('Insurance Rep', 'Based on the enrollment date, major services will be effective July 1, 2024.', 25);
-      updateVerificationRow('VF000047', '07/01/2024');
+      updateVerificationRow('VF000046', '07/01/2024');
       await wait(1200);
 
       // Closing
