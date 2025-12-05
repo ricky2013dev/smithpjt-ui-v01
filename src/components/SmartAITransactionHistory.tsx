@@ -205,7 +205,6 @@ declare global {
 const SmartAITransactionHistory: React.FC = () => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [typeFilter, setTypeFilter] = useState<'ALL' | 'API' | 'CALL'>('ALL');
-  const [statusFilter, setStatusFilter] = useState<'ALL' | 'SUCCESS' | 'PARTIAL' | 'FAILED'>('ALL');
   const [activeDetailTab, setActiveDetailTab] = useState<{[key: string]: string}>({});
 
   // Fax modal states
@@ -512,8 +511,7 @@ Important Notes
   // Filter data based on selected filters
   const filteredData = mockData.filter(transaction => {
     const typeMatch = typeFilter === 'ALL' || transaction.type === typeFilter;
-    const statusMatch = statusFilter === 'ALL' || transaction.status === statusFilter;
-    return typeMatch && statusMatch;
+    return typeMatch;
   });
 
   const getStatusColor = (status: string) => {
@@ -571,47 +569,11 @@ Important Notes
           CALL
         </button>
 
-        {/* Divider */}
-        <div className="w-px h-4 bg-slate-200 dark:bg-slate-700 mx-1"></div>
-
-        {/* Status Filters */}
-        <button
-          onClick={() => setStatusFilter('SUCCESS')}
-          className={`px-2 py-0.5 rounded text-[10px] font-semibold transition-colors ${
-            statusFilter === 'SUCCESS'
-              ? 'bg-green-600 text-white'
-              : 'text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
-          }`}
-        >
-          SUCCESS
-        </button>
-        <button
-          onClick={() => setStatusFilter('PARTIAL')}
-          className={`px-2 py-0.5 rounded text-[10px] font-semibold transition-colors ${
-            statusFilter === 'PARTIAL'
-              ? 'bg-yellow-600 text-white'
-              : 'text-yellow-600 dark:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-yellow-900/20'
-          }`}
-        >
-          PARTIAL
-        </button>
-        <button
-          onClick={() => setStatusFilter('FAILED')}
-          className={`px-2 py-0.5 rounded text-[10px] font-semibold transition-colors ${
-            statusFilter === 'FAILED'
-              ? 'bg-red-600 text-white'
-              : 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20'
-          }`}
-        >
-          FAILED
-        </button>
-
         {/* Clear Filters */}
-        {(typeFilter !== 'ALL' || statusFilter !== 'ALL') && (
+        {typeFilter !== 'ALL' && (
           <button
             onClick={() => {
               setTypeFilter('ALL');
-              setStatusFilter('ALL');
             }}
             className="px-2 py-0.5 rounded text-[10px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ml-1"
           >
