@@ -192,11 +192,30 @@ export const mockData: Transaction[] = [
   }
 ];
 
+interface FaxRequest {
+  transactionId: string;
+  status: 'idle' | 'step1' | 'step2' | 'step3' | 'completed';
+  document?: {
+    image: string;
+    name: string;
+  };
+  analysis?: {
+    confidence: number;
+    fields: {
+      name: string;
+      value: string;
+      confidence: number;
+    }[];
+  };
+  codeAnalysis?: string;
+}
+
 const SmartAITransactionHistory: React.FC = () => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [typeFilter, setTypeFilter] = useState<'ALL' | 'API' | 'CALL'>('ALL');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'SUCCESS' | 'PARTIAL' | 'FAILED'>('ALL');
   const [activeDetailTab, setActiveDetailTab] = useState<{[key: string]: string}>({});
+  const [faxRequest, setFaxRequest] = useState<FaxRequest | null>(null);
 
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
@@ -207,6 +226,75 @@ const SmartAITransactionHistory: React.FC = () => {
 
   const setDetailTab = (transactionId: string, tab: string) => {
     setActiveDetailTab({...activeDetailTab, [transactionId]: tab});
+  };
+
+  // Handle fax document request
+  const handleRequestFaxDocument = (transactionId: string) => {
+    setFaxRequest({
+      transactionId,
+      status: 'step1',
+      document: {
+        image: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22600%22 height=%22800%22 viewBox=%220 0 600 800%22%3E%3Crect fill=%22%23fff%22 width=%22600%22 height=%22800%22/%3E%3Ctext x=%2230%22 y=%2250%22 font-size=%2224%22 font-weight=%22bold%22 fill=%22%23000%22%3EINSURANCE BENEFITS FAX%3C/text%3E%3Ctext x=%2230%22 y=%2290%22 font-size=%2214%22 fill=%22%23333%22%3ETo: Smith Dental%3C/text%3E%3Ctext x=%2230%22 y=%22115%22 font-size=%2214%22 fill=%22%23333%22%3EFrom: Cigna Dental Insurance%3C/text%3E%3Ctext x=%2230%22 y=%22140%22 font-size=%2214%22 fill=%22%23333%22%3EDate: November 28, 2025%3C/text%3E%3Cline x1=%2230%22 y1=%22160%22 x2=%22570%22 y2=%22160%22 stroke=%22%23999%22/%3E%3Ctext x=%2230%22 y=%22200%22 font-size=%2216%22 font-weight=%22bold%22 fill=%22%23000%22%3EPatient: Sarah Johnson%3C/text%3E%3Ctext x=%2230%22 y=%22230%22 font-size=%2214%22 fill=%22%23333%22%3EMember ID: CIG-4567890%3C/text%3E%3Ctext x=%2230%22 y=%22255%22 font-size=%2214%22 fill=%22%23333%22%3EPlan: Cigna Dental PPO%3C/text%3E%3Ctext x=%2230%22 y=%22300%22 font-size=%2216%22 font-weight=%22bold%22 fill=%22%23000%22%3EBenefits Summary:%3C/text%3E%3Ctext x=%2230%22 y=%22330%22 font-size=%2213%22 fill=%22%23333%22%3E• Preventive: 100% (2 cleanings, 2 exams/year)%3C/text%3E%3Ctext x=%2230%22 y=%22355%22 font-size=%2213%22 fill=%22%23333%22%3E• Basic: 80% after $50 deductible%3C/text%3E%3Ctext x=%2230%22 y=%22380%22 font-size=%2213%22 fill=%22%23333%22%3E• Major: 50% after deductible%3C/text%3E%3Ctext x=%2230%22 y=%22405%22 font-size=%2213%22 fill=%22%23333%22%3E• Annual Maximum: $2,000/year%3C/text%3E%3Ctext x=%2230%22 y=%22430%22 font-size=%2213%22 fill=%22%23333%22%3E• Remaining: $2,000 (unused)%3C/text%3E%3Ctext x=%2230%22 y=%22475%22 font-size=%2216%22 font-weight=%22bold%22 fill=%22%23000%22%3EDeductible Status:%3C/text%3E%3Ctext x=%2230%22 y=%22505%22 font-size=%2213%22 fill=%22%23333%22%3EIndividual: $50 (Not Met)%3C/text%3E%3Ctext x=%2230%22 y=%22530%22 font-size=%2213%22 fill=%22%23333%22%3EFamily: $100 (Not Met)%3C/text%3E%3Ctext x=%2230%22 y=%22575%22 font-size=%2216%22 font-weight=%22bold%22 fill=%22%23000%22%3EWaiting Periods:%3C/text%3E%3Ctext x=%2230%22 y=%22605%22 font-size=%2213%22 fill=%22%23333%22%3ENone - All services immediately available%3C/text%3E%3Ctext x=%2230%22 y=%22650%22 font-size=%2213%22 fill=%22%23999%22 font-style=%22italic%22%3EThis fax contains confidential health information.%3C/text%3E%3Ctext x=%2230%22 y=%22675%22 font-size=%2213%22 fill=%22%23999%22 font-style=%22italic%22%3EIf you received this in error, please contact us immediately.%3C/text%3E%3C/svg%3E',
+        name: 'Insurance_Fax_CIG4567890.pdf'
+      }
+    });
+  };
+
+  // Process fax through steps
+  const processFaxStep = (nextStep: 'step2' | 'step3' | 'completed') => {
+    if (!faxRequest) return;
+
+    if (nextStep === 'step2') {
+      setFaxRequest({
+        ...faxRequest,
+        status: 'step2',
+        analysis: {
+          confidence: 94.5,
+          fields: [
+            { name: 'Member ID', value: 'CIG-4567890', confidence: 99 },
+            { name: 'Patient Name', value: 'Sarah Johnson', confidence: 98 },
+            { name: 'Plan Type', value: 'Cigna Dental PPO', confidence: 96 },
+            { name: 'Preventive Coverage', value: '100%', confidence: 95 },
+            { name: 'Basic Coverage', value: '80%', confidence: 94 },
+            { name: 'Major Coverage', value: '50%', confidence: 93 },
+            { name: 'Annual Maximum', value: '$2,000', confidence: 97 },
+            { name: 'Deductible', value: '$50', confidence: 92 },
+          ]
+        }
+      });
+    } else if (nextStep === 'step3') {
+      setFaxRequest({
+        ...faxRequest,
+        status: 'step3',
+        codeAnalysis: `{
+  "fax_extraction": {
+    "status": "SUCCESS",
+    "confidence": 94.5,
+    "fields_detected": 8,
+    "fields_extracted": 8
+  },
+  "data_validation": {
+    "member_id_format": "VALID",
+    "plan_code": "CIGNA_DENTAL_PPO",
+    "effective_date": "2025-01-01",
+    "coverage_percentages": [100, 80, 50],
+    "data_completeness": "COMPLETE"
+  },
+  "compliance_check": {
+    "hipaa_compliant": true,
+    "required_fields_present": true,
+    "signature_verified": true
+  },
+  "processing_time_ms": 245,
+  "timestamp": "2025-11-28T10:30:45.123Z"
+}`
+      });
+    } else {
+      setFaxRequest({
+        ...faxRequest,
+        status: 'completed'
+      });
+    }
   };
 
   // Format transcript with styling
@@ -516,6 +604,14 @@ const SmartAITransactionHistory: React.FC = () => {
                         Transaction Detail
                       </button>
                     )}
+                    <button
+                      onClick={() => handleRequestFaxDocument(transaction.id)}
+                      className="px-3 py-2 text-xs font-medium border-b-2 border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors ml-auto"
+                      title="Request insurance fax document"
+                    >
+                      <span className="material-symbols-outlined text-sm align-text-bottom mr-1">description</span>
+                      Request Fax
+                    </button>
                   </div>
 
                   {/* Tab Content */}
@@ -690,6 +786,172 @@ const SmartAITransactionHistory: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Fax Document Request Modal */}
+      {faxRequest && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-xl">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-slate-100 dark:bg-slate-800 px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">Insurance Fax Document - 3 Step Analysis</h2>
+              <button
+                onClick={() => setFaxRequest(null)}
+                className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            {/* Progress Indicator */}
+            <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex justify-between items-center gap-4">
+                <div className={`flex-1 p-3 rounded text-center text-xs font-medium transition-all ${
+                  ['step1', 'step2', 'step3', 'completed'].includes(faxRequest.status)
+                    ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                    : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
+                }`}>
+                  Step 1: Document Image
+                </div>
+                <div className="w-8 h-0.5 bg-slate-300 dark:bg-slate-700"></div>
+                <div className={`flex-1 p-3 rounded text-center text-xs font-medium transition-all ${
+                  ['step2', 'step3', 'completed'].includes(faxRequest.status)
+                    ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                    : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
+                }`}>
+                  Step 2: Data Analysis
+                </div>
+                <div className="w-8 h-0.5 bg-slate-300 dark:bg-slate-700"></div>
+                <div className={`flex-1 p-3 rounded text-center text-xs font-medium transition-all ${
+                  ['step3', 'completed'].includes(faxRequest.status)
+                    ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                    : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
+                }`}>
+                  Step 3: Code Analysis
+                </div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-6">
+              {/* Step 1: Document Image */}
+              {faxRequest.status === 'step1' && faxRequest.document && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-green-600 dark:text-green-400">check_circle</span>
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">Step 1: Document Retrieved</h3>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">Fax document from insurance provider received successfully</p>
+
+                  <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded border border-slate-200 dark:border-slate-700">
+                    <img src={faxRequest.document.image} alt="Insurance Fax Document" className="w-full rounded border border-slate-200 dark:border-slate-600" />
+                  </div>
+
+                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded p-3">
+                    <p className="text-xs text-blue-700 dark:text-blue-400"><strong>File:</strong> {faxRequest.document.name}</p>
+                    <p className="text-xs text-blue-700 dark:text-blue-400 mt-1"><strong>Status:</strong> Document image loaded and ready for analysis</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 2: Data Analysis */}
+              {faxRequest.status === 'step2' && faxRequest.analysis && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-green-600 dark:text-green-400">check_circle</span>
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">Step 2: Document Analysis Complete</h3>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">AI extracted and analyzed all data fields from the fax document</p>
+
+                  <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded border border-slate-200 dark:border-slate-700">
+                    <div className="mb-3 pb-3 border-b border-slate-200 dark:border-slate-700">
+                      <p className="text-xs font-medium text-slate-700 dark:text-slate-300">Overall Confidence Score: <span className="font-bold text-lg text-green-600 dark:text-green-400">{faxRequest.analysis.confidence}%</span></p>
+                    </div>
+                    <div className="space-y-2">
+                      {faxRequest.analysis.fields.map((field, idx) => (
+                        <div key={idx} className="flex items-start justify-between text-xs gap-2 pb-2 border-b border-slate-200 dark:border-slate-700 last:border-b-0">
+                          <div className="flex-1">
+                            <p className="font-medium text-slate-900 dark:text-white">{field.name}</p>
+                            <p className="text-slate-600 dark:text-slate-400">{field.value}</p>
+                          </div>
+                          <div className="flex items-center gap-1 whitespace-nowrap">
+                            <span className={`text-xs font-semibold px-2 py-1 rounded ${
+                              field.confidence >= 95 ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' :
+                              field.confidence >= 90 ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400' :
+                              'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400'
+                            }`}>
+                              {field.confidence}%
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: Code Analysis */}
+              {faxRequest.status === 'step3' && faxRequest.codeAnalysis && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-green-600 dark:text-green-400">check_circle</span>
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">Step 3: Code Analysis Complete</h3>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">Technical analysis and validation of extracted data</p>
+
+                  <div className="bg-slate-900 text-slate-100 p-4 rounded border border-slate-700 font-mono text-xs overflow-x-auto">
+                    <pre>{faxRequest.codeAnalysis}</pre>
+                  </div>
+                </div>
+              )}
+
+              {/* Completed */}
+              {faxRequest.status === 'completed' && (
+                <div className="space-y-4 text-center py-6">
+                  <div className="flex justify-center">
+                    <span className="material-symbols-outlined text-5xl text-green-600 dark:text-green-400">check_circle</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Analysis Complete</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">All 3 steps have been successfully processed. The fax document has been analyzed and validated.</p>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="sticky bottom-0 bg-slate-50 dark:bg-slate-800 px-6 py-4 border-t border-slate-200 dark:border-slate-700 flex gap-3 justify-end">
+              {faxRequest.status === 'step1' && (
+                <button
+                  onClick={() => processFaxStep('step2')}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded transition-colors"
+                >
+                  Analyze Document Data
+                </button>
+              )}
+              {faxRequest.status === 'step2' && (
+                <button
+                  onClick={() => processFaxStep('step3')}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded transition-colors"
+                >
+                  Run Code Analysis
+                </button>
+              )}
+              {faxRequest.status === 'step3' && (
+                <button
+                  onClick={() => processFaxStep('completed')}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded transition-colors"
+                >
+                  Complete
+                </button>
+              )}
+              <button
+                onClick={() => setFaxRequest(null)}
+                className="px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-900 dark:text-white text-xs font-medium rounded transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
