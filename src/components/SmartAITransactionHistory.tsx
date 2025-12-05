@@ -635,11 +635,11 @@ Important Notes
           <div className="w-6"></div>
           <div className="grid grid-cols-12 gap-3">
             <div className="col-span-2">Start Time</div>
+            <div className="col-span-1 text-center">Duration</div>
             <div className="col-span-1 text-center">Type</div>
             <div className="col-span-1 text-center">Status</div>
             <div className="col-span-2">Insurance Provider</div>
             <div className="col-span-2">Insurance Rep</div>
-            <div className="col-span-1 text-center">Duration</div>
             <div className="col-span-1 text-center">Score</div>
             <div className="col-span-2">Run By</div>
           </div>
@@ -674,6 +674,7 @@ Important Notes
                     <div className="text-slate-900 dark:text-white">{transaction.startTime}</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">{transaction.requestId}</div>
                   </div>
+                  <div className="col-span-1 text-center font-mono text-xs text-slate-600 dark:text-slate-400">{transaction.duration}</div>
                   <div className={`col-span-1 text-center font-semibold text-xs ${getTypeColor(transaction.type)}`}>
                     {transaction.type}
                   </div>
@@ -682,7 +683,6 @@ Important Notes
                   </div>
                   <div className="col-span-2 text-slate-700 dark:text-slate-300">{transaction.insuranceProvider}</div>
                   <div className="col-span-2 text-slate-600 dark:text-slate-400">{transaction.insuranceRep}</div>
-                  <div className="col-span-1 text-center font-mono text-xs text-slate-600 dark:text-slate-400">{transaction.duration}</div>
                   <div className="col-span-1 text-center">
                     <span className={`font-semibold text-sm ${
                       transaction.verificationScore >= 90 ? 'text-green-600 dark:text-green-400' :
