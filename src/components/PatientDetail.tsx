@@ -429,9 +429,12 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             {/* Request Insurance Fax */}
             <button
               onClick={() => {
-                // This will trigger the fax document modal
-                const event = new CustomEvent('requestFax', { detail: { patientId: patient.id } });
-                window.dispatchEvent(event);
+                // Call the global openFaxModal function exposed by SmartAITransactionHistory
+                if (window.openFaxModal) {
+                  window.openFaxModal();
+                  // Also navigate to the AI Call History tab to show the modal
+                  onTabChange(TAB_TYPES.AI_CALL_HISTORY);
+                }
               }}
               className="ml-3 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700"
               title="Request insurance fax document"

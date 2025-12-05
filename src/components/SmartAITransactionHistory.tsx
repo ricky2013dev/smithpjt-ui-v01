@@ -210,6 +210,13 @@ interface FaxRequest {
   codeAnalysis?: string;
 }
 
+// Create a global interface to expose fax functionality
+declare global {
+  interface Window {
+    openFaxModal?: () => void;
+  }
+}
+
 const SmartAITransactionHistory: React.FC = () => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [typeFilter, setTypeFilter] = useState<'ALL' | 'API' | 'CALL'>('ALL');
@@ -217,13 +224,14 @@ const SmartAITransactionHistory: React.FC = () => {
   const [activeDetailTab, setActiveDetailTab] = useState<{[key: string]: string}>({});
   const [faxRequest, setFaxRequest] = useState<FaxRequest | null>(null);
 
-  // Listen for fax request events from PatientDetail
+  // Expose fax modal function globally so it can be called from anywhere
   React.useEffect(() => {
-    const handleFaxRequest = () => {
+    window.openFaxModal = () => {
       handleRequestFaxDocument(mockData[0]?.id || '1');
     };
-    window.addEventListener('requestFax', handleFaxRequest);
-    return () => window.removeEventListener('requestFax', handleFaxRequest);
+    return () => {
+      delete window.openFaxModal;
+    };
   }, []);
 
   const toggleExpand = (id: string) => {
