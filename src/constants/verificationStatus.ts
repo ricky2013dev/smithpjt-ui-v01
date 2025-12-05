@@ -3,8 +3,8 @@
 
 export const VERIFICATION_STATUS_LABELS = {
   NOT_STARTED: 'Not Started',
-  BASIC_DATA_READY: 'Basic Data Ready',
-  ELIGIBILITY_CHECK: 'Basic Data Ready',
+  BASIC_DATA_READY: 'Basic Fax Data Ready',
+  ELIGIBILITY_CHECK: 'Document Analysis',
   BENEFITS_PENDING: 'Benefits Pending',
   BENEFITS_CHECK: 'Benefits Check',
   AI_CALL_PENDING: 'AI Call Pending',

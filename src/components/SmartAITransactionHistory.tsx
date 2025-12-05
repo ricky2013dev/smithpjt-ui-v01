@@ -53,10 +53,10 @@ export const mockData: Transaction[] = [
     patientId: 'P002',
     patientName: 'Sarah Johnson',
     insuranceProvider: 'Cigna Dental',
-    insuranceRep: 'System',
+    insuranceRep: 'Fax System',
     runBy: 'Smith AI System',
     dataVerified: ['Member ID', 'Patient Name', 'Plan Name', 'Effective Date', 'Coverage', 'Deductible', 'Annual Maximum'],
-    verificationScore: 100,
+    verificationScore: 30,
     details: {
       eligibilityCheck: 'ACTIVE - Policy effective through 12/31/2025',
       benefitsVerification: 'Preventive: 100%, Basic: 80%, Major: 50%',
@@ -78,10 +78,10 @@ export const mockData: Transaction[] = [
     patientId: 'P001',
     patientName: 'Robert Taylor',
     insuranceProvider: 'Cigna Dental',
-    insuranceRep: 'System',
+    insuranceRep: 'API System',
     runBy: 'Smith AI System',
     dataVerified: ['Eligibility', 'Benefits', 'Coverage', 'Deductibles'],
-    verificationScore: 100,
+    verificationScore: 80,
     responseCode: '200',
     endpoint: 'https://api.cigna.com/dental/benefits',
     details: {
@@ -273,11 +273,9 @@ const SmartAITransactionHistory: React.FC = () => {
     });
   };
 
-  // Auto-scroll during typing
+  // Auto-scroll during typing - disabled for step 1 since it now displays an image
   useEffect(() => {
-    if (step1Status === 'in_progress' && contentRef.current) {
-      contentRef.current.scrollTop = contentRef.current.scrollHeight;
-    }
+    // Step 1 now displays an image, no need to auto-scroll
   }, [step1Text]);
 
   useEffect(() => {
@@ -292,30 +290,6 @@ const SmartAITransactionHistory: React.FC = () => {
     }
   }, [step3Text]);
 
-  // Sample fax data
-  const faxData = JSON.stringify({
-    "fax_received": "2025-11-28T10:30:00Z",
-    "from_carrier": "Cigna Dental Insurance",
-    "patient_name": "Sarah Johnson",
-    "member_id": "CIG-4567890",
-    "policy": "Cigna Dental PPO - Individual",
-    "effective_date": "2025-01-01",
-    "status": "ACTIVE",
-    "benefits": {
-      "preventive": "100% (2 cleanings, 2 exams annually)",
-      "basic": "80% (after $50 deductible)",
-      "major": "50% (after deductible)",
-      "annual_maximum": "$2,000 per year",
-      "annual_remaining": "$2,000"
-    },
-    "coverage_codes": {
-      "D0120": "Periodic oral evaluation",
-      "D0210": "Complete intraoral - full mouth radiographic images",
-      "D1110": "Prophylaxis - adult",
-      "D2140": "Amalgam - one surface, primary",
-      "D2391": "Resin-based composite - one surface, posterior"
-    }
-  }, null, 2);
 
   const insuranceDataAnalysis = `INSURANCE FAX ANALYSIS - DETAILED BREAKDOWN
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -398,14 +372,18 @@ Important Notes
   // Start fax verification process
   const startFaxVerification = async () => {
     setCurrentFaxStep('step1');
+    // Show loading state first for 10 seconds
     setStep1Status('in_progress');
-    await new Promise(resolve => setTimeout(resolve, 100));
-    await typeText(faxData, setStep1Text, 15);
-    await new Promise(resolve => setTimeout(resolve, 50));
+
+    // Wait 10 seconds for loading animation
+    await new Promise(resolve => setTimeout(resolve, 10000));
+
+    // Then show the image
+    setStep1Text('image');
     setStep1Status('completed');
 
     // Step 2: Analysis
-    await new Promise(resolve => setTimeout(resolve, 150));
+    await new Promise(resolve => setTimeout(resolve, 800));
     setCurrentFaxStep('step2');
     setStep2Status('in_progress');
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -1027,14 +1005,63 @@ Important Notes
               {step1Status !== 'pending' && (
                 <div className="space-y-4 mb-6">
                   <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-green-600 dark:text-green-400">check_circle</span>
+                    {step1Status === 'completed' ? (
+                      <span className="material-symbols-outlined text-green-600 dark:text-green-400">check_circle</span>
+                    ) : (
+                      <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 animate-spin">hourglass_bottom</span>
+                    )}
                     <h3 className="text-sm font-bold text-slate-900 dark:text-white">Step 1: Fax Document Retrieved</h3>
                   </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">Fax received from insurance carrier</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">
+                    {step1Status === 'in_progress' ? 'Processing fax document...' : 'Fax received from insurance carrier'}
+                  </p>
 
-                  <div className="bg-slate-900 text-slate-100 p-4 rounded border border-slate-700 font-mono text-xs overflow-x-auto">
-                    <pre>{step1Text}</pre>
-                  </div>
+                  {step1Status === 'in_progress' ? (
+                    <div className="bg-slate-50 dark:bg-slate-800 p-12 rounded border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center gap-6">
+                      {/* Animated Document Icon */}
+                      <div className="relative w-16 h-20 mb-2">
+                        <span className="material-symbols-outlined text-6xl text-blue-500 animate-pulse">description</span>
+                      </div>
+
+                      {/* Bouncing Dots */}
+                      <div className="flex gap-2">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+                        <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                      </div>
+
+                      {/* Status Text */}
+                      <div className="text-center space-y-2">
+                        <p className="text-sm text-slate-900 dark:text-white font-semibold">Retrieving fax from insurance carrier...</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">Connecting to Cigna Dental server</p>
+                      </div>
+
+                      {/* Progress Bar */}
+                      <div className="w-full max-w-xs h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full animate-pulse" style={{ width: '65%' }}></div>
+                      </div>
+
+                      {/* Process Steps */}
+                      <div className="w-full max-w-xs space-y-2 text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-green-500 text-base">check_circle</span>
+                          <span className="text-slate-700 dark:text-slate-300">Connected to server</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-blue-500 text-base animate-spin">hourglass_bottom</span>
+                          <span className="text-slate-700 dark:text-slate-300">Downloading document</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-slate-400 dark:text-slate-600 text-base">schedule</span>
+                          <span className="text-slate-500 dark:text-slate-400">Processing OCR</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded border border-slate-200 dark:border-slate-700">
+                      <img src="/assets/fax-sample.png" alt="Fax Document" className="max-w-full h-auto rounded" />
+                    </div>
+                  )}
                 </div>
               )}
 
