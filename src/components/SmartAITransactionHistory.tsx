@@ -11,7 +11,7 @@ interface CallCommunication {
 interface Transaction {
   id: string;
   requestId: string;
-  type: 'API' | 'CALL';
+  type: 'API' | 'CALL' | 'FAX';
   method: string;
   startTime: string;
   endTime: string;
@@ -40,6 +40,31 @@ interface Transaction {
 }
 
 export const mockData: Transaction[] = [
+  // FAX DOCUMENT ANALYSIS
+  {
+    id: '0',
+    requestId: 'REQ-2025-11-28-0915',
+    type: 'FAX',
+    method: 'FAX /fax/document-analysis',
+    startTime: '2025-11-28 09:15:30',
+    endTime: '2025-11-28 09:15:48',
+    duration: '18s',
+    status: 'SUCCESS',
+    patientId: 'P002',
+    patientName: 'Sarah Johnson',
+    insuranceProvider: 'Cigna Dental',
+    insuranceRep: 'System',
+    runBy: 'Smith AI System',
+    dataVerified: ['Member ID', 'Patient Name', 'Plan Name', 'Effective Date', 'Coverage', 'Deductible', 'Annual Maximum'],
+    verificationScore: 100,
+    details: {
+      eligibilityCheck: 'ACTIVE - Policy effective through 12/31/2025',
+      benefitsVerification: 'Preventive: 100%, Basic: 80%, Major: 50%',
+      coverageDetails: 'Annual Maximum: $2,000 | Used: $0 | Remaining: $2,000',
+      deductibleInfo: 'Individual Deductible: $50 | Met: $0',
+      transcript: 'Fax document analysis completed successfully. Insurance information extracted and verified from fax document.'
+    }
+  },
   // API SUCCESS
   {
     id: '1',
@@ -204,7 +229,7 @@ declare global {
 
 const SmartAITransactionHistory: React.FC = () => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [typeFilter, setTypeFilter] = useState<'ALL' | 'API' | 'CALL'>('ALL');
+  const [typeFilter, setTypeFilter] = useState<'ALL' | 'API' | 'CALL' | 'FAX'>('ALL');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'SUCCESS' | 'PARTIAL' | 'FAILED'>('ALL');
   const [activeDetailTab, setActiveDetailTab] = useState<{[key: string]: string}>({});
 
@@ -530,9 +555,16 @@ Important Notes
   };
 
   const getTypeColor = (type: string) => {
-    return type === 'API'
-      ? 'text-blue-600 dark:text-blue-400'
-      : 'text-purple-600 dark:text-purple-400';
+    switch (type) {
+      case 'API':
+        return 'text-blue-600 dark:text-blue-400';
+      case 'CALL':
+        return 'text-purple-600 dark:text-purple-400';
+      case 'FAX':
+        return 'text-cyan-600 dark:text-cyan-400';
+      default:
+        return 'text-slate-600 dark:text-slate-400';
+    }
   };
 
   return (
@@ -569,6 +601,16 @@ Important Notes
           }`}
         >
           CALL
+        </button>
+        <button
+          onClick={() => setTypeFilter('FAX')}
+          className={`px-2 py-0.5 rounded text-[10px] font-semibold transition-colors ${
+            typeFilter === 'FAX'
+              ? 'bg-cyan-600 text-white'
+              : 'text-cyan-600 dark:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/20'
+          }`}
+        >
+          FAX
         </button>
 
         {/* Divider */}
