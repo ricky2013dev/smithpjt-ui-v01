@@ -746,7 +746,7 @@ Important Notes
                       title="Request insurance fax document"
                     >
                       <span className="material-symbols-outlined text-sm align-text-bottom mr-1">description</span>
-                      Request Fax
+                      Run Fax Document Analysis
                     </button>
                   </div>
 

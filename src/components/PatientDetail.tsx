@@ -440,7 +440,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               title="Request insurance fax document"
             >
               <span className="material-symbols-outlined text-base">description</span>
-              Request Fax
+              Run Fax Document Analysis
             </button>
 
             {/* Step 1: Run API Verification */}
