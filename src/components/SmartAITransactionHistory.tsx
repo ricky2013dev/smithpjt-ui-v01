@@ -633,15 +633,15 @@ Important Notes
         {/* Header */}
         <div className="grid grid-cols-[auto_1fr] gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs font-medium">
           <div className="w-6"></div>
-          <div className="grid grid-cols-13 gap-3">
+          <div className="grid grid-cols-12 gap-3">
             <div className="col-span-2">Start Time</div>
-            <div className="col-span-2">End Time</div>
             <div className="col-span-1 text-center">Type</div>
             <div className="col-span-1 text-center">Status</div>
             <div className="col-span-2">Insurance Provider</div>
+            <div className="col-span-2">Insurance Rep</div>
             <div className="col-span-1 text-center">Duration</div>
             <div className="col-span-1 text-center">Score</div>
-            <div className="col-span-3">Run By</div>
+            <div className="col-span-2">Run By</div>
           </div>
         </div>
 
@@ -669,13 +669,10 @@ Important Notes
                     expand_more
                   </span>
                 </div>
-                <div className="grid grid-cols-13 gap-3 items-center text-sm">
+                <div className="grid grid-cols-12 gap-3 items-center text-sm">
                   <div className="col-span-2">
                     <div className="text-slate-900 dark:text-white">{transaction.startTime}</div>
                     <div className="text-xs text-slate-500 dark:text-slate-400">{transaction.requestId}</div>
-                  </div>
-                  <div className="col-span-2 text-slate-700 dark:text-slate-300">
-                    <div className="text-slate-900 dark:text-white">{transaction.endTime}</div>
                   </div>
                   <div className={`col-span-1 text-center font-semibold text-xs ${getTypeColor(transaction.type)}`}>
                     {transaction.type}
@@ -684,6 +681,7 @@ Important Notes
                     {transaction.status}
                   </div>
                   <div className="col-span-2 text-slate-700 dark:text-slate-300">{transaction.insuranceProvider}</div>
+                  <div className="col-span-2 text-slate-600 dark:text-slate-400">{transaction.insuranceRep}</div>
                   <div className="col-span-1 text-center font-mono text-xs text-slate-600 dark:text-slate-400">{transaction.duration}</div>
                   <div className="col-span-1 text-center">
                     <span className={`font-semibold text-sm ${
@@ -694,7 +692,7 @@ Important Notes
                       {transaction.verificationScore}%
                     </span>
                   </div>
-                  <div className="col-span-3 text-slate-700 dark:text-slate-300">{transaction.runBy}</div>
+                  <div className="col-span-2 text-slate-700 dark:text-slate-300">{transaction.runBy}</div>
                 </div>
               </div>
 
