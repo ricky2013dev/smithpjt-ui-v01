@@ -217,6 +217,15 @@ const SmartAITransactionHistory: React.FC = () => {
   const [activeDetailTab, setActiveDetailTab] = useState<{[key: string]: string}>({});
   const [faxRequest, setFaxRequest] = useState<FaxRequest | null>(null);
 
+  // Listen for fax request events from PatientDetail
+  React.useEffect(() => {
+    const handleFaxRequest = () => {
+      handleRequestFaxDocument(mockData[0]?.id || '1');
+    };
+    window.addEventListener('requestFax', handleFaxRequest);
+    return () => window.removeEventListener('requestFax', handleFaxRequest);
+  }, []);
+
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
     if (!activeDetailTab[id]) {

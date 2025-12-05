@@ -426,6 +426,20 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           </div>
 
           <div className={`flex-1 flex justify-center gap-2 ${patient.id.startsWith('new-') ? 'invisible' : ''}`}>
+            {/* Request Insurance Fax */}
+            <button
+              onClick={() => {
+                // This will trigger the fax document modal
+                const event = new CustomEvent('requestFax', { detail: { patientId: patient.id } });
+                window.dispatchEvent(event);
+              }}
+              className="ml-3 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors bg-slate-900 dark:bg-slate-800 text-white hover:bg-slate-800 dark:hover:bg-slate-700"
+              title="Request insurance fax document"
+            >
+              <span className="material-symbols-outlined text-base">description</span>
+              Request Fax
+            </button>
+
             {/* Step 1: Run API Verification */}
             <button
               onClick={() => setIsCoverageResultsOpen(true)}
