@@ -224,16 +224,6 @@ const SmartAITransactionHistory: React.FC = () => {
   const [activeDetailTab, setActiveDetailTab] = useState<{[key: string]: string}>({});
   const [faxRequest, setFaxRequest] = useState<FaxRequest | null>(null);
 
-  // Expose fax modal function globally so it can be called from anywhere
-  React.useEffect(() => {
-    window.openFaxModal = () => {
-      handleRequestFaxDocument(mockData[0]?.id || '1');
-    };
-    return () => {
-      delete window.openFaxModal;
-    };
-  }, []);
-
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
     if (!activeDetailTab[id]) {
@@ -313,6 +303,16 @@ const SmartAITransactionHistory: React.FC = () => {
       });
     }
   };
+
+  // Expose fax modal function globally so it can be called from anywhere
+  React.useEffect(() => {
+    window.openFaxModal = () => {
+      handleRequestFaxDocument(mockData[0]?.id || '1');
+    };
+    return () => {
+      delete window.openFaxModal;
+    };
+  }, [handleRequestFaxDocument]);
 
   // Format transcript with styling
   const formatTranscript = (transcript: string) => {
