@@ -192,7 +192,7 @@ export const mockData: Transaction[] = [
   }
 ];
 
-type FaxStep = 'idle' | 'step1' | 'step2' | 'completed';
+type FaxStep = 'idle' | 'step1' | 'step2' | 'step3' | 'completed';
 type StepStatus = 'pending' | 'in_progress' | 'completed';
 
 // Create a global interface to expose fax functionality
@@ -212,8 +212,10 @@ const SmartAITransactionHistory: React.FC = () => {
   const [currentFaxStep, setCurrentFaxStep] = useState<FaxStep>('idle');
   const [step1Status, setStep1Status] = useState<StepStatus>('pending');
   const [step2Status, setStep2Status] = useState<StepStatus>('pending');
+  const [step3Status, setStep3Status] = useState<StepStatus>('pending');
   const [step1Text, setStep1Text] = useState("");
   const [step2Text, setStep2Text] = useState("");
+  const [step3Text, setStep3Text] = useState("");
   const contentRef = useRef<HTMLDivElement>(null);
 
   const toggleExpand = (id: string) => {
@@ -259,6 +261,12 @@ const SmartAITransactionHistory: React.FC = () => {
       contentRef.current.scrollTop = contentRef.current.scrollHeight;
     }
   }, [step2Text]);
+
+  useEffect(() => {
+    if (step3Status === 'in_progress' && contentRef.current) {
+      contentRef.current.scrollTop = contentRef.current.scrollHeight;
+    }
+  }, [step3Text]);
 
   // Sample fax data
   const faxData = JSON.stringify({
@@ -349,6 +357,44 @@ Important Notes
 ✓ Prior authorization required for major services
 ✓ Dependent coverage available upon request`;
 
+  const codeAnalysisData = `{
+  "fax_extraction": {
+    "status": "SUCCESS",
+    "confidence": 98.2,
+    "fields_detected": 12,
+    "fields_extracted": 12,
+    "extraction_time_ms": 245
+  },
+  "data_validation": {
+    "member_id_format": "VALID",
+    "plan_code": "CIGNA_DENTAL_PPO",
+    "effective_date": "2025-01-01",
+    "expiration_date": "2025-12-31",
+    "coverage_percentages": [100, 80, 50],
+    "data_completeness": "COMPLETE",
+    "validation_status": "PASSED"
+  },
+  "compliance_check": {
+    "hipaa_compliant": true,
+    "required_fields_present": true,
+    "signature_verified": true,
+    "document_integrity": "VERIFIED"
+  },
+  "coverage_analysis": {
+    "preventive_available": true,
+    "basic_available": true,
+    "major_available_after_wait": true,
+    "deductible_requirement": "$50",
+    "annual_max": "$2000"
+  },
+  "processing_metadata": {
+    "processing_time_ms": 512,
+    "timestamp": "2025-11-28T10:30:45.123Z",
+    "version": "2.1.0",
+    "processor": "FaxAI_v2"
+  }
+}`;
+
   // Start fax verification process
   const startFaxVerification = async () => {
     setCurrentFaxStep('step1');
@@ -366,6 +412,15 @@ Important Notes
     await typeText(insuranceDataAnalysis, setStep2Text, 5);
     await new Promise(resolve => setTimeout(resolve, 50));
     setStep2Status('completed');
+
+    // Step 3: Code Analysis
+    await new Promise(resolve => setTimeout(resolve, 150));
+    setCurrentFaxStep('step3');
+    setStep3Status('in_progress');
+    await new Promise(resolve => setTimeout(resolve, 100));
+    await typeText(codeAnalysisData, setStep3Text, 10);
+    await new Promise(resolve => setTimeout(resolve, 50));
+    setStep3Status('completed');
   };
 
   // Open fax modal handler
@@ -373,8 +428,10 @@ Important Notes
     setCurrentFaxStep('idle');
     setStep1Status('pending');
     setStep2Status('pending');
+    setStep3Status('pending');
     setStep1Text('');
     setStep2Text('');
+    setStep3Text('');
 
     setTimeout(() => {
       startFaxVerification();
@@ -386,8 +443,10 @@ Important Notes
     setCurrentFaxStep('idle');
     setStep1Status('pending');
     setStep2Status('pending');
+    setStep3Status('pending');
     setStep1Text('');
     setStep2Text('');
+    setStep3Text('');
   };
 
   // Expose fax modal function globally
@@ -960,6 +1019,27 @@ Important Notes
                     <div className="text-xs text-slate-500 dark:text-slate-400">Coverage Details</div>
                   </div>
                 </div>
+
+                <div className={`h-0.5 flex-1 mx-2 ${
+                  step2Status === 'completed' ? 'bg-green-500' : 'bg-slate-300 dark:bg-slate-600'
+                }`}></div>
+
+                {/* Step 3 */}
+                <div className="flex items-center gap-2 flex-1">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
+                    step3Status === 'completed'
+                      ? 'bg-green-500 text-white'
+                      : step3Status === 'in_progress'
+                      ? 'bg-blue-500 text-white animate-pulse'
+                      : 'bg-slate-300 dark:bg-slate-600 text-slate-600 dark:text-slate-400'
+                  }`}>
+                    {step3Status === 'completed' ? '✓' : '3'}
+                  </div>
+                  <div className="text-sm">
+                    <div className="font-medium text-slate-900 dark:text-white">Code Analysis</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">Validation</div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -982,7 +1062,7 @@ Important Notes
 
               {/* Step 2: Analysis */}
               {step2Status !== 'pending' && (
-                <div className="space-y-4">
+                <div className="space-y-4 mb-6">
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-green-600 dark:text-green-400">check_circle</span>
                     <h3 className="text-sm font-bold text-slate-900 dark:text-white">Step 2: Insurance Analysis</h3>
@@ -991,6 +1071,21 @@ Important Notes
 
                   <div className="bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 p-4 rounded border border-slate-200 dark:border-slate-700 font-mono text-xs overflow-x-auto whitespace-pre-wrap">
                     {step2Text}
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3: Code Analysis */}
+              {step3Status !== 'pending' && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-green-600 dark:text-green-400">check_circle</span>
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">Step 3: Code Analysis</h3>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mb-3">Technical validation and compliance verification</p>
+
+                  <div className="bg-slate-900 text-slate-100 p-4 rounded border border-slate-700 font-mono text-xs overflow-x-auto">
+                    <pre>{step3Text}</pre>
                   </div>
                 </div>
               )}
