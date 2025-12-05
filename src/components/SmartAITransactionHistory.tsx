@@ -1010,8 +1010,8 @@ Important Notes
                     {step3Status === 'completed' ? '✓' : '3'}
                   </div>
                   <div className="text-sm">
-                    <div className="font-medium text-slate-900 dark:text-white">Code Analysis</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400">Validation</div>
+                    <div className="font-medium text-slate-900 dark:text-white">Fax Verification Data</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">Results Table</div>
                   </div>
                 </div>
               </div>
