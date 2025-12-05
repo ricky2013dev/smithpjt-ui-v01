@@ -2,14 +2,14 @@
  * Script to generate dynamic appointment dates in patients.json
  * Run this script to refresh all appointment dates in the mockup data
  *
- * Usage: node server/scripts/generateDynamicDates.js
+ * Usage: node mockupdata/generateDynamicDates.cjs
  */
 
 const fs = require('fs');
 const path = require('path');
 
 // Configuration
-const PATIENTS_DATA_PATH = path.join(__dirname, '../mockupdata/patients.json');
+const PATIENTS_DATA_PATH = path.join(__dirname, './patients.json');
 const FUTURE_DAYS_MIN = 3;
 const FUTURE_DAYS_MAX = 7;
 const PAST_DAYS_MIN = 30;

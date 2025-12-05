@@ -11,7 +11,7 @@
     "server": "node server/index.js",
     "dev:all": "concurrently \"npm run server\" \"npm run dev\"",
     "test:api": "node server/test-api.js",
-    "refresh-dates": "node server/scripts/generateDynamicDates.js"
+    "refresh-dates": "node mockupdata/generateDynamicDates.cjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

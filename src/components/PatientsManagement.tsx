@@ -6,7 +6,7 @@ import Dashboard from './Dashboard';
 import PatientGuide from './PatientGuide';
 import Header from './Header';
 import { Patient, FilterType, TabType, TAB_TYPES } from '../types/patient';
-import patientsData from '../../server/mockupdata/patients.json';
+import patientsData from '../../mockupdata/patients.json';
 
 const patients = patientsData as Patient[];
 

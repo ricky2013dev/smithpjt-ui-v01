@@ -1294,9 +1294,10 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
         )}
 
         {/* Tab Content - AI Call History */}
-        {activeTab === TAB_TYPES.AI_CALL_HISTORY && (
+        {/* Always render SmartAITransactionHistory so window.openFaxModal is always available */}
+        <div className={activeTab === TAB_TYPES.AI_CALL_HISTORY ? '' : 'hidden'}>
           <SmartAITransactionHistory />
-        )}
+        </div>
       </div>
 
       {/* Save Button for New Patients */}

@@ -19,9 +19,10 @@ This project now features dynamic appointment dates for the mockup patient data,
    - `getPastAppointmentDate()` - Get single past date
    - `generatePatientAppointmentDates()` - Generate dates for a specific patient
 
-2. **`server/scripts/generateDynamicDates.js`** - Node.js script to update `patients.json`
+2. **`mockupdata/generateDynamicDates.cjs`** - Node.js script to update `patients.json`
    - Regenerates all appointment dates while preserving appointment types and provider names
    - Provides statistics and confirmation output
+   - Uses CommonJS format (`.cjs`) for compatibility with project's ES module configuration
 
 3. **`package.json`** - Added new npm script
    - `npm run refresh-dates` - Run the date generation script
@@ -112,7 +113,7 @@ npm run dev:all
 
 ## Customization
 
-To customize date ranges, edit the constants in `server/scripts/generateDynamicDates.js`:
+To customize date ranges, edit the constants in `mockupdata/generateDynamicDates.cjs`:
 
 ```javascript
 const FUTURE_DAYS_MIN = 3;    // Minimum days for upcoming
@@ -147,4 +148,4 @@ const dates = generateDynamicAppointmentDates({
 
 ---
 
-**Last Updated**: November 28, 2025
+**Last Updated**: December 4, 2025
