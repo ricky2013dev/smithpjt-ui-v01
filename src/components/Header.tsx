@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
   onLogoClick?: () => void;
@@ -12,38 +13,62 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onLoginClick }) => {
+  const navigate = useNavigate();
+
   return (
     <header className="bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-700/50 px-6 py-3 shrink-0 sticky top-0 z-50">
       <div className="flex items-center justify-between w-full">
-        <div
-          className="flex items-center gap-3 cursor-pointer hover:opacity-70 transition-opacity w-fit"
-          onClick={onLogoClick}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              onLogoClick?.();
-            }
-          }}
-        >
-          {/* Robot Logo */}
-          <div className="w-10 h-10 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center">
-            <span className="material-symbols-outlined text-2xl text-slate-700 dark:text-slate-300">
-              smart_toy
-            </span>
+        <div className="flex items-center gap-8 flex-1">
+          <div
+            className="flex items-center gap-3 cursor-pointer hover:opacity-70 transition-opacity w-fit"
+            onClick={onLogoClick}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                onLogoClick?.();
+              }
+            }}
+          >
+            {/* Robot Logo */}
+            <div className="w-10 h-10 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-center">
+              <span className="material-symbols-outlined text-2xl text-slate-700 dark:text-slate-300">
+                smart_toy
+              </span>
+            </div>
+
+            {/* Title and Subtitle */}
+            <div>
+              <h1 className="flex items-baseline gap-1">
+
+                <span className="font-handwriting tracking-wide rotate-[-0deg] font-bold text-orange-600 dark:text-orange-500 tracking-tight text-lg">Smith</span>
+                <span className="text-sm font-medium text-slate-900 dark:text-white">AI Center</span>
+              </h1>
+              <p className="text-slate-500 dark:text-slate-400 text-[10px] font-medium uppercase tracking-wider mt-0.5">
+                Patient List
+              </p>
+            </div>
           </div>
 
-          {/* Title and Subtitle */}
-          <div>
-            <h1 className="flex items-baseline gap-1">
-
-              <span className="font-handwriting tracking-wide rotate-[-0deg] font-bold text-orange-600 dark:text-orange-500 tracking-tight text-lg">Smith</span>
-              <span className="text-sm font-medium text-slate-900 dark:text-white">AI Center</span>
-            </h1>
-            <p className="text-slate-500 dark:text-slate-400 text-[10px] font-medium uppercase tracking-wider mt-0.5">
-              Insurance Verification
-            </p>
-          </div>
+          {/* Navigation Links */}
+          {onLogout && (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => navigate('/daily-jobs')}
+                className="px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5"
+              >
+                <span className="material-symbols-outlined text-sm">schedule</span>
+                Schedule Jobs
+              </button>
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5"
+              >
+                <span className="material-symbols-outlined text-sm">dashboard</span>
+                Patient List
+              </button>
+            </div>
+          )}
         </div>
 
 

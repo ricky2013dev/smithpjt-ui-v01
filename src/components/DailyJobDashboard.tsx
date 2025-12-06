@@ -1,0 +1,548 @@
+import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Patient } from '../types/patient';
+import Header from './Header';
+import patientsData from '../../mockupdata/patients.json';
+
+interface JobStep {
+  id: 'analysis' | 'api_call' | 'call_center';
+  label: string;
+  icon: string;
+}
+
+interface PatientJob {
+  patient: Patient;
+  steps: Record<JobStep['id'], 'pending' | 'in_progress' | 'completed'>;
+  scheduledTime: string;
+  startTime: string;
+  endTime: string;
+  jobDate: Date;
+}
+
+interface DailyJobDashboardProps {
+  patients?: Patient[];
+  onDetailClick?: (patientId: string) => void;
+}
+
+type ViewMode = 'day' | 'week' | 'month';
+
+const DailyJobDashboard: React.FC<DailyJobDashboardProps> = ({ patients: patientsPropsOverride, onDetailClick }) => {
+  const navigate = useNavigate();
+  const patients = patientsPropsOverride || (patientsData as Patient[]);
+
+  const [viewMode, setViewMode] = useState<ViewMode>('day');
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const jobSteps: JobStep[] = [
+    { id: 'analysis', label: 'Document Analysis', icon: 'description' },
+    { id: 'api_call', label: 'API Verification', icon: 'api' },
+    { id: 'call_center', label: 'Call Center', icon: 'phone' }
+  ];
+
+  // Generate jobs for a specific date
+  const generateJobsForDate = (date: Date, patientList: Patient[]): PatientJob[] => {
+    const dateStr = date.toISOString().split('T')[0];
+    // Use date string to seed random number for consistent data per date
+    const seed = dateStr.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+
+    // Check if date is past, present, or future
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+
+    const isPastDate = checkDate < today;
+    const isFutureDate = checkDate > today;
+
+    return patientList.slice(0, 5 + (seed % 6)).map((patient, idx) => {
+      const rng = (seed + idx * 7) % 100;
+      const startHour = 8 + (rng % 12);
+      const startMin = (rng * 13) % 60;
+      const durationMin = 15 + ((rng * 19) % 61);
+
+      const startDateObj = new Date(date);
+      startDateObj.setHours(startHour, startMin, 0);
+
+      const endDate = new Date(startDateObj.getTime() + durationMin * 60000);
+
+      // For past dates: all steps completed
+      // For future dates: all steps pending
+      // For today: mixed status
+      const getStepStatus = () => {
+        if (isPastDate) {
+          return { analysis: 'completed' as const, api_call: 'completed' as const, call_center: 'completed' as const };
+        } else if (isFutureDate) {
+          return { analysis: 'pending' as const, api_call: 'pending' as const, call_center: 'pending' as const };
+        } else {
+          return {
+            analysis: rng > 40 ? 'completed' as const : rng > 20 ? 'in_progress' as const : 'pending' as const,
+            api_call: rng > 55 ? 'completed' as const : rng > 30 ? 'in_progress' as const : 'pending' as const,
+            call_center: rng > 70 ? 'completed' as const : rng > 40 ? 'in_progress' as const : 'pending' as const,
+          };
+        }
+      };
+
+      return {
+        patient,
+        steps: getStepStatus(),
+        scheduledTime: `${String(startHour).padStart(2, '0')}:${String(startMin).padStart(2, '0')}`,
+        startTime: `${String(startHour).padStart(2, '0')}:${String(startMin).padStart(2, '0')}`,
+        endTime: `${String(endDate.getHours()).padStart(2, '0')}:${String(endDate.getMinutes()).padStart(2, '0')}`,
+        jobDate: startDateObj
+      };
+    });
+  };
+
+  // Get filtered jobs based on view mode
+  const filteredJobs: PatientJob[] = useMemo(() => {
+    const jobs: PatientJob[] = [];
+
+    if (viewMode === 'day') {
+      jobs.push(...generateJobsForDate(selectedDate, patients));
+    } else if (viewMode === 'week') {
+      const startOfWeek = new Date(selectedDate);
+      startOfWeek.setDate(selectedDate.getDate() - selectedDate.getDay());
+
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(startOfWeek);
+        date.setDate(startOfWeek.getDate() + i);
+        jobs.push(...generateJobsForDate(date, patients));
+      }
+    } else if (viewMode === 'month') {
+      const year = selectedDate.getFullYear();
+      const month = selectedDate.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, month, day);
+        jobs.push(...generateJobsForDate(date, patients));
+      }
+    }
+
+    return jobs;
+  }, [selectedDate, viewMode, patients]);
+
+  const stats = useMemo(() => {
+    let totalJobs = filteredJobs.length;
+    let completedJobs = 0;
+    let inProgressJobs = 0;
+
+    filteredJobs.forEach(job => {
+      const allCompleted = Object.values(job.steps).every(step => step === 'completed');
+      const anyInProgress = Object.values(job.steps).some(step => step === 'in_progress');
+
+      if (allCompleted) completedJobs++;
+      else if (anyInProgress) inProgressJobs++;
+    });
+
+    const completionRate = totalJobs > 0 ? Math.round((completedJobs / totalJobs) * 100) : 0;
+
+    return { totalJobs, completedJobs, inProgressJobs, completionRate };
+  }, [filteredJobs]);
+
+  // Get display date range
+  const getDateRange = () => {
+    if (viewMode === 'day') {
+      return selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    } else if (viewMode === 'week') {
+      const startOfWeek = new Date(selectedDate);
+      startOfWeek.setDate(selectedDate.getDate() - selectedDate.getDay());
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
+      return `${startOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${endOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+    } else {
+      return selectedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+    }
+  };
+
+  const handlePreviousPeriod = () => {
+    const newDate = new Date(selectedDate);
+    if (viewMode === 'day') {
+      newDate.setDate(newDate.getDate() - 1);
+    } else if (viewMode === 'week') {
+      newDate.setDate(newDate.getDate() - 7);
+    } else {
+      newDate.setMonth(newDate.getMonth() - 1);
+    }
+    setSelectedDate(newDate);
+  };
+
+  const handleNextPeriod = () => {
+    const newDate = new Date(selectedDate);
+    if (viewMode === 'day') {
+      newDate.setDate(newDate.getDate() + 1);
+    } else if (viewMode === 'week') {
+      newDate.setDate(newDate.getDate() + 7);
+    } else {
+      newDate.setMonth(newDate.getMonth() + 1);
+    }
+    setSelectedDate(newDate);
+  };
+
+  const handleToday = () => {
+    setSelectedDate(new Date());
+  };
+
+  const getStepLineColor = (status: string) => {
+    if (status === 'completed') return 'bg-green-500';
+    if (status === 'in_progress') return 'bg-slate-300 dark:bg-slate-600';
+    return 'bg-slate-300 dark:bg-slate-600';
+  };
+
+  const getPatientName = (patient: Patient) => {
+    const given = patient.name.given.join(' ');
+    return `${given} ${patient.name.family}`.trim();
+  };
+
+  const getJobStatus = (job: PatientJob) => {
+    const allCompleted = Object.values(job.steps).every(s => s === 'completed');
+    const anyInProgress = Object.values(job.steps).some(s => s === 'in_progress');
+
+    if (allCompleted) return { text: 'Completed', color: 'text-green-600 dark:text-green-400', bg: 'bg-green-100 dark:bg-green-900/30' };
+    if (anyInProgress) return { text: 'In Progress', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-100 dark:bg-blue-900/30' };
+    return { text: 'Pending', color: 'text-slate-600 dark:text-slate-400', bg: 'bg-slate-100 dark:bg-slate-800' };
+  };
+
+  const handleLogout = () => {
+    navigate('/');
+  };
+
+  return (
+    <div className="flex flex-col h-screen bg-white dark:bg-slate-950 overflow-hidden font-sans">
+      {/* Header */}
+      <Header
+        onLogoClick={() => navigate('/daily-jobs')}
+        onLogout={handleLogout}
+      />
+
+      {/* Page Title */}
+      <div className="flex-none px-8 py-6 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+        <div className="max-w-[1400px] mx-auto">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Schedule Jobs</h1>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">Track patient verification workflow progress</p>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-y-auto">
+        <div className="max-w-[1400px] mx-auto px-8 py-8 space-y-6">
+
+          {/* View Controls */}
+          <div className="flex items-center justify-between bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-4">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handlePreviousPeriod}
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors text-slate-600 dark:text-slate-400"
+                title="Previous"
+              >
+                <span className="material-symbols-outlined">chevron_left</span>
+              </button>
+
+              <div className="text-center min-w-[200px]">
+                <p className="text-sm font-semibold text-slate-900 dark:text-white">{getDateRange()}</p>
+              </div>
+
+              <button
+                onClick={handleNextPeriod}
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors text-slate-600 dark:text-slate-400"
+                title="Next"
+              >
+                <span className="material-symbols-outlined">chevron_right</span>
+              </button>
+
+              <div className="w-px h-6 bg-slate-200 dark:bg-slate-700"></div>
+
+              <button
+                onClick={handleToday}
+                className="px-3 py-1.5 text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
+              >
+                Today
+              </button>
+            </div>
+
+            {/* View Mode Buttons */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setViewMode('day')}
+                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                  viewMode === 'day'
+                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+                }`}
+              >
+                Day
+              </button>
+              <button
+                onClick={() => setViewMode('week')}
+                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                  viewMode === 'week'
+                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+                }`}
+              >
+                Week
+              </button>
+              <button
+                onClick={() => setViewMode('month')}
+                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                  viewMode === 'month'
+                    ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+                }`}
+              >
+                Month
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Stats with Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+            <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-4">
+              <p className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">Total Jobs</p>
+              <p className="text-3xl font-bold text-slate-900 dark:text-white mt-2">{stats.totalJobs}</p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-4">
+              <p className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">Completed</p>
+              <p className="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">{stats.completedJobs}</p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-4">
+              <p className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">In Progress</p>
+              <p className="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-2">{stats.inProgressJobs}</p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-4 flex flex-col">
+              <p className="text-xs font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">Completion Rate</p>
+              <div className="flex items-center justify-between mt-3 flex-1">
+                <p className="text-3xl font-bold text-slate-900 dark:text-white">{stats.completionRate}%</p>
+                <svg width="60" height="60" viewBox="0 0 60 60" className="ml-2">
+                  <circle cx="30" cy="30" r="27" fill="none" stroke="#e2e8f0" strokeWidth="6" />
+                  <circle
+                    cx="30"
+                    cy="30"
+                    r="27"
+                    fill="none"
+                    stroke="#22c55e"
+                    strokeWidth="6"
+                    strokeDasharray={`${(stats.completionRate / 100) * 170} 170`}
+                    strokeLinecap="round"
+                    transform="rotate(-90 30 30)"
+                    className="transition-all duration-300"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Charts Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Status Distribution Pie Chart */}
+            <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-6">Job Status Distribution</h3>
+              <div className="flex items-center justify-center gap-8">
+                <svg width="140" height="140" viewBox="0 0 140 140" className="flex-shrink-0">
+                  {/* Completed */}
+                  <circle cx="70" cy="70" r="55" fill="none" stroke="#22c55e" strokeWidth="20"
+                    strokeDasharray={`${(stats.completedJobs / stats.totalJobs) * 345} 345`}
+                    transform="rotate(-90 70 70)" />
+                  {/* In Progress */}
+                  <circle cx="70" cy="70" r="55" fill="none" stroke="#3b82f6" strokeWidth="20"
+                    strokeDasharray={`${(stats.inProgressJobs / stats.totalJobs) * 345} 345`}
+                    strokeDashoffset={`-${(stats.completedJobs / stats.totalJobs) * 345}`}
+                    transform="rotate(-90 70 70)" />
+                  {/* Pending */}
+                  <circle cx="70" cy="70" r="55" fill="none" stroke="#cbd5e1" strokeWidth="20"
+                    strokeDashoffset={`-${((stats.completedJobs + stats.inProgressJobs) / stats.totalJobs) * 345}`}
+                    transform="rotate(-90 70 70)" />
+                </svg>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                    <span className="text-sm text-slate-600 dark:text-slate-400">Completed: {stats.completedJobs}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
+                    <span className="text-sm text-slate-600 dark:text-slate-400">In Progress: {stats.inProgressJobs}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 bg-slate-300 dark:bg-slate-600 rounded-full"></span>
+                    <span className="text-sm text-slate-600 dark:text-slate-400">Pending: {stats.totalJobs - stats.completedJobs - stats.inProgressJobs}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Workflow Progress - Single Column with Bar Chart */}
+            <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
+              <h2 className="text-sm font-semibold text-slate-900 dark:text-white uppercase tracking-wide mb-6">Workflow Progress</h2>
+              <div className="space-y-4">
+                {jobSteps.map((step) => {
+                  const stepJobs = filteredJobs.filter(job => {
+                    const status = job.steps[step.id];
+                    return status === 'completed' || status === 'in_progress';
+                  });
+                  const progressPercent = stats.totalJobs > 0 ? (stepJobs.length / stats.totalJobs) * 100 : 0;
+                  return (
+                    <div key={step.id}>
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-8 h-8 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-400 flex-shrink-0">
+                          <span className="material-symbols-outlined text-base">{step.icon}</span>
+                        </div>
+                        <p className="text-xs font-semibold text-slate-900 dark:text-white flex-1 truncate">{step.label}</p>
+                        <p className="text-sm font-bold text-blue-600 dark:text-blue-400 flex-shrink-0">{stepJobs.length}/{stats.totalJobs}</p>
+                      </div>
+                      {/* Progress Bar */}
+                      <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-blue-400 to-blue-600 dark:from-blue-500 dark:to-blue-700 rounded-full transition-all duration-300"
+                          style={{ width: `${progressPercent}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Patient Jobs Table */}
+          <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
+            {/* Table Header with Step Labels */}
+            <div className="flex gap-3 px-3 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+              <div style={{ width: '10%' }}>
+                <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Date</p>
+              </div>
+              <div style={{ width: '10%' }}>
+                <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Time</p>
+              </div>
+              <div style={{ width: '10%' }}>
+                <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Duration</p>
+              </div>
+              <div style={{ width: '20%' }}>
+                <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Patient</p>
+              </div>
+              <div style={{ width: '35%' }}>
+                <div className="flex items-center justify-between">
+                  {jobSteps.map((step) => (
+                    <div key={step.id} className="flex flex-col items-center flex-1">
+                      <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 text-center px-1">{step.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ width: '15%' }} className="flex justify-end">
+                <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Status</p>
+              </div>
+            </div>
+
+            {/* Table Rows */}
+            <div className="divide-y divide-slate-100 dark:divide-slate-700 max-h-[600px] overflow-y-auto">
+              {filteredJobs.map((job, index) => {
+                const jobStatus = getJobStatus(job);
+                const [startHour, startMin] = job.startTime.split(':');
+                const [endHour, endMin] = job.endTime.split(':');
+                const durationMin = (parseInt(endHour) * 60 + parseInt(endMin)) - (parseInt(startHour) * 60 + parseInt(startMin));
+
+                return (
+                  <div
+                    key={`${job.jobDate.toISOString()}-${index}`}
+                    onClick={() => {
+                      if (onDetailClick) {
+                        onDetailClick(job.patient.id);
+                      } else {
+                        // Navigate to dashboard with patient selected
+                        navigate(`/dashboard?patientId=${job.patient.id}`);
+                      }
+                    }}
+                    className="flex gap-3 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer items-center"
+                  >
+                    {/* Date */}
+                    <div style={{ width: '10%' }}>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{job.jobDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                    </div>
+
+                    {/* Time Range */}
+                    <div style={{ width: '10%' }}>
+                      <p className="text-xs text-slate-900 dark:text-white font-medium">{job.startTime} - {job.endTime}</p>
+                    </div>
+
+                    {/* Duration */}
+                    <div style={{ width: '10%' }}>
+                      <p className="text-xs text-slate-600 dark:text-slate-400">{durationMin}m</p>
+                    </div>
+
+                    {/* Patient Name */}
+                    <div style={{ width: '20%' }}>
+                      <p className="font-medium text-slate-900 dark:text-white text-sm truncate">{getPatientName(job.patient)}</p>
+                    </div>
+
+                    {/* Progress Steps */}
+                    <div style={{ width: '35%' }}>
+                      <div className="flex items-center justify-between h-8">
+                        {jobSteps.map((step, stepIndex) => {
+                          const status = job.steps[step.id];
+                          const isLast = stepIndex === jobSteps.length - 1;
+                          return (
+                            <React.Fragment key={step.id}>
+                              {/* Step Circle */}
+                              <div className="flex flex-col items-center flex-1">
+                                <div
+                                  className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold text-xs border-2 transition-all ${
+                                    status === 'completed'
+                                      ? 'bg-green-500 dark:bg-green-600 border-green-500 dark:border-green-600 text-white'
+                                      : status === 'in_progress'
+                                      ? 'bg-blue-500 dark:bg-blue-600 border-blue-500 dark:border-blue-600 text-white'
+                                      : 'bg-slate-200 dark:bg-slate-700 border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-400'
+                                  }`}
+                                >
+                                  {status === 'completed' ? (
+                                    <span className="material-symbols-outlined text-sm">check</span>
+                                  ) : status === 'in_progress' ? (
+                                    <span className="material-symbols-outlined text-sm animate-spin">sync</span>
+                                  ) : (
+                                    stepIndex + 1
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Connector Line */}
+                              {!isLast && (
+                                <div className="flex-1 h-0.5 mx-1 relative">
+                                  <div
+                                    className={`absolute inset-0 rounded-full transition-all ${getStepLineColor(status)}`}
+                                  ></div>
+                                </div>
+                              )}
+                            </React.Fragment>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Status Badge */}
+                    <div style={{ width: '15%' }} className="flex justify-end">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${jobStatus.bg} ${jobStatus.color}`}>
+                        {jobStatus.text}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Empty State */}
+          {filteredJobs.length === 0 && (
+            <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-12 text-center">
+              <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="material-symbols-outlined text-3xl text-slate-400">schedule</span>
+              </div>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">No jobs scheduled</h3>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">No patients are scheduled for this period.</p>
+            </div>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default DailyJobDashboard;

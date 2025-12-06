@@ -26,6 +26,7 @@ interface PatientDetailProps {
   onTabChange: (tab: TabType) => void;
   isAdmin?: boolean;
   onCancel?: () => void;
+  onBackToScheduleJobs?: () => void;
 }
 
 // Tab content wrapper component for consistent spacing
@@ -42,6 +43,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   onTabChange,
   isAdmin = false,
   onCancel,
+  onBackToScheduleJobs,
 }) => {
   const [showAICenter, setShowAICenter] = useState(false);
   const [insuranceSubTab, setInsuranceSubTab] = useState<InsuranceSubTabType>(INSURANCE_SUB_TAB_TYPES.COVERAGE_DETAILS);
@@ -561,7 +563,17 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             )}
           </div>
 
-
+          {/* Back to Schedule Jobs Button */}
+          {onBackToScheduleJobs && !patient.id.startsWith('new-') && (
+            <button
+              onClick={onBackToScheduleJobs}
+              className="ml-auto px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+              title="Back to Schedule Jobs"
+            >
+              <span className="material-symbols-outlined text-sm">arrow_back</span>
+              Back
+            </button>
+          )}
         </div>
       </div>
 

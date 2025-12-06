@@ -80,16 +80,16 @@ export const mockData: Transaction[] = [
     insuranceProvider: 'Cigna Dental',
     insuranceRep: 'API System',
     runBy: 'Smith AI System',
-    dataVerified: ['Eligibility', 'Benefits', 'Coverage', 'Deductibles'],
+    dataVerified: ['Patient Name', 'Patient SSN', 'Patient Date of Birth', 'Relationship to Subscriber', 'Subscriber Name', 'Subscriber SSN', 'Subscriber Date of Birth', 'Subscriber ID Number', 'Insurance Company', 'Insurer Type - Primary', 'Insurer Type - Secondary', 'Insurance Address', 'Insurance Phone', 'Employer', 'Group Number', 'Effective Date', 'Renewal Month', 'Yearly Maximum', 'Deductible Per Individual', 'Deductible Per Family', 'Deductible Applies To - Preventative', 'Deductible Applies To - Basic', 'Deductible Applies To - Major', 'Preventative Covered At (%)', 'Preventative Waiting Period', 'Preventative Effective Date', 'Bitewing Frequency'],
     verificationScore: 80,
     responseCode: '200',
     endpoint: 'https://api.cigna.com/dental/benefits',
     details: {
-      eligibilityCheck: 'ACTIVE - Policy effective through 12/31/2026',
-      benefitsVerification: 'Preventive: 100%, Basic: 80%, Major: 50%',
-      coverageDetails: 'Annual Maximum: $1,800 | Used: $0 | Remaining: $1,800',
-      deductibleInfo: 'Deductible: $100 | Met: $0',
-      rawResponse: '{"status":"active","coverage":{"preventive":"100%","basic":"80%","major":"50%"},"annual_max":1800,"annual_used":0,"deductible_met":0}'
+      eligibilityCheck: 'ACTIVE - Policy effective through 12/31/2026. Policy status: active and in good standing. Verification date: 01/21/2025',
+      benefitsVerification: 'Preventive: 100%, Basic: 80%, Major: 50% | Waiting Periods: Preventive - None, Basic - None, Major - 12 months',
+      coverageDetails: 'Annual Maximum: $2,000 | Used: $450 | Remaining: $1,550 | Plan Type: PPO Premium',
+      deductibleInfo: 'Individual Deductible: $50 | Family Deductible: $150 | Deductible Met: $50',
+      rawResponse: '{"verification_id":"VER-2025-001234","timestamp":"2025-01-21T10:30:45Z","patient":{"name":"Michael Robert Anderson","dob":"1978-07-22","member_id":"BCBS123456789"},"insurance":{"carrier":"Blue Cross Blue Shield","group_number":"GRP987654","policy_status":"active","effective_date":"2024-01-01","plan_type":"PPO Premium"},"eligibility":{"active":true,"coverage_status":"verified","verification_date":"2025-01-21"},"benefits":{"annual_maximum":2000,"annual_used":450,"annual_remaining":1550,"deductible":50,"deductible_met":50,"preventive_coverage":"100%","basic_coverage":"80%","major_coverage":"50%","waiting_periods":{"preventive":"none","basic":"none","major":"12 months"}}}'
     }
   },
   // CALL SUCCESS
@@ -376,7 +376,7 @@ Important Notes
     setStep1Status('in_progress');
 
     // Wait 10 seconds for loading animation
-    await new Promise(resolve => setTimeout(resolve, 10000));
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
     // Then show the image
     setStep1Text('image');
@@ -833,26 +833,37 @@ Important Notes
                     {/* Content All Detail Tab */}
                     {(activeDetailTab[transaction.id] || 'action') === 'detail' && (
                       <div className="space-y-3 text-sm">
-                        {transaction.details.transcript && (
+                        {transaction.type === 'FAX' ? (
                           <div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">Call Transcript</div>
-                            <div className="text-xs bg-white dark:bg-slate-900 p-4 rounded border border-slate-200 dark:border-slate-700 max-h-96 overflow-y-auto">
-                              {formatTranscript(transaction.details.transcript)}
+                            <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">Fax Document</div>
+                            <div className="bg-white dark:bg-slate-900 p-4 rounded border border-slate-200 dark:border-slate-700">
+                              <img src="/assets/fax-sample.png" alt="Fax Sample Document" className="w-1/2 h-auto rounded" />
                             </div>
                           </div>
-                        )}
+                        ) : (
+                          <>
+                            {transaction.details.transcript && (
+                              <div>
+                                <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">Call Transcript</div>
+                                <div className="text-xs bg-white dark:bg-slate-900 p-4 rounded border border-slate-200 dark:border-slate-700 max-h-96 overflow-y-auto">
+                                  {formatTranscript(transaction.details.transcript)}
+                                </div>
+                              </div>
+                            )}
 
-                        {transaction.details.rawResponse && (
-                          <div>
-                            <div className="text-xs text-slate-400 mb-1">Raw API Response</div>
-                            <div className="text-xs text-green-400 font-mono bg-slate-900 dark:bg-slate-950 p-3 rounded border border-slate-700 overflow-x-auto">{transaction.details.rawResponse}</div>
-                          </div>
-                        )}
+                            {transaction.details.rawResponse && (
+                              <div>
+                                <div className="text-xs text-slate-400 mb-1">Raw API Response</div>
+                                <div className="text-xs text-green-400 font-mono bg-slate-900 dark:bg-slate-950 p-3 rounded border border-slate-700 overflow-x-auto">{transaction.details.rawResponse}</div>
+                              </div>
+                            )}
 
-                        {!transaction.details.transcript && !transaction.details.rawResponse && (
-                          <div className="text-center py-8 text-slate-500 dark:text-slate-400">
-                            No detailed content available
-                          </div>
+                            {!transaction.details.transcript && !transaction.details.rawResponse && (
+                              <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                                No detailed content available
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
                     )}

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import PatientList from './PatientList';
 import PatientDetail from './PatientDetail';
 import Dashboard from './Dashboard';
@@ -12,12 +12,23 @@ const patients = patientsData as Patient[];
 
 const PatientsManagement: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const isAdmin = false; // Always user mode
   const [viewMode, setViewMode] = useState<'dashboard' | 'list'>('list'); // Default to list for non-admin
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeFilters, setActiveFilters] = useState<FilterType[]>([]);
   const [activeTab, setActiveTab] = useState<TabType>(TAB_TYPES.PATIENT_BASIC_INFO);
+
+  // Handle patient selection from Schedule Jobs page
+  useEffect(() => {
+    const patientId = searchParams.get('patientId');
+    if (patientId) {
+      setSelectedPatientId(patientId);
+      // Clean up the URL
+      navigate('/dashboard', { replace: true });
+    }
+  }, [searchParams, navigate]);
 
   const handleLogout = () => {
     setSelectedPatientId(null);
@@ -196,6 +207,11 @@ const PatientsManagement: React.FC = () => {
     setSelectedPatientId(null);
   };
 
+  const handleBackToScheduleJobs = () => {
+    setSelectedPatientId(null);
+    navigate('/daily-jobs');
+  };
+
   return (
     <div className="flex h-screen w-full flex-col">
       {/* Smith AI Center Header */}
@@ -220,6 +236,7 @@ const PatientsManagement: React.FC = () => {
               onRemoveFilter={handleRemoveFilter}
               onAddFilter={handleAddFilter}
               isAdmin={isAdmin}
+              onBackToScheduleJobs={handleBackToScheduleJobs}
             />
 
             <PatientDetail
@@ -228,6 +245,7 @@ const PatientsManagement: React.FC = () => {
               onTabChange={setActiveTab}
               isAdmin={isAdmin}
               onCancel={selectedPatient.id.startsWith('new-') ? handleCancelNewPatient : undefined}
+              onBackToScheduleJobs={handleBackToScheduleJobs}
             />
           </div>
         ) : (

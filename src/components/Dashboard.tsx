@@ -230,48 +230,6 @@ const Dashboard: React.FC<DashboardProps> = ({ patients, onItemClick }) => {
                                         <span className="text-xs font-medium text-slate-400">100%</span>
                                     </div>
                                 </div>
-
-                                {/* Verified */}
-                                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center text-green-500 shadow-sm">
-                                            <span className="material-symbols-outlined text-sm">check_circle</span>
-                                        </div>
-                                        <span className="font-medium text-slate-700 dark:text-slate-300">Verified</span>
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                        <span className="text-xl font-bold text-green-600 dark:text-green-400">{verifiedCount}</span>
-                                        <span className="text-xs font-medium text-slate-400">{Math.round((verifiedCount / totalPatients) * 100)}%</span>
-                                    </div>
-                                </div>
-
-                                {/* In Progress */}
-                                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center text-blue-500 shadow-sm">
-                                            <span className="material-symbols-outlined text-sm">sync</span>
-                                        </div>
-                                        <span className="font-medium text-slate-700 dark:text-slate-300">In Progress</span>
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                        <span className="text-xl font-bold text-blue-600 dark:text-blue-400">{inProgressCount}</span>
-                                        <span className="text-xs font-medium text-slate-400">{Math.round((inProgressCount / totalPatients) * 100)}%</span>
-                                    </div>
-                                </div>
-
-                                {/* Pending */}
-                                <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center text-orange-500 shadow-sm">
-                                            <span className="material-symbols-outlined text-sm">schedule</span>
-                                        </div>
-                                        <span className="font-medium text-slate-700 dark:text-slate-300">Pending</span>
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                        <span className="text-xl font-bold text-orange-600 dark:text-orange-400">{pendingCount}</span>
-                                        <span className="text-xs font-medium text-slate-400">{Math.round((pendingCount / totalPatients) * 100)}%</span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
