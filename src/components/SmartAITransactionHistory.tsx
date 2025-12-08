@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { VERIFICATION_STATUS_LABELS } from '../constants/verificationStatus';
+import { PDFViewerWithModal } from './PDFViewer';
 
 interface CallCommunication {
   timestamp: string;
@@ -835,9 +836,9 @@ Important Notes
                       <div className="space-y-3 text-sm">
                         {transaction.type === 'FAX' ? (
                           <div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">Fax Document</div>
+                            <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">Fax Document (Click to view all pages)</div>
                             <div className="bg-white dark:bg-slate-900 p-4 rounded border border-slate-200 dark:border-slate-700">
-                              <img src="/assets/fax-sample.png" alt="Fax Sample Document" className="w-1/2 h-auto rounded" />
+                              <PDFViewerWithModal pdfUrl="/assets/fax-all.pdf" firstPageMaxWidth="50%" />
                             </div>
                           </div>
                         ) : (
@@ -1070,7 +1071,7 @@ Important Notes
                     </div>
                   ) : (
                     <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded border border-slate-200 dark:border-slate-700">
-                      <img src="/assets/fax-sample.png" alt="Fax Document" className="max-w-full h-auto rounded" />
+                      <PDFViewerWithModal pdfUrl="/assets/fax-all.pdf" firstPageMaxWidth="100%" />
                     </div>
                   )}
                 </div>

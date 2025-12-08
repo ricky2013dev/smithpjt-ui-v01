@@ -43,7 +43,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
   onTabChange,
   isAdmin = false,
   onCancel,
-  onBackToScheduleJobs,
+  onBackToScheduleJobs: _onBackToScheduleJobs,
 }) => {
   const [showAICenter, setShowAICenter] = useState(false);
   const [insuranceSubTab, setInsuranceSubTab] = useState<InsuranceSubTabType>(INSURANCE_SUB_TAB_TYPES.COVERAGE_DETAILS);
