@@ -108,32 +108,32 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
     const configs = {
       eligibilityCheck: {
         icon: status === 'completed' ? 'check' : status === 'in_progress' ? 'sync' : 'schedule',
-        bgColor: status === 'completed' ? 'bg-status-green' : status === 'in_progress' ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700',
-        textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-500 dark:text-slate-400',
+        bgColor: status === 'completed' ? 'bg-green-500 dark:bg-green-600' : status === 'in_progress' ? 'bg-blue-500 dark:bg-blue-600' : 'bg-slate-300 dark:bg-slate-600',
+        textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-600 dark:text-slate-400',
         label: VERIFICATION_STATUS_LABELS.ELIGIBILITY_CHECK,
         statusText: status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Pending',
-        statusColor: status === 'completed' ? 'text-status-green' : status === 'in_progress' ? 'text-primary' : 'text-slate-500 dark:text-slate-400',
+        statusColor: status === 'completed' ? 'text-green-600 dark:text-green-400' : status === 'in_progress' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400',
       },
       benefitsVerification: {
         icon: status === 'completed' ? 'check' : status === 'in_progress' ? 'sync' : 'schedule',
-        bgColor: status === 'completed' ? 'bg-status-green' : status === 'in_progress' ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700',
-        textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-500 dark:text-slate-400',
+        bgColor: status === 'completed' ? 'bg-green-500 dark:bg-green-600' : status === 'in_progress' ? 'bg-blue-500 dark:bg-blue-600' : 'bg-slate-300 dark:bg-slate-600',
+        textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-600 dark:text-slate-400',
         label: 'API Verification',
         statusText: status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Pending',
-        statusColor: status === 'completed' ? 'text-status-green' : status === 'in_progress' ? 'text-primary' : 'text-slate-500 dark:text-slate-400',
+        statusColor: status === 'completed' ? 'text-green-600 dark:text-green-400' : status === 'in_progress' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400',
       },
       aiCallVerification: {
         icon: status === 'completed' ? 'check' : status === 'in_progress' ? 'sync' : 'schedule',
-        bgColor: status === 'completed' ? 'bg-status-green' : status === 'in_progress' ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700',
-        textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-500 dark:text-slate-400',
+        bgColor: status === 'completed' ? 'bg-green-500 dark:bg-green-600' : status === 'in_progress' ? 'bg-blue-500 dark:bg-blue-600' : 'bg-slate-300 dark:bg-slate-600',
+        textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-600 dark:text-slate-400',
         label: 'AI Call Verification',
         statusText: status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Pending',
-        statusColor: status === 'completed' ? 'text-status-green' : status === 'in_progress' ? 'text-primary' : 'text-slate-500 dark:text-slate-400',
+        statusColor: status === 'completed' ? 'text-green-600 dark:text-green-400' : status === 'in_progress' ? 'text-blue-600 dark:text-blue-400' : 'text-slate-500 dark:text-slate-400',
       },
       sendToPMS: {
         icon: status === 'completed' ? 'check' : status === 'in_progress' ? 'sync' : 'schedule',
-        bgColor: status === 'completed' ? 'bg-status-green' : status === 'in_progress' ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-700',
-        textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-500 dark:text-slate-400',
+        bgColor: status === 'completed' ? 'bg-green-500 dark:bg-green-600' : status === 'in_progress' ? 'bg-blue-500 dark:bg-blue-600' : 'bg-slate-300 dark:bg-slate-600',
+        textColor: status === 'completed' ? 'text-white' : status === 'in_progress' ? 'text-white' : 'text-slate-600 dark:text-slate-400',
         label: 'Complete Verification',
         statusText: status === 'completed' ? 'Completed' : status === 'in_progress' ? 'In Progress' : 'Pending',
         statusColor: status === 'completed' ? 'text-status-green' : status === 'in_progress' ? 'text-primary' : 'text-slate-500 dark:text-slate-400',
@@ -410,7 +410,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
     <section key={patient.id} className="hidden w-0 flex-1 flex-col bg-background-light dark:bg-background-dark lg:flex lg:w-[85%] animate-fadeIn">
       {/* Profile Header - Compact */}
       <div className="px-6 py-3 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 justify-between">
           <div className="rounded-full h-10 w-10 overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-800">
             <img
               src={`https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&size=80&background=e2e8f0&color=475569&bold=false&format=svg`}
@@ -427,7 +427,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             </p>
           </div>
 
-          <div className={`flex-1 flex justify-center gap-2 ${patient.id.startsWith('new-') ? 'invisible' : ''}`}>
+          <div className={`flex gap-2 ${patient.id.startsWith('new-') ? 'invisible' : ''}`}>
             {/* Request Insurance Fax */}
             <button
               onClick={() => {
@@ -483,8 +483,8 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
           </div>
 
           {/* Verification Steps Progress - Compact */}
-          <div className="flex-1 max-w-md flex items-center gap-4">
-            <div className="flex-1">
+          <div className="flex items-center gap-4 w-80 ml-auto">
+            <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
                   Progress
@@ -494,10 +494,10 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 </span>
               </div>
               {/* Simplified Progress Line */}
-              <div className="relative">
+              <div className="relative py-1">
                 {/* Connector line segment 1: Step 1 to Step 2 */}
                 <div
-                  className={`absolute top-2.5 h-px transition-colors ${
+                  className={`absolute top-4 h-0.5 transition-colors ${
                     isPullBasicDataCompleted()
                       ? 'bg-green-500'
                       : 'bg-slate-300 dark:bg-slate-600'
@@ -507,7 +507,7 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
 
                 {/* Connector line segment 2: Step 2 to Step 3 */}
                 <div
-                  className={`absolute top-2.5 h-px transition-colors ${
+                  className={`absolute top-4 h-0.5 transition-colors ${
                     isAPIVerificationCompleted()
                       ? 'bg-green-500'
                       : 'bg-slate-300 dark:bg-slate-600'
@@ -519,30 +519,30 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
                 <div className="relative flex items-start justify-between">
                   {/* Step 1 */}
                   <div className="flex flex-col items-center" style={{ width: '33.33%' }}>
-                    <div className={`flex items-center justify-center w-5 h-5 rounded-full ${getStepConfig('eligibilityCheck').bgColor} ${getStepConfig('eligibilityCheck').textColor} shrink-0 relative z-10`}>
-                      <span className="material-symbols-outlined text-xs">{getStepConfig('eligibilityCheck').icon}</span>
+                    <div className={`flex items-center justify-center w-8 h-8 rounded-full ${getStepConfig('eligibilityCheck').bgColor} ${getStepConfig('eligibilityCheck').textColor} shrink-0 relative z-10 border-2 border-white dark:border-slate-900`}>
+                      <span className="material-symbols-outlined text-sm">{getStepConfig('eligibilityCheck').icon}</span>
                     </div>
-                    <p className="text-[8px] text-slate-600 dark:text-slate-400 mt-0.5 text-center leading-tight">
+                    <p className="text-[9px] text-slate-600 dark:text-slate-400 mt-1 text-center leading-tight px-1">
                       {getStepConfig('eligibilityCheck').label}
                     </p>
                   </div>
 
                   {/* Step 2 */}
                   <div className="flex flex-col items-center" style={{ width: '33.33%' }}>
-                    <div className={`flex items-center justify-center w-5 h-5 rounded-full ${getStepConfig('benefitsVerification').bgColor} ${getStepConfig('benefitsVerification').textColor} shrink-0 relative z-10`}>
-                      <span className="material-symbols-outlined text-xs">{getStepConfig('benefitsVerification').icon}</span>
+                    <div className={`flex items-center justify-center w-8 h-8 rounded-full ${getStepConfig('benefitsVerification').bgColor} ${getStepConfig('benefitsVerification').textColor} shrink-0 relative z-10 border-2 border-white dark:border-slate-900`}>
+                      <span className="material-symbols-outlined text-sm">{getStepConfig('benefitsVerification').icon}</span>
                     </div>
-                    <p className="text-[8px] text-slate-600 dark:text-slate-400 mt-0.5 text-center leading-tight">
+                    <p className="text-[9px] text-slate-600 dark:text-slate-400 mt-1 text-center leading-tight px-1">
                       {getStepConfig('benefitsVerification').label}
                     </p>
                   </div>
 
                   {/* Step 3 */}
                   <div className="flex flex-col items-center" style={{ width: '33.33%' }}>
-                    <div className={`flex items-center justify-center w-5 h-5 rounded-full ${getStepConfig('aiCallVerification').bgColor} ${getStepConfig('aiCallVerification').textColor} shrink-0 relative z-10`}>
-                      <span className="material-symbols-outlined text-xs">{getStepConfig('aiCallVerification').icon}</span>
+                    <div className={`flex items-center justify-center w-8 h-8 rounded-full ${getStepConfig('aiCallVerification').bgColor} ${getStepConfig('aiCallVerification').textColor} shrink-0 relative z-10 border-2 border-white dark:border-slate-900`}>
+                      <span className="material-symbols-outlined text-sm">{getStepConfig('aiCallVerification').icon}</span>
                     </div>
-                    <p className="text-[8px] text-slate-600 dark:text-slate-400 mt-0.5 text-center leading-tight">
+                    <p className="text-[9px] text-slate-600 dark:text-slate-400 mt-1 text-center leading-tight px-1">
                       {getStepConfig('aiCallVerification').label}
                     </p>
                   </div>
@@ -562,18 +562,6 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
               </button>
             )}
           </div>
-
-          {/* Back to Scheduled Jobs Button */}
-          {onBackToScheduleJobs && !patient.id.startsWith('new-') && (
-            <button
-              onClick={onBackToScheduleJobs}
-              className="ml-auto px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
-              title="Back to Scheduled Jobs"
-            >
-              <span className="material-symbols-outlined text-sm">arrow_back</span>
-              Back
-            </button>
-          )}
         </div>
       </div>
 

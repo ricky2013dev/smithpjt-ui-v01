@@ -32,6 +32,7 @@ const DailyJobDashboard: React.FC<DailyJobDashboardProps> = ({ patients: patient
 
   const [viewMode, setViewMode] = useState<ViewMode>('day');
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [expandedJobId, setExpandedJobId] = useState<string | null>(null);
 
   const jobSteps: JobStep[] = [
     { id: 'analysis', label: 'Document Analysis', icon: 'description' },
@@ -207,6 +208,76 @@ const DailyJobDashboard: React.FC<DailyJobDashboardProps> = ({ patients: patient
     navigate('/');
   };
 
+  // Generate mock transaction history for a job
+  const generateTransactionHistory = (job: PatientJob) => {
+    const transactions = [];
+    const seed = job.jobDate.getTime();
+    const insuranceProvider = job.patient.insurance?.[0]?.provider || 'Cigna Dental';
+
+    // FAX transaction
+    if (job.steps.analysis === 'completed') {
+      transactions.push({
+        startTime: job.jobDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }) + ' ' + job.startTime + ':30',
+        reqId: `REQ-${job.jobDate.toISOString().split('T')[0].replace(/-/g, '')}-${Math.floor(seed % 1000).toString().padStart(4, '0')}`,
+        duration: '5m 25s',
+        type: 'FAX',
+        status: 'SUCCESS',
+        insuranceProvider,
+        insuranceRep: 'Fax System',
+        score: '30%',
+        runBy: 'Smith AI System'
+      });
+    }
+
+    // API transaction
+    if (job.steps.api_call !== 'pending') {
+      const apiStartTime = new Date(job.jobDate.getTime() + 6 * 60000); // 6 minutes after job start
+      transactions.push({
+        startTime: apiStartTime.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }) + ' ' +
+          `${String(apiStartTime.getHours()).padStart(2, '0')}:${String(apiStartTime.getMinutes()).padStart(2, '0')}:15`,
+        reqId: `REQ-${job.jobDate.toISOString().split('T')[0].replace(/-/g, '')}-${Math.floor((seed + 100) % 1000).toString().padStart(4, '0')}`,
+        duration: '1m 10s',
+        type: 'API',
+        status: job.steps.api_call === 'completed' ? 'SUCCESS' : 'IN_PROGRESS',
+        insuranceProvider,
+        insuranceRep: 'API System',
+        score: '80%',
+        runBy: 'Smith AI System'
+      });
+    }
+
+    // CALL transaction
+    if (job.steps.call_center !== 'pending') {
+      const callStartTime = new Date(job.jobDate.getTime() + 8 * 60000); // 8 minutes after job start
+      transactions.push({
+        startTime: callStartTime.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }) + ' ' +
+          `${String(callStartTime.getHours()).padStart(2, '0')}:${String(callStartTime.getMinutes()).padStart(2, '0')}:22`,
+        reqId: `REQ-${job.jobDate.toISOString().split('T')[0].replace(/-/g, '')}-${Math.floor((seed + 200) % 1000).toString().padStart(4, '0')}`,
+        duration: '48m 0s',
+        type: 'CALL',
+        status: job.steps.call_center === 'completed' ? 'SUCCESS' : 'IN_PROGRESS',
+        insuranceProvider,
+        insuranceRep: 'Amanda Rodriguez',
+        score: '100%',
+        runBy: 'Smith AI System'
+      });
+    }
+
+    return transactions;
+  };
+
+  const handleGoToDetail = (job: PatientJob) => {
+    if (onDetailClick) {
+      onDetailClick(job.patient.id);
+    } else {
+      navigate(`/patient-appointments?patientId=${job.patient.id}`);
+    }
+  };
+
+  const toggleJobExpansion = (jobId: string) => {
+    setExpandedJobId(expandedJobId === jobId ? null : jobId);
+  };
+
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-slate-950 overflow-hidden font-sans">
       {/* Header */}
@@ -334,6 +405,7 @@ const DailyJobDashboard: React.FC<DailyJobDashboardProps> = ({ patients: patient
           <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
             {/* Table Header with Step Labels */}
             <div className="flex gap-3 px-3 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+              <div className="w-6"></div>
               <div style={{ width: '15%' }}>
                 <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Date & Time</p>
               </div>
@@ -367,20 +439,24 @@ const DailyJobDashboard: React.FC<DailyJobDashboardProps> = ({ patients: patient
                 const [startHour, startMin] = job.startTime.split(':');
                 const [endHour, endMin] = job.endTime.split(':');
                 const durationMin = (parseInt(endHour) * 60 + parseInt(endMin)) - (parseInt(startHour) * 60 + parseInt(startMin));
+                const jobId = `${job.jobDate.toISOString()}-${index}`;
+                const isExpanded = expandedJobId === jobId;
 
                 return (
-                  <div
-                    key={`${job.jobDate.toISOString()}-${index}`}
-                    onClick={() => {
-                      if (onDetailClick) {
-                        onDetailClick(job.patient.id);
-                      } else {
-                        // Navigate to patient appointments with patient selected
-                        navigate(`/patient-appointments?patientId=${job.patient.id}`);
-                      }
-                    }}
-                    className="flex gap-3 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer items-center"
-                  >
+                  <div key={jobId}>
+                    <div
+                      onClick={() => toggleJobExpansion(jobId)}
+                      className="flex gap-3 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer items-center"
+                    >
+                    {/* Expand/Collapse Icon */}
+                    <div className="w-6 flex items-center justify-center">
+                      <span className={`material-symbols-outlined text-slate-400 dark:text-slate-500 text-lg transition-transform duration-200 ${
+                        isExpanded ? 'rotate-180' : ''
+                      }`}>
+                        expand_more
+                      </span>
+                    </div>
+
                     {/* Date & Time */}
                     <div style={{ width: '15%' }}>
                       <div className="flex flex-col">
@@ -454,6 +530,96 @@ const DailyJobDashboard: React.FC<DailyJobDashboardProps> = ({ patients: patient
                       </span>
                     </div>
                   </div>
+
+                  {/* Expandable Transaction Summary */}
+                  {isExpanded && (
+                    <div className="bg-slate-50 dark:bg-slate-800/30 p-6 border-t border-slate-200 dark:border-slate-700">
+                      {/* Summary Header */}
+                      <div className="flex items-center gap-4 mb-4">
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                          Transaction Summary
+                        </h3>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleGoToDetail(job);
+                          }}
+                          className="px-3 py-1.5 bg-slate-900 dark:bg-slate-700 text-white rounded-lg hover:bg-slate-800 dark:hover:bg-slate-600 transition-colors text-xs font-medium flex items-center gap-1"
+                        >
+                          Go to Detail
+                          <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                      </div>
+
+                      {/* Patient Info */}
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                        Patient: {getPatientName(job.patient)} | Date: {job.jobDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                      </p>
+
+                      {/* Transaction History Table */}
+                      <div className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+
+                        {/* Table */}
+                        <div className="overflow-x-auto">
+                          <table className="w-full">
+                            <thead className="bg-slate-100 dark:bg-slate-800">
+                              <tr>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Start Time</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Duration</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Type</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Status</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Insurance Provider</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Insurance Rep</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Score</th>
+                                <th className="px-4 py-3 text-left text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide">Run By</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
+                              {generateTransactionHistory(job).map((transaction, idx) => (
+                                <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                                  <td className="px-4 py-3">
+                                    <div className="text-sm text-slate-900 dark:text-white font-medium">{transaction.startTime.split(' ')[0]}</div>
+                                    <div className="text-xs text-slate-500 dark:text-slate-400">{transaction.reqId}</div>
+                                  </td>
+                                  <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{transaction.duration}</td>
+                                  <td className="px-4 py-3">
+                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold ${
+                                      transaction.type === 'FAX' ? 'bg-cyan-50 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400' :
+                                      transaction.type === 'API' ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' :
+                                      'bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400'
+                                    }`}>
+                                      {transaction.type}
+                                    </span>
+                                  </td>
+                                  <td className="px-4 py-3">
+                                    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold ${
+                                      transaction.status === 'SUCCESS' ? 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400' :
+                                      'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400'
+                                    }`}>
+                                      {transaction.status}
+                                    </span>
+                                  </td>
+                                  <td className="px-4 py-3 text-sm text-slate-900 dark:text-white">{transaction.insuranceProvider}</td>
+                                  <td className="px-4 py-3 text-sm text-slate-900 dark:text-white">{transaction.insuranceRep}</td>
+                                  <td className="px-4 py-3">
+                                    <span className={`text-sm font-bold ${
+                                      parseInt(transaction.score) === 100 ? 'text-green-600 dark:text-green-400' :
+                                      parseInt(transaction.score) >= 80 ? 'text-orange-600 dark:text-orange-400' :
+                                      'text-red-600 dark:text-red-400'
+                                    }`}>
+                                      {transaction.score}
+                                    </span>
+                                  </td>
+                                  <td className="px-4 py-3 text-sm text-slate-900 dark:text-white">{transaction.runBy}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 );
               })}
             </div>

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import PatientList from './PatientList';
 import PatientDetail from './PatientDetail';
-import Dashboard from './Dashboard';
 import PatientGuide from './PatientGuide';
 import Header from './Header';
 import { Patient, FilterType, TabType, TAB_TYPES } from '../types/patient';
@@ -14,7 +13,6 @@ const PatientsManagement: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isAdmin = false; // Always user mode
-  const [viewMode, setViewMode] = useState<'dashboard' | 'list'>('list'); // Default to list for non-admin
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeFilters, setActiveFilters] = useState<FilterType[]>([]);
@@ -141,12 +139,6 @@ const PatientsManagement: React.FC = () => {
     }
   };
 
-  const handleDashboardItemClick = (_patientId?: string) => {
-    setViewMode('list');
-    // Clear selected patient to show PatientGuide first
-    setSelectedPatientId(null);
-  };
-
   const handleHeaderClick = () => {
     // Navigate to dashboard
     navigate('/dashboard');
@@ -221,9 +213,7 @@ const PatientsManagement: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex flex-1 overflow-hidden">
-        {viewMode === 'dashboard' ? (
-          <Dashboard patients={patients} onItemClick={handleDashboardItemClick} />
-        ) : selectedPatient ? (
+        {selectedPatient ? (
           <div className="flex w-full">
             <PatientList
               patients={filteredPatients}
