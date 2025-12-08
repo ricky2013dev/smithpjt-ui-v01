@@ -9,8 +9,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/dashboard" element={<PatientsManagement />} />
-        <Route path="/daily-jobs" element={<DailyJobDashboard />} />
+        <Route path="/dashboard" element={<DailyJobDashboard />} />
+        <Route path="/patient-appointments" element={<PatientsManagement />} />
         <Route path="/smart-ai-transaction-history" element={<SmartAITransactionHistory />} />
       </Routes>
     </Router>

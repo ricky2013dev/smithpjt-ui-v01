@@ -20,13 +20,13 @@ const PatientsManagement: React.FC = () => {
   const [activeFilters, setActiveFilters] = useState<FilterType[]>([]);
   const [activeTab, setActiveTab] = useState<TabType>(TAB_TYPES.AI_CALL_HISTORY);
 
-  // Handle patient selection from Scheduled Jobs page
+  // Handle patient selection from Dashboard page
   useEffect(() => {
     const patientId = searchParams.get('patientId');
     if (patientId) {
       setSelectedPatientId(patientId);
       // Clean up the URL
-      navigate('/dashboard', { replace: true });
+      navigate('/patient-appointments', { replace: true });
     }
   }, [searchParams, navigate]);
 
@@ -148,9 +148,8 @@ const PatientsManagement: React.FC = () => {
   };
 
   const handleHeaderClick = () => {
-    // Admin mode: go to dashboard, User mode: go to list
-    setViewMode(isAdmin ? 'dashboard' : 'list');
-    setSelectedPatientId(null);
+    // Navigate to dashboard
+    navigate('/dashboard');
   };
 
   const handleAddNewPatient = () => {
@@ -207,9 +206,9 @@ const PatientsManagement: React.FC = () => {
     setSelectedPatientId(null);
   };
 
-  const handleBackToScheduleJobs = () => {
+  const handleBackToDashboard = () => {
     setSelectedPatientId(null);
-    navigate('/daily-jobs');
+    navigate('/dashboard');
   };
 
   return (
@@ -236,7 +235,7 @@ const PatientsManagement: React.FC = () => {
               onRemoveFilter={handleRemoveFilter}
               onAddFilter={handleAddFilter}
               isAdmin={isAdmin}
-              onBackToScheduleJobs={handleBackToScheduleJobs}
+              onBackToScheduleJobs={handleBackToDashboard}
             />
 
             <PatientDetail
@@ -245,7 +244,7 @@ const PatientsManagement: React.FC = () => {
               onTabChange={setActiveTab}
               isAdmin={isAdmin}
               onCancel={selectedPatient.id.startsWith('new-') ? handleCancelNewPatient : undefined}
-              onBackToScheduleJobs={handleBackToScheduleJobs}
+              onBackToScheduleJobs={handleBackToDashboard}
             />
           </div>
         ) : (

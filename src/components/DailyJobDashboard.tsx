@@ -211,7 +211,7 @@ const DailyJobDashboard: React.FC<DailyJobDashboardProps> = ({ patients: patient
     <div className="flex flex-col h-screen bg-white dark:bg-slate-950 overflow-hidden font-sans">
       {/* Header */}
       <Header
-        onLogoClick={() => navigate('/daily-jobs')}
+        onLogoClick={() => navigate('/dashboard')}
         onLogout={handleLogout}
       />
 
@@ -221,7 +221,7 @@ const DailyJobDashboard: React.FC<DailyJobDashboardProps> = ({ patients: patient
 
           {/* Title */}
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Scheduled Jobs</h1>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Dashboard</h1>
             <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">Track patient verification workflow progress</p>
           </div>
 
@@ -375,8 +375,8 @@ const DailyJobDashboard: React.FC<DailyJobDashboardProps> = ({ patients: patient
                       if (onDetailClick) {
                         onDetailClick(job.patient.id);
                       } else {
-                        // Navigate to dashboard with patient selected
-                        navigate(`/dashboard?patientId=${job.patient.id}`);
+                        // Navigate to patient appointments with patient selected
+                        navigate(`/patient-appointments?patientId=${job.patient.id}`);
                       }
                     }}
                     className="flex gap-3 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer items-center"

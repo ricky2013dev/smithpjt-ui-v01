@@ -54,17 +54,17 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onL
           {onLogout && (
             <div className="flex items-center gap-2">
               <button
-                onClick={() => navigate('/daily-jobs')}
-                className="px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5"
-              >
-                <span className="material-symbols-outlined text-sm">schedule</span>
-                Scheduled Jobs
-              </button>
-              <button
                 onClick={() => navigate('/dashboard')}
                 className="px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-sm">dashboard</span>
+                Dashboard
+              </button>
+              <button
+                onClick={() => navigate('/patient-appointments')}
+                className="px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5"
+              >
+                <span className="material-symbols-outlined text-sm">group</span>
                 Patient Appointments
               </button>
             </div>

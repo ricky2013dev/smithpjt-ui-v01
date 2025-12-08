@@ -26,7 +26,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
         // Simulate authentication delay (800ms)
         setTimeout(() => {
-            navigate('/daily-jobs');
+            navigate('/dashboard');
             onClose();
             setIsLoading(false);
         }, 800);
