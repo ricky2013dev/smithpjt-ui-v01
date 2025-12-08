@@ -18,9 +18,9 @@ const PatientsManagement: React.FC = () => {
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeFilters, setActiveFilters] = useState<FilterType[]>([]);
-  const [activeTab, setActiveTab] = useState<TabType>(TAB_TYPES.PATIENT_BASIC_INFO);
+  const [activeTab, setActiveTab] = useState<TabType>(TAB_TYPES.AI_CALL_HISTORY);
 
-  // Handle patient selection from Schedule Jobs page
+  // Handle patient selection from Scheduled Jobs page
   useEffect(() => {
     const patientId = searchParams.get('patientId');
     if (patientId) {

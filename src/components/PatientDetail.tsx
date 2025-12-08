@@ -563,12 +563,12 @@ const PatientDetail: React.FC<PatientDetailProps> = ({
             )}
           </div>
 
-          {/* Back to Schedule Jobs Button */}
+          {/* Back to Scheduled Jobs Button */}
           {onBackToScheduleJobs && !patient.id.startsWith('new-') && (
             <button
               onClick={onBackToScheduleJobs}
               className="ml-auto px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-medium transition-colors bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
-              title="Back to Schedule Jobs"
+              title="Back to Scheduled Jobs"
             >
               <span className="material-symbols-outlined text-sm">arrow_back</span>
               Back

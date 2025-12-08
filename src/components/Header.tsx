@@ -45,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onL
                 <span className="text-sm font-medium text-slate-900 dark:text-white">AI Center</span>
               </h1>
               <p className="text-slate-500 dark:text-slate-400 text-[10px] font-medium uppercase tracking-wider mt-0.5">
-                Patient List
+                Patient Appointments
               </p>
             </div>
           </div>
@@ -58,14 +58,14 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onL
                 className="px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-sm">schedule</span>
-                Schedule Jobs
+                Scheduled Jobs
               </button>
               <button
                 onClick={() => navigate('/dashboard')}
                 className="px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5"
               >
                 <span className="material-symbols-outlined text-sm">dashboard</span>
-                Patient List
+                Patient Appointments
               </button>
             </div>
           )}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Patient } from '../types/patient';
 import { VERIFICATION_STATUS_LABELS } from '../constants/verificationStatus';
 
@@ -133,55 +133,8 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
     return { label: VERIFICATION_STATUS_LABELS.NOT_STARTED, color: 'text-slate-600 dark:text-slate-400', percentage: 0 };
   };
 
-  const [isPulling, setIsPulling] = useState(false);
-  const [pullProgress, setPullProgress] = useState(0);
-  const [pullMessage, setPullMessage] = useState('');
-
   const upcomingAppointments = getUpcomingAppointments();
   const pastAppointments = getPastAppointments();
-
-  const handlePullPatientData = () => {
-    setIsPulling(true);
-    setPullProgress(0);
-    setPullMessage('Establishing secure connection to Practice Management System...');
-
-    // Stage 1: Connecting (0-25%)
-    setTimeout(() => {
-      setPullProgress(25);
-      setPullMessage('Connection established. Authenticating credentials...');
-    }, 800);
-
-    // Stage 2: Authenticating (25-50%)
-    setTimeout(() => {
-      setPullProgress(50);
-      setPullMessage('Authentication successful. Retrieving patient records...');
-    }, 1600);
-
-    // Stage 3: Fetching (50-75%)
-    setTimeout(() => {
-      setPullProgress(75);
-      setPullMessage('Processing patient demographics and insurance information...');
-    }, 2400);
-
-    // Stage 4: Syncing (75-90%)
-    setTimeout(() => {
-      setPullProgress(90);
-      setPullMessage('Synchronizing appointment schedules and verification status...');
-    }, 3200);
-
-    // Stage 5: Finalizing (90-100%)
-    setTimeout(() => {
-      setPullProgress(100);
-      setPullMessage('Data synchronization completed successfully.');
-    }, 4000);
-
-    // Close modal
-    setTimeout(() => {
-      setIsPulling(false);
-      setPullProgress(0);
-      setPullMessage('');
-    }, 5000);
-  };
 
 
 
@@ -190,29 +143,20 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
       <div className="p-6 max-w-[1600px] mx-auto w-full space-y-6">
 
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-              Patient List
-            </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Select a patient from the list to initiate the insurance verification process.
-            </p>
-          </div>
-          <button
-            onClick={handlePullPatientData}
-            className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg hover:bg-slate-800 dark:hover:bg-slate-100 flex items-center gap-2 text-sm font-medium shadow-sm transition-colors"
-          >
-            <span className="material-symbols-outlined text-lg">sync</span>
-            Pull Up The Latest Upcoming Appointments
-          </button>
+        <div>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+            Patient Appointments
+          </h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            Select a patient from the list to initiate the insurance verification process.
+          </p>
         </div>
 
         {/* Bottom Section: Appointments */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* Upcoming Appointments */}
-          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col h-[500px]">
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col h-[700px]">
             <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
@@ -276,7 +220,7 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
           </div>
 
           {/* Past Appointments */}
-          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col h-[500px]">
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex flex-col h-[700px]">
             <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center">
@@ -341,37 +285,6 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
 
         </div>
       </div>
-
-      {/* Sync Modal Overlay */}
-      {isPulling && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full p-8 border border-slate-200 dark:border-slate-700">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-6 relative">
-                <span className="material-symbols-outlined text-3xl text-blue-600 dark:text-blue-400 animate-pulse">cloud_sync</span>
-                <svg className="absolute inset-0 w-full h-full animate-spin-slow" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="20 10" className="text-blue-200 dark:text-blue-800" />
-                </svg>
-              </div>
-
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Syncing Data</h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-8 h-10">{pullMessage}</p>
-
-              <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 mb-4 overflow-hidden">
-                <div
-                  className="h-full bg-blue-600 dark:bg-blue-500 transition-all duration-300 ease-out rounded-full"
-                  style={{ width: `${pullProgress}%` }}
-                ></div>
-              </div>
-
-              <div className="flex justify-between w-full text-xs text-slate-400 font-medium">
-                <span>Connecting</span>
-                <span>{pullProgress}%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 };
