@@ -3,9 +3,9 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import PatientList from './PatientList';
 import PatientDetail from './PatientDetail';
 import PatientGuide from './PatientGuide';
-import Header from './Header';
-import { Patient, FilterType, TabType, TAB_TYPES } from '../types/patient';
-import patientsData from '../../mockupdata/patients.json';
+import Header from '../Header';
+import { Patient, FilterType, TabType, TAB_TYPES } from '../../types/patient';
+import patientsData from '../../../mockupdata/patients.json';
 
 const patients = patientsData as Patient[];
 
@@ -24,7 +24,7 @@ const PatientsManagement: React.FC = () => {
     if (patientId) {
       setSelectedPatientId(patientId);
       // Clean up the URL
-      navigate('/patient-appointments', { replace: true });
+      navigate('/b2b-agent/patient-appointments', { replace: true });
     }
   }, [searchParams, navigate]);
 
@@ -141,7 +141,7 @@ const PatientsManagement: React.FC = () => {
 
   const handleHeaderClick = () => {
     // Navigate to dashboard
-    navigate('/dashboard');
+    navigate('/b2b-agent/dashboard');
   };
 
   const handleAddNewPatient = () => {
@@ -200,7 +200,7 @@ const PatientsManagement: React.FC = () => {
 
   const handleBackToDashboard = () => {
     setSelectedPatientId(null);
-    navigate('/dashboard');
+    navigate('/b2b-agent/dashboard');
   };
 
   return (

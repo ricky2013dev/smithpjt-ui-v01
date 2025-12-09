@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
-import { Patient } from "../types/patient";
-import verificationData from "../../mockupdata/verificationData.json";
+import { Patient } from "../../types/patient";
+import verificationData from "../../../mockupdata/verificationData.json";
 // import availityService from "../services/availityService"; // Not currently used
 
 interface VerificationFormProps {

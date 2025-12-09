@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { Patient, FilterType } from '../types/patient';
-import { VERIFICATION_STATUS_LABELS } from '../constants/verificationStatus';
+import { Patient, FilterType } from '../../types/patient';
+import { VERIFICATION_STATUS_LABELS } from '../../constants/verificationStatus';
 
 type SortField = 'name' | 'appointment' | 'type' | 'status';
 type SortDirection = 'asc' | 'desc';

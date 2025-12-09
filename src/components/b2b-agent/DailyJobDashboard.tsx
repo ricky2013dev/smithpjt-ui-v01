@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Patient } from '../types/patient';
-import Header from './Header';
-import patientsData from '../../mockupdata/patients.json';
+import { Patient } from '../../types/patient';
+import Header from '../Header';
+import patientsData from '../../../mockupdata/patients.json';
 
 interface JobStep {
   id: 'analysis' | 'api_call' | 'call_center';
@@ -276,7 +276,7 @@ const DailyJobDashboard: React.FC<DailyJobDashboardProps> = ({ patients: patient
     if (onDetailClick) {
       onDetailClick(job.patient.id);
     } else {
-      navigate(`/patient-appointments?patientId=${job.patient.id}`);
+      navigate(`/b2b-agent/patient-appointments?patientId=${job.patient.id}`);
     }
   };
 
@@ -288,7 +288,7 @@ const DailyJobDashboard: React.FC<DailyJobDashboardProps> = ({ patients: patient
     <div className="flex flex-col h-screen bg-white dark:bg-slate-950 overflow-hidden font-sans">
       {/* Header */}
       <Header
-        onLogoClick={() => navigate('/dashboard')}
+        onLogoClick={() => navigate('/b2b-agent/dashboard')}
         onLogout={handleLogout}
       />
 

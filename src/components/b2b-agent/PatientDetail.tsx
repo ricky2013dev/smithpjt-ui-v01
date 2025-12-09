@@ -10,15 +10,15 @@ import {
   InsuranceSubTabType,
   INSURANCE_SUB_TAB_TYPES,
   INSURANCE_SUB_TAB_LABELS,
-} from "../types/patient";
+} from "../../types/patient";
 import SmithAICenter from "./SmithAICenter";
 import VerificationForm from "./VerificationForm";
 import InsuranceCardUploadModal, { ScannedData } from "./InsuranceCardUploadModal";
 import CoverageVerificationResults from "./CoverageVerificationResults";
 import SmartAITransactionHistory from "./SmartAITransactionHistory";
 import CoverageByCodeView from "./CoverageByCodeView";
-import { PRIMARY_BUTTON } from "../styles/buttonStyles";
-import { VERIFICATION_STATUS_LABELS } from "../constants/verificationStatus";
+import { PRIMARY_BUTTON } from "../../styles/buttonStyles";
+import { VERIFICATION_STATUS_LABELS } from "../../constants/verificationStatus";
 
 interface PatientDetailProps {
   patient: Patient;

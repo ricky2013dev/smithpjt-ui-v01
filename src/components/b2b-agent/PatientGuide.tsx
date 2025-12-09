@@ -1,6 +1,6 @@
 import React from 'react';
-import { Patient } from '../types/patient';
-import { VERIFICATION_STATUS_LABELS } from '../constants/verificationStatus';
+import { Patient } from '../../types/patient';
+import { VERIFICATION_STATUS_LABELS } from '../../constants/verificationStatus';
 
 interface PatientGuideProps {
   totalPatients?: number;

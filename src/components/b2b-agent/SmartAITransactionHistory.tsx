@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { VERIFICATION_STATUS_LABELS } from '../constants/verificationStatus';
+import { VERIFICATION_STATUS_LABELS } from '../../constants/verificationStatus';
 import { PDFViewerWithModal } from './PDFViewer';
 
 interface CallCommunication {

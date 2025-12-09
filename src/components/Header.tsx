@@ -10,9 +10,11 @@ interface HeaderProps {
   } | null;
   onLogout?: () => void;
   onLoginClick?: () => void;
+  onInsuranceLoginClick?: () => void;
+  mode?: 'b2b' | 'insurance';
 }
 
-const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onLoginClick }) => {
+const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onLoginClick, onInsuranceLoginClick, mode = 'b2b' }) => {
   const navigate = useNavigate();
 
   return (
@@ -45,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onL
                 <span className="text-sm font-medium text-slate-900 dark:text-white">AI Center</span>
               </h1>
               <p className="text-slate-500 dark:text-slate-400 text-[10px] font-medium uppercase tracking-wider mt-0.5">
-                Patient Appointments
+                {mode === 'insurance' ? 'Insurance Verification' : 'Patient Appointments'}
               </p>
             </div>
           </div>
@@ -53,20 +55,34 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onL
           {/* Navigation Links */}
           {onLogout && (
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5"
-              >
-                <span className="material-symbols-outlined text-sm">dashboard</span>
-                Dashboard
-              </button>
-              <button
-                onClick={() => navigate('/patient-appointments')}
-                className="px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5"
-              >
-                <span className="material-symbols-outlined text-sm">group</span>
-                Patient Appointments
-              </button>
+              {mode === 'insurance' ? (
+                <>
+                  <button
+                    onClick={() => navigate('/insurance/dashboard')}
+                    className="px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-sm">dashboard</span>
+                    Call Dashboard
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => navigate('/b2b-agent/dashboard')}
+                    className="px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-sm">dashboard</span>
+                    Dashboard
+                  </button>
+                  <button
+                    onClick={() => navigate('/b2b-agent/patient-appointments')}
+                    className="px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-sm">group</span>
+                    Patient Appointments
+                  </button>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -128,14 +144,26 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onL
             </button>
           </div>
         ) : onLoginClick ? (
-          /* Login Button for Home Page */
-          <button
-            onClick={onLoginClick}
-            className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 group"
-          >
-            <span>B2B Demo Login</span>
-            <span className="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
-          </button>
+          /* Login Buttons for Home Page */
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onLoginClick}
+              className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 group"
+            >
+              <span>B2B Agent</span>
+              <span className="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+            </button>
+            {onInsuranceLoginClick && (
+              <button
+                onClick={onInsuranceLoginClick}
+                className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 text-xs font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center gap-2 group"
+              >
+                <span className="material-symbols-outlined text-sm">phone</span>
+                <span>Insurance Agent</span>
+                <span className="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+              </button>
+            )}
+          </div>
         ) : null}
       </div>
     </header>

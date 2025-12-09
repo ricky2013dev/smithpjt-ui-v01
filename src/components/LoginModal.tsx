@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 interface LoginModalProps {
     isOpen: boolean;
     onClose: () => void;
+    userType?: 'b2b' | 'insurance';
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
+const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, userType = 'b2b' }) => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -26,7 +27,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
         // Simulate authentication delay (800ms)
         setTimeout(() => {
-            navigate('/dashboard');
+            if (userType === 'insurance') {
+                navigate('/insurance/dashboard');
+            } else {
+                navigate('/b2b-agent/dashboard');
+            }
             onClose();
             setIsLoading(false);
         }, 800);
@@ -52,7 +57,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                         </span>
                     </div>
                     <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Welcome To Smith AI Center</h2>
-                    <p className="text-slate-500 dark:text-slate-400 mt-2">Sign in to access</p>
+                    <p className="text-slate-500 dark:text-slate-400 mt-2">
+                        {userType === 'insurance' ? 'Insurance Agent Portal' : 'B2B Agent Portal'}
+                    </p>
                 </div>
 
                 <form onSubmit={handleLogin} className="space-y-6">

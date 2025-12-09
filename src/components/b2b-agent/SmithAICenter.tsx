@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Patient } from '../types/patient';
+import { Patient } from '../../types/patient';
 import VerificationDataPanel, { VerificationDataRow } from './VerificationDataPanel';
 
 interface SmithAICenterProps {

@@ -5,6 +5,7 @@ import mermaid from 'mermaid';
 
 const HomePage: React.FC = () => {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [loginUserType, setLoginUserType] = useState<'b2b' | 'insurance'>('b2b');
     const [showDesktopWarning, setShowDesktopWarning] = useState(false);
     const [showDiagramModal, setShowDiagramModal] = useState(false);
 
@@ -26,13 +27,14 @@ const HomePage: React.FC = () => {
         }
     }, [showDiagramModal]);
 
-    const handleLoginClick = () => {
+    const handleLoginClick = (userType: 'b2b' | 'insurance' = 'b2b') => {
         // Check if screen size is mobile (width < 768px) - allow tablets and desktop
         if (window.innerWidth < 768) {
             setShowDesktopWarning(true);
             setTimeout(() => setShowDesktopWarning(false), 5000); // Auto-hide after 5 seconds
             return;
         }
+        setLoginUserType(userType);
         setIsLoginModalOpen(true);
     };
 
@@ -42,7 +44,7 @@ const HomePage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex flex-col font-sans selection:bg-orange-100 dark:selection:bg-orange-900/30">
-            <Header onLoginClick={handleLoginClick} />
+            <Header onLoginClick={() => handleLoginClick('b2b')} onInsuranceLoginClick={() => handleLoginClick('insurance')} />
 
             {/* Desktop Warning Toast */}
             {showDesktopWarning && (
@@ -160,7 +162,7 @@ const HomePage: React.FC = () => {
                 © {new Date().getFullYear()} Smith AI Center. All rights reserved.
             </footer>
 
-            <LoginModal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} />
+            <LoginModal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} userType={loginUserType} />
 
             {/* Workflow Diagram Modal */}
             {showDiagramModal && (
