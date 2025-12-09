@@ -25,14 +25,19 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
 
   // Get upcoming appointments from all patients
   const getUpcomingAppointments = () => {
-    const now = new Date();
+    // Get start of today (00:00:00)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     const allAppointments: Array<{ patient: Patient, appointment: any }> = [];
 
     patients.forEach(patient => {
       if (patient.appointments) {
         patient.appointments.forEach(apt => {
           const aptDate = new Date(apt.date);
-          if (aptDate >= now && apt.status === 'scheduled') {
+          aptDate.setHours(0, 0, 0, 0);
+          // Show appointments from today onwards
+          if (aptDate >= today && apt.status === 'scheduled') {
             allAppointments.push({ patient, appointment: apt });
           }
         });
@@ -51,14 +56,19 @@ const PatientGuide: React.FC<PatientGuideProps> = ({
 
   // Get past appointments from all patients
   const getPastAppointments = () => {
-    const now = new Date();
+    // Get start of today (00:00:00)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     const allAppointments: Array<{ patient: Patient, appointment: any }> = [];
 
     patients.forEach(patient => {
       if (patient.appointments) {
         patient.appointments.forEach(apt => {
           const aptDate = new Date(apt.date);
-          if (aptDate < now) {
+          aptDate.setHours(0, 0, 0, 0);
+          // Show appointments from yesterday and before (before today)
+          if (aptDate < today) {
             allAppointments.push({ patient, appointment: apt });
           }
         });

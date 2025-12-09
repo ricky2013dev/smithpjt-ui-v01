@@ -61,7 +61,7 @@
     ],
     "appointments": [
       {
-        "date": "2025-12-09",
+        "date": "2025-12-15",
         "time": "1:00 PM",
         "status": "scheduled",
         "type": "Teeth Cleaning",
@@ -228,7 +228,7 @@
     ],
     "appointments": [
       {
-        "date": "2025-12-11",
+        "date": "2025-12-15",
         "time": "11:30 AM",
         "status": "scheduled",
         "type": "Root Canal",
@@ -367,7 +367,7 @@
     ],
     "appointments": [
       {
-        "date": "2025-12-07",
+        "date": "2025-12-15",
         "time": "12:30 PM",
         "status": "scheduled",
         "type": "Dental Exam",
@@ -457,7 +457,7 @@
     "insurance": [],
     "appointments": [
       {
-        "date": "2025-12-07",
+        "date": "2025-12-15",
         "time": "3:00 PM",
         "status": "scheduled",
         "type": "Extraction",
@@ -552,7 +552,7 @@
     ],
     "appointments": [
       {
-        "date": "2025-12-11",
+        "date": "2025-12-15",
         "time": "4:30 PM",
         "status": "scheduled",
         "type": "Teeth Cleaning",
@@ -710,7 +710,7 @@
     ],
     "appointments": [
       {
-        "date": "2025-12-07",
+        "date": "2025-12-15",
         "time": "4:00 PM",
         "status": "scheduled",
         "type": "Crown Placement",
@@ -830,7 +830,7 @@
     ],
     "appointments": [
       {
-        "date": "2025-12-11",
+        "date": "2025-12-15",
         "time": "6:00 PM",
         "status": "scheduled",
         "type": "Filling",
@@ -942,7 +942,7 @@
     ],
     "appointments": [
       {
-        "date": "2025-12-08",
+        "date": "2025-12-15",
         "time": "5:00 PM",
         "status": "scheduled",
         "type": "Dental Exam",
@@ -1062,7 +1062,7 @@
     ],
     "appointments": [
       {
-        "date": "2025-12-07",
+        "date": "2025-12-15",
         "time": "8:30 AM",
         "status": "scheduled",
         "type": "Bridge Fitting",
@@ -1202,7 +1202,7 @@
     ],
     "appointments": [
       {
-        "date": "2025-12-11",
+        "date": "2025-12-15",
         "time": "4:30 PM",
         "status": "scheduled",
         "type": "Dental Exam",

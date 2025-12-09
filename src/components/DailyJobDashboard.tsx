@@ -17,6 +17,7 @@ interface PatientJob {
   startTime: string;
   endTime: string;
   jobDate: Date;
+  appointmentDate: Date | null;
 }
 
 interface DailyJobDashboardProps {
@@ -83,13 +84,18 @@ const DailyJobDashboard: React.FC<DailyJobDashboardProps> = ({ patients: patient
         }
       };
 
+      // Get the patient's first scheduled appointment date
+      const scheduledAppointment = patient.appointments?.find(apt => apt.status === 'scheduled');
+      const appointmentDate = scheduledAppointment ? new Date(scheduledAppointment.date) : null;
+
       return {
         patient,
         steps: getStepStatus(),
         scheduledTime: `${String(startHour).padStart(2, '0')}:${String(startMin).padStart(2, '0')}`,
         startTime: `${String(startHour).padStart(2, '0')}:${String(startMin).padStart(2, '0')}`,
         endTime: `${String(endDate.getHours()).padStart(2, '0')}:${String(endDate.getMinutes()).padStart(2, '0')}`,
-        jobDate: startDateObj
+        jobDate: startDateObj,
+        appointmentDate
       };
     });
   };
@@ -472,7 +478,12 @@ const DailyJobDashboard: React.FC<DailyJobDashboardProps> = ({ patients: patient
 
                     {/* Appointment Date */}
                     <div style={{ width: '15%' }}>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">{job.jobDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        {job.appointmentDate
+                          ? job.appointmentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                          : 'No appointment'
+                        }
+                      </p>
                     </div>
 
                     {/* Patient Name */}
