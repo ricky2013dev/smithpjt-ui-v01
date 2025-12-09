@@ -322,7 +322,19 @@ const InsuranceCallDashboard: React.FC = () => {
                       <tr>
                         <td colSpan={7} className="px-6 py-6 bg-gray-50">
                           <div className="space-y-4">
-                            <h3 className="text-lg font-semibold text-gray-900">Call Summary</h3>
+                            <div className="flex items-center justify-between mb-2 mr-8">
+                              <h3 className="text-lg font-semibold text-gray-900">Call Summary</h3>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigate(`/insurance/call/${call.id}`);
+                                }}
+                                className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 rounded-md text-xs font-medium transition-colors flex items-center space-x-1.5"
+                              >
+                                <span>View Full Details</span>
+                                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                              </button>
+                            </div>
                             <div className="grid grid-cols-2 gap-4">
                               <div>
                                 <p className="text-sm font-medium text-gray-600">Patient Information</p>
@@ -344,18 +356,6 @@ const InsuranceCallDashboard: React.FC = () => {
                                 <p className="text-sm font-medium text-gray-600">Notes</p>
                                 <p className="text-sm text-gray-900 mt-1">{call.notes}</p>
                               </div>
-                            </div>
-                            <div className="flex justify-start mt-4">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  navigate(`/insurance/call/${call.id}`);
-                                }}
-                                className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 rounded-md text-xs font-medium transition-colors flex items-center space-x-1.5"
-                              >
-                                <span>View Full Details</span>
-                                <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                              </button>
                             </div>
                           </div>
                         </td>
