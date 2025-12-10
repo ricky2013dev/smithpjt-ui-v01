@@ -324,7 +324,7 @@ const InsuranceCallDashboard: React.FC = () => {
                           <div className="space-y-4">
                             <div className="flex items-center justify-between mb-2 mr-8">
                               <h3 className="text-lg font-semibold text-gray-900">Call Summary</h3>
-                              <button
+                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   navigate(`/insurance/call/${call.id}`);
@@ -333,7 +333,7 @@ const InsuranceCallDashboard: React.FC = () => {
                               >
                                 <span>View Full Details</span>
                                 <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                              </button>
+                              </button> 
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                               <div>

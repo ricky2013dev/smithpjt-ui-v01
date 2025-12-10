@@ -256,7 +256,7 @@ const InsuranceCallDetail: React.FC = () => {
       {/* Main Content - Split Layout */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar - Call List */}
-        <div className="w-[30%] border-r border-slate-200 dark:border-slate-700 flex flex-col bg-white dark:bg-slate-900 overflow-hidden">
+        <div className="w-[0%] border-r border-slate-200 dark:border-slate-700 flex flex-col bg-white dark:bg-slate-900 overflow-hidden">
           {/* Call List Table */}
           <div className="flex-1 overflow-auto">
             <table className="w-full">
