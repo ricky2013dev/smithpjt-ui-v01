@@ -96,13 +96,7 @@ const HomePage: React.FC = () => {
                     </div>
 
                     {/* Bridge Visualization - Smith AI Between Dental Office & Insurance */}
-                    <div className="relative py-8 px-8 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 overflow-hidden">
-                        {/* Animated background glow */}
-                        <div className="absolute inset-0 overflow-hidden">
-                            <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-blue-500/10 to-transparent rounded-full blur-3xl"></div>
-                            <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-orange-500/10 to-transparent rounded-full blur-3xl"></div>
-                        </div>
-
+                    <div className="relative py-8 px-8 overflow-hidden">
                         {/* Content */}
                         <div className="relative z-10">
 
@@ -173,7 +167,10 @@ const HomePage: React.FC = () => {
                                                 <span className="material-symbols-outlined text-xl text-white">smart_toy</span>
                                             </div>
                                         </div>
-                                        <p className="font-bold text-xs text-purple-600 dark:text-purple-400 uppercase tracking-wide text-center mt-1">Smith AI</p>
+                                        <p className="font-bold text-xs uppercase tracking-wide text-center mt-1">
+                                            <span className="text-orange-600 dark:text-orange-500">Smith</span>
+                                            <span className="text-slate-900 dark:text-white"> AI</span>
+                                        </p>
                                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800/30 mt-1">
                                             <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">100% Automation</span>
                                         </div>

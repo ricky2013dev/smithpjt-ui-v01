@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ onLogoClick, currentUser, onLogout, onL
                 <span className="text-sm font-medium text-slate-900 dark:text-white">AI Center</span>
               </h1>
               <p className="text-slate-500 dark:text-slate-400 text-[10px] font-medium uppercase tracking-wider mt-0.5">
-                {mode === 'insurance' ? 'Insurance Verification' : 'Patient Appointments'}
+                {mode === 'insurance' ? 'Insurance Verification' : 'Insurance Verification'}
               </p>
             </div>
           </div>
