@@ -75,30 +75,192 @@ const HomePage: React.FC = () => {
                     <div className="absolute top-[40%] -right-[10%] w-[40%] h-[40%] bg-blue-200/20 dark:bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '12s', animationDelay: '1s' }}></div>
                 </div>
 
-                <div className="max-w-4xl w-full z-10 text-center space-y-12">
+                <div className="max-w-4xl w-full z-10 text-center space-y-8">
 
                     {/* Hero Section */}
                     <div className="space-y-6">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800/30 text-orange-600 dark:text-orange-400 text-xs font-medium uppercase tracking-wider mb-4">
-                            <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+                        <div className="inline-flex items-center gap-1 px-1 py-0 rounded-full bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800/30 text-orange-600 dark:text-orange-400 text-xs font-medium uppercase tracking-wider mb-4">
+                            <span className="w-2 h-1 rounded-full bg-orange-500 animate-pulse"></span>
                             Next Gen Automation
                         </div>
 
-                        <h1 className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight">
+                        <h1 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight">
                             <span className="bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-700 to-slate-900 dark:from-white dark:via-slate-200 dark:to-slate-400">
                                 Multimodal Intelligence
                             </span>
                             <br />
-                            <span className="text-4xl md:text-6xl text-slate-400 dark:text-slate-500 font-normal">
+                            <span className="text-2xl md:text-4xl text-slate-400 dark:text-slate-500 font-normal">
                                 for Complex Workflows
                             </span>
                         </h1>
                     </div>
 
+                    {/* Bridge Visualization - Smith AI Between Dental Office & Insurance */}
+                    <div className="relative py-8 px-8 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 overflow-hidden">
+                        {/* Animated background glow */}
+                        <div className="absolute inset-0 overflow-hidden">
+                            <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-blue-500/10 to-transparent rounded-full blur-3xl"></div>
+                            <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-orange-500/10 to-transparent rounded-full blur-3xl"></div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="relative z-10">
+
+
+                            <div className="flex items-center justify-center gap-6 flex-wrap md:gap-8">
+                                {/* Dental Office */}
+                                <div className="flex flex-col items-center gap-4">
+                                    <div className="relative group">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl blur-lg opacity-25 group-hover:opacity-40 transition-opacity"></div>
+                                        <div className="relative w-20 h-20 rounded-2xl bg-white dark:bg-slate-700 shadow-lg border border-blue-200 dark:border-blue-800/50 flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-3xl text-blue-600 dark:text-blue-400">local_pharmacy</span>
+                                        </div>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="font-bold text-slate-900 dark:text-white text-sm">Dental Office</p>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Workflow & Data</p>
+                                    </div>
+                                </div>
+
+                                {/* Left Connection Lines */}
+                                <div className="hidden md:flex items-center justify-center relative flex-1 h-32">
+                                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 120" preserveAspectRatio="xMidYMid meet">
+                                        {/* Forward line - left to center top */}
+                                        <path
+                                            d="M 10 40 Q 40 20 95 50"
+                                            stroke="url(#blueGradient)"
+                                            strokeWidth="2"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            className="animate-pulse"
+                                        />
+                                        {/* Arrow forward */}
+                                        <path d="M 85 48 L 97 50 L 85 52" stroke="url(#blueGradient)" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+
+                                        {/* Return line - center bottom to left */}
+                                        <path
+                                            d="M 95 70 Q 40 100 10 80"
+                                            stroke="url(#purpleGradient)"
+                                            strokeWidth="2"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            className="animate-pulse"
+                                            style={{ animationDelay: '0.6s' }}
+                                        />
+                                        {/* Arrow return */}
+                                        <path d="M 15 82 L 3 80 L 15 78" stroke="url(#purpleGradient)" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+
+                                        <defs>
+                                            <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stopColor="rgb(59, 130, 246)" />
+                                                <stop offset="100%" stopColor="rgb(59, 130, 246, 0.8)" />
+                                            </linearGradient>
+                                            <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stopColor="rgb(168, 85, 247)" />
+                                                <stop offset="100%" stopColor="rgb(168, 85, 247, 0.8)" />
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                </div>
+
+                                {/* AI/Robotics Connection Bridge - Central Hub */}
+                                <div className="flex items-center justify-center flex-1 relative">
+                                    {/* Central AI/Robotics Hub */}
+                                    <div className="flex flex-col items-center gap-2">
+                                        <div className="relative group">
+                                            <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity animate-pulse" style={{ animationDuration: '2.5s' }}></div>
+                                            <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 shadow-lg flex items-center justify-center">
+                                                <span className="material-symbols-outlined text-xl text-white">smart_toy</span>
+                                            </div>
+                                        </div>
+                                        <p className="font-bold text-xs text-purple-600 dark:text-purple-400 uppercase tracking-wide text-center mt-1">Smith AI</p>
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800/30 mt-1">
+                                            <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">100% Automation</span>
+                                        </div>
+                                        <p className="text-xs text-slate-600 dark:text-slate-400 text-center">Bidirectional<br/>Integration</p>
+                                    </div>
+                                </div>
+
+                                {/* Right Connection Lines */}
+                                <div className="hidden md:flex items-center justify-center relative flex-1 h-32">
+                                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 120" preserveAspectRatio="xMidYMid meet">
+                                        {/* Forward line - center top to right */}
+                                        <path
+                                            d="M 5 50 Q 60 20 90 40"
+                                            stroke="url(#orangeGradient)"
+                                            strokeWidth="2"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            className="animate-pulse"
+                                            style={{ animationDelay: '0.3s' }}
+                                        />
+                                        {/* Arrow forward */}
+                                        <path d="M 80 38 L 92 40 L 80 42" stroke="url(#orangeGradient)" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+
+                                        {/* Return line - right to center bottom */}
+                                        <path
+                                            d="M 90 80 Q 60 100 5 70"
+                                            stroke="url(#greenGradient)"
+                                            strokeWidth="2"
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            className="animate-pulse"
+                                            style={{ animationDelay: '0.6s' }}
+                                        />
+                                        {/* Arrow return */}
+                                        <path d="M 10 72 L -2 70 L 10 68" stroke="url(#greenGradient)" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+
+                                        <defs>
+                                            <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stopColor="rgb(249, 115, 22)" />
+                                                <stop offset="100%" stopColor="rgb(249, 115, 22, 0.8)" />
+                                            </linearGradient>
+                                            <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stopColor="rgb(34, 197, 94)" />
+                                                <stop offset="100%" stopColor="rgb(34, 197, 94, 0.8)" />
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                </div>
+
+                                {/* Mobile Connection Indicator */}
+                                <div className="md:hidden flex flex-col items-center gap-3 my-4">
+                                    <div className="flex gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 animate-bounce" style={{ animationDelay: '0s' }}></div>
+                                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-orange-500 animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-green-500 animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                                    </div>
+                                    <div className="relative group">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                                        <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 shadow-lg flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-lg text-white">smart_toy</span>
+                                        </div>
+                                    </div>
+                                    <p className="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">AI & Robotics Bridge</p>
+                                </div>
+
+                                {/* Insurance Company */}
+                                <div className="flex flex-col items-center gap-4">
+                                    <div className="relative group">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl blur-lg opacity-25 group-hover:opacity-40 transition-opacity"></div>
+                                        <div className="relative w-20 h-20 rounded-2xl bg-white dark:bg-slate-700 shadow-lg border border-green-200 dark:border-green-800/50 flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-3xl text-green-600 dark:text-green-400">verified_user</span>
+                                        </div>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="font-bold text-slate-900 dark:text-white text-sm">Insurance Company</p>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Verification & Claims</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
                     {/* Mission Statement */}
                     <div className="relative group">
                         <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-blue-500 rounded-2xl blur opacity-10 group-hover:opacity-20 transition duration-1000"></div>
-                        <div className="relative bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 p-8 md:p-12 rounded-xl shadow-sm">
+                        <div className="relative bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700 p-6 md:p-8 rounded-xl shadow-sm">
                             <p className="text-lg md:text-2xl text-slate-600 dark:text-slate-300 leading-relaxed font-light">
                                 Our mission is to solve the challenge of repetitive yet complex business tasks through <span className="text-slate-900 dark:text-white font-medium">multimodal intelligence</span>.
                                 By combining <span className="text-slate-900 dark:text-white font-medium">document analysis</span> with <span className="text-slate-900 dark:text-white font-medium">autonomous voice AI</span>,
@@ -149,11 +311,7 @@ const HomePage: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Click hint */}
-                    <div className="mt-6 flex items-center justify-center gap-2 text-sm text-slate-500 dark:text-slate-400 opacity-70 hover:opacity-100 transition-opacity">
-                        <span className="material-symbols-outlined text-base">touch_app</span>
-                        <span>Click above to view detailed workflow diagram</span>
-                    </div>
+
 
                 </div>
             </main>
